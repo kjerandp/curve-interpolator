@@ -1,0 +1,45 @@
+{
+  "private": true,
+  "name": "curve-interpolator",
+  "version": "0.1.0",
+  "description": "Interpolate values on a Cardinal/Catmull-Rom spline curve",
+  "repository": "https://github.com/kjerandp/curve-interpolator",
+  "author": "Kjerand Pedersen",
+  "license": "MIT",
+  "keywords": ["interpolate", "interpolator", "curve", "spline"],
+  "main": "dist/curve-interpolator.cjs.js",
+  "module": "dist/curve-interpolator.esm.js",
+  "browser": "dist/curve-interpolator.js",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.8.0",
+    "babel-core": "^6.8.0",
+    "babel-eslint": "^8.2.2",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.8.0",
+    "chai": "^4.1.2",
+    "eslint": "^4.18.2",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.7.0",
+    "mathjs": "^4.0.0",
+    "mocha": "^5.0.4",
+    "rollup": "^0.56.5",
+    "rollup-plugin-babel": "^3.0.3",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "sinon": "^4.4.2"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "NODE_ENV=test mocha --require babel-register",
+    "test:watch": "NODE_ENV=test mocha --require babel-register --reporter min --watch",
+    "lint": "eslint src test tools"
+  },
+  "files": [
+    "dist"
+  ]
+}
