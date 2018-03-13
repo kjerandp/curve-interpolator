@@ -1,7 +1,7 @@
 {
-  "private": true,
+  "private": false,
   "name": "curve-interpolator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Interpolate values on a Cardinal/Catmull-Rom spline curve",
   "repository": "https://github.com/kjerandp/curve-interpolator",
   "author": "Kjerand Pedersen",

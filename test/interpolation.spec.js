@@ -4,12 +4,13 @@ import path from 'path';
 import CurveInterpolator from '../src';
 
 const data = [
-  { x: -1, y: 1 },
+  { x: -2, y: 1 },
+  { x: 0, y: 5.5 },
   { x: 3, y: 6 },
   { x: 8, y: 3 },
   { x: 13, y: 2.5 },
 ];
-const interpolator = new CurveInterpolator(data, 0.25);
+const interpolator = new CurveInterpolator(data, 0.15);
 
 it('Should have some test data', () => {
   fs.writeFileSync(path.join(__dirname, './static/data.json'), JSON.stringify(data));

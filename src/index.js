@@ -6,6 +6,12 @@ export default class CurveInterpolator {
     this.tension = tension;
     this.arcLengthDivisions = arcLengthDivisions;
 
+    this.cache = {
+      xLookup: {},
+      yLookup: {},
+      arcLengths: undefined,
+    };
+
     // get extent and cache ordering
     this.sortedX = points.map((p, i) => ({ v: p.x, i })).sort((a, b) => a.v > b.v);
     this.sortedY = points.map((p, i) => ({ v: p.y, i })).sort((a, b) => a.v > b.v);
@@ -19,12 +25,17 @@ export default class CurveInterpolator {
     this.dx = this.maxX - this.minX;
     this.dy = this.maxY - this.minY;
 
-    // normalize points
+    // normalize and add points to cache
     this.convertionFactor = Math.sqrt((this.dx * this.dx + this.dy * this.dy) / 2);
-    this.points = points.map(p => ({
-      x: math.normalizeValue(p.x, this.dx, this.minX),
-      y: math.normalizeValue(p.y, this.dy, this.minY),
-    }));
+    this.points = points.map((p) => {
+      const np = {
+        x: math.normalizeValue(p.x, this.dx, this.minX),
+        y: math.normalizeValue(p.y, this.dy, this.minY),
+      };
+      this.cache.xLookup[np.x] = np.y;
+      this.cache.yLookup[np.y] = np.x;
+      return np;
+    });
   }
 
   _getPoint(t) {
@@ -48,29 +59,29 @@ export default class CurveInterpolator {
   _getLengths(divisions) {
     if (divisions === undefined) divisions = this.arcLengthDivisions;
 
-    if (this.cacheArcLengths &&
-      (this.cacheArcLengths.length === divisions + 1)) {
-      return this.cacheArcLengths;
+    if (this.cache.arcLengths &&
+      (this.cache.arcLengths.length === divisions + 1)) {
+      return this.cache.arcLengths;
     }
 
-    const cache = [];
+    const _cache = [];
     let current,
       last = this._getPoint(0);
     let p,
       sum = 0;
 
-    cache.push(0);
+    _cache.push(0);
 
     for (p = 1; p <= divisions; p++) {
       current = this._getPoint(p / divisions);
       sum += math.getDistance(current, last);
-      cache.push(sum);
+      _cache.push(sum);
       last = current;
     }
 
-    this.cacheArcLengths = cache;
+    this.cache.arcLengths = _cache;
 
-    return cache; // { sums: cache, sum: sum }; Sum is in the last element.
+    return _cache; // { sums: cache, sum: sum }; Sum is in the last element.
   }
 
   _getUtoTmapping(u, distance) {
@@ -166,28 +177,34 @@ export default class CurveInterpolator {
 
   getYfromX(x, isNormalized = false) {
     const nx = isNormalized ? x : math.normalizeValue(x, this.dx, this.minX);
+    if (this.cache.xLookup[nx] !== undefined) {
+      return this.denormalizeY(this.cache.xLookup[nx]);
+    }
     const cp = math.determineControlPointsFrom(this.points, nx, p => p.x);
     const coeff = math.getCoefficients(cp.p0.x, cp.p1.x, cp.p2.x, cp.p3.x, nx, this.tension);
     const roots = math.getCubicRoots(coeff.a, coeff.b, coeff.c, coeff.d);
-    const rootMatch = roots.filter(r => r.real >= 0 && r.real < 1 && r.imag === 0);
-    if (rootMatch.length === 1) {
-      const t = rootMatch[0].real;
+    const t = math.selectRootValue(roots);
+    if (t !== undefined) {
       const y = math.getPointOnCurve(t, cp.p0.y, cp.p1.y, cp.p2.y, cp.p3.y, this.tension);
-      return math.denormalizeValue(y, this.dy, this.minY);
+      this.cache.xLookup[nx] = y;
+      return this.denormalizeY(y);
     }
     throw new Error(`Unable to solve for x = ${x}`);
   }
 
   getXfromY(y, isNormalized = false) {
     const ny = isNormalized ? y : math.normalizeValue(y, this.dy, this.minY);
+    if (this.cache.yLookup[ny] !== undefined) {
+      return this.denormalizeX(this.cache.yLookup[ny]);
+    }
     const cp = math.determineControlPointsFrom(this.points, ny, p => p.y);
     const coeff = math.getCoefficients(cp.p0.y, cp.p1.y, cp.p2.y, cp.p3.y, ny, this.tension);
     const roots = math.getCubicRoots(coeff.a, coeff.b, coeff.c, coeff.d);
-    const rootMatch = roots.filter(r => r.real >= 0 && r.real < 1.00001 && r.imag === 0);
-    if (rootMatch.length === 1) {
-      const t = Math.min(rootMatch[0].real, 1.0);
+    const t = math.selectRootValue(roots);
+    if (t !== undefined) {
       const x = math.getPointOnCurve(t, cp.p0.x, cp.p1.x, cp.p2.x, cp.p3.x, this.tension);
-      return math.denormalizeValue(x, this.dx, this.minX);
+      this.cache.yLookup[ny] = x;
+      return this.denormalizeX(x);
     }
     throw new Error(`Unable to solve for y = ${y}`);
   }

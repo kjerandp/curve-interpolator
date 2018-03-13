@@ -216,3 +216,13 @@ export const getPointOnCurve = (t, p0, p1, p2, p3, tension = 0) => {
   const coeff = getCoefficients(p0, p1, p2, p3, 0, tension);
   return coeff.a * t3 + coeff.b * t2 + coeff.c * t + coeff.d;
 };
+
+export const selectRootValue = (roots) => {
+  const rootMatch = roots.filter(r => r.real >= 0 && r.real < 1.0001 && r.imag === 0);
+  if (rootMatch.length === 1) {
+    return rootMatch[0].real;
+  } else if (rootMatch.length > 1) {
+    return rootMatch.reduce((t, r) => Math.max(r.real, t), 0);
+  }
+  return undefined;
+};

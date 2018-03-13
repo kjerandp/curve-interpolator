@@ -48,6 +48,16 @@
             .attr("stroke-width", 3)
             .attr("d", line);
 
+        g.append("g")
+            .selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", function(d){ return x(d.x); })
+            .attr("cy", function(d){ return y(d.y); })
+            .attr("r", function(d, i) { return 3; })
+            .attr('fill', 'black');
+
     });
 
     d3.json('interpolated_x.json', function(err, data){
@@ -64,7 +74,7 @@
             .attr("cx", function(d){ return x(d.x); })
             .attr("cy", function(d){ return y(d.y); })
             .attr("r", function(d, i) { return 4; })
-            .attr('fill', 'rgba(0, 255, 0, 0.75)');;
+            .attr('fill', 'rgba(0, 255, 0, 0.75)');
 
     });
 
