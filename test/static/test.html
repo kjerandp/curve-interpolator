@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
   <body>
-    <svg width="1200" height="900"></svg>
+    <svg width="600" height="500"></svg>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script>
 
@@ -55,26 +55,8 @@
             .append("circle")
             .attr("cx", function(d){ return x(d.x); })
             .attr("cy", function(d){ return y(d.y); })
-            .attr("r", function(d, i) { return 3; })
+            .attr("r", function(d, i) { return 8; })
             .attr('fill', 'black');
-
-    });
-
-    d3.json('interpolated_x.json', function(err, data){
-        if (err) {
-            console.log(err);
-            return;
-        }
-
-        g.append("g")
-            .selectAll("circle")
-            .data(data)
-            .enter()
-            .append("circle")
-            .attr("cx", function(d){ return x(d.x); })
-            .attr("cy", function(d){ return y(d.y); })
-            .attr("r", function(d, i) { return 4; })
-            .attr('fill', 'rgba(0, 255, 0, 0.75)');
 
     });
 
@@ -91,8 +73,26 @@
             .append("circle")
             .attr("cx", function(d){ return x(d.x); })
             .attr("cy", function(d){ return y(d.y); })
-            .attr("r", function(d, i) { return 4; })
+            .attr("r", function(d, i) { return 2; })
             .attr('fill', 'rgba(255, 0, 0, 0.75)');
+
+    });
+
+    d3.json('interpolated_x.json', function(err, data){
+        if (err) {
+            console.log(err);
+            return;
+        }
+
+        g.append("g")
+            .selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", function(d){ return x(d.x); })
+            .attr("cy", function(d){ return y(d.y); })
+            .attr("r", function(d, i) { return 8; })
+            .attr('fill', 'rgba(0, 255, 0, 0.75)');
 
     });
 
@@ -114,6 +114,23 @@
 
     });
 
+    d3.json('interpolated_t1.json', function(err, data){
+        if (err) {
+            console.log(err);
+            return;
+        }
+
+        g.append("g")
+            .selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", function(d){ return x(d.x); })
+            .attr("cy", function(d){ return y(d.y); })
+            .attr("r", function(d, i) { return 8; })
+            .attr('fill', 'rgba(255, 0, 255, 0.75)');
+
+    });
     </script>
 
   </body>

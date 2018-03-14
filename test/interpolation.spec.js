@@ -26,44 +26,32 @@ it('Should have some test data', () => {
 });
 
 it('Should interpolate by x', () => {
-  const interpolated = [];
-  for (let x = 0; x <= 1; x += 0.025) {
-    interpolated.push({
-      x: interpolator.denormalizeX(x),
-      y: interpolator.getYfromX(x, true),
-    });
-  }
+  const interpolated = [
+    {
+      x: 6,
+      y: interpolator.getYfromX(6),
+    },
+  ];
   fs.writeFileSync(path.join(__dirname, './static/interpolated_x.json'), JSON.stringify(interpolated));
 });
 
 it('Should interpolate by y', () => {
   const interpolated = [
     {
-      x: interpolator.getXfromY(2.8),
-      y: 2.8,
-    },
-    {
-      x: interpolator.getXfromY(5),
-      y: 5,
-    },
-    {
-      x: interpolator.getXfromY(1.5),
-      y: 1.5,
-    },
-    {
-      x: interpolator.getXfromY(6),
-      y: 6,
-    },
-    {
-      x: interpolator.getXfromY(1),
-      y: 1,
+      x: interpolator.getXfromY(4.5),
+      y: 4.5,
     },
   ];
 
   fs.writeFileSync(path.join(__dirname, './static/interpolated_y.json'), JSON.stringify(interpolated));
 });
 
-it('Should interpolate by t', () => {
-  const interpolated = interpolator.getPoints(80);
+it('Should interpolate single point by t', () => {
+  const interpolated = [interpolator.getPointAt(0.9)];
+  fs.writeFileSync(path.join(__dirname, './static/interpolated_t1.json'), JSON.stringify(interpolated));
+});
+
+it('Should interpolate equally spaced points', () => {
+  const interpolated = interpolator.getPoints(500);
   fs.writeFileSync(path.join(__dirname, './static/interpolated_t.json'), JSON.stringify(interpolated));
 });

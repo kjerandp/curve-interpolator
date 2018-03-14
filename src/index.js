@@ -156,24 +156,21 @@ export default class CurveInterpolator {
 
   getPointAt(u, optionalTarget) {
     const t = this._getUtoTmapping(u);
-    return this._getPoint(t, optionalTarget);
+    const p = this._getPoint(t, optionalTarget);
+
+    return ({
+      x: this.denormalizeX(p.x),
+      y: this.denormalizeY(p.y),
+    });
   }
 
-  getNormalizedPoints(divisions) {
+  getPoints(divisions) {
     if (divisions === undefined) divisions = 5;
     const points = [];
     for (let d = 0; d <= divisions; d++) {
       points.push(this.getPointAt(d / divisions));
     }
     return points;
-  }
-
-  getPoints(divisions) {
-    return this.getNormalizedPoints(divisions)
-      .map(p => ({
-        x: this.denormalizeX(p.x),
-        y: this.denormalizeY(p.y),
-      }));
   }
 
   y(x, isNormalized = false) {
