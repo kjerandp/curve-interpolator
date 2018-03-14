@@ -1,4 +1,5 @@
 
+import polyRoots from 'minimatrix-polyroots';
 import * as math from './mathHelper';
 
 export default class CurveInterpolator {
@@ -175,14 +176,14 @@ export default class CurveInterpolator {
       }));
   }
 
-  getYfromX(x, isNormalized = false) {
+  y(x, isNormalized = false) {
     const nx = isNormalized ? x : math.normalizeValue(x, this.dx, this.minX);
     if (this.cache.xLookup[nx] !== undefined) {
       return this.denormalizeY(this.cache.xLookup[nx]);
     }
     const cp = math.determineControlPointsFrom(this.points, nx, p => p.x);
     const coeff = math.getCoefficients(cp.p0.x, cp.p1.x, cp.p2.x, cp.p3.x, nx, this.tension);
-    const roots = math.getCubicRoots(coeff.a, coeff.b, coeff.c, coeff.d);
+    const roots = polyRoots.getCubicRoots(coeff.a, coeff.b, coeff.c, coeff.d);
     const t = math.selectRootValue(roots);
     if (t !== undefined) {
       const y = math.getPointOnCurve(t, cp.p0.y, cp.p1.y, cp.p2.y, cp.p3.y, this.tension);
@@ -192,14 +193,14 @@ export default class CurveInterpolator {
     throw new Error(`Unable to solve for x = ${x}`);
   }
 
-  getXfromY(y, isNormalized = false) {
+  x(y, isNormalized = false) {
     const ny = isNormalized ? y : math.normalizeValue(y, this.dy, this.minY);
     if (this.cache.yLookup[ny] !== undefined) {
       return this.denormalizeX(this.cache.yLookup[ny]);
     }
     const cp = math.determineControlPointsFrom(this.points, ny, p => p.y);
     const coeff = math.getCoefficients(cp.p0.y, cp.p1.y, cp.p2.y, cp.p3.y, ny, this.tension);
-    const roots = math.getCubicRoots(coeff.a, coeff.b, coeff.c, coeff.d);
+    const roots = polyRoots.getCubicRoots(coeff.a, coeff.b, coeff.c, coeff.d);
     const t = math.selectRootValue(roots);
     if (t !== undefined) {
       const x = math.getPointOnCurve(t, cp.p0.x, cp.p1.x, cp.p2.x, cp.p3.x, this.tension);
@@ -207,6 +208,14 @@ export default class CurveInterpolator {
       return this.denormalizeX(x);
     }
     throw new Error(`Unable to solve for y = ${y}`);
+  }
+
+  getYfromX(x, isNormalized = false) {
+    return this.y(x, isNormalized);
+  }
+
+  getXfromY(y, isNormalized = false) {
+    return this.x(y, isNormalized);
   }
 
   normalizeX(x) {

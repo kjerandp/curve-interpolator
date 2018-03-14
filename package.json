@@ -1,16 +1,23 @@
 {
   "private": false,
   "name": "curve-interpolator",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "description": "Interpolate values on a Cardinal/Catmull-Rom spline curve",
   "repository": "https://github.com/kjerandp/curve-interpolator",
   "author": "Kjerand Pedersen",
   "license": "MIT",
-  "keywords": ["interpolate", "interpolator", "curve", "spline"],
+  "keywords": [
+    "interpolate",
+    "interpolator",
+    "curve",
+    "spline"
+  ],
   "main": "dist/curve-interpolator.cjs.js",
   "module": "dist/curve-interpolator.esm.js",
   "browser": "dist/curve-interpolator.js",
-  "dependencies": {},
+  "dependencies": {
+    "minimatrix-polyroots": "^2.0.2"
+  },
   "devDependencies": {
     "babel-cli": "^6.8.0",
     "babel-core": "^6.8.0",
@@ -29,7 +36,7 @@
     "rollup": "^0.56.5",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^8.0.2",
-    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-node-resolve": "^3.2.0",
     "sinon": "^4.4.2"
   },
   "scripts": {
