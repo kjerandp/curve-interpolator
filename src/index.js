@@ -1,5 +1,3 @@
-
-import polyRoots from 'minimatrix-polyroots';
 import * as math from './mathHelper';
 
 export default class CurveInterpolator {
@@ -12,6 +10,10 @@ export default class CurveInterpolator {
       yLookup: {},
       arcLengths: undefined,
     };
+
+    if (points.length < 4) {
+      throw new Error('You must provide a minimum of 4 controlpoints');
+    }
 
     // get extent and cache ordering
     this.sortedX = points.map((p, i) => ({ v: p.x, i })).sort((a, b) => a.v > b.v);
@@ -85,20 +87,20 @@ export default class CurveInterpolator {
     return _cache; // { sums: cache, sum: sum }; Sum is in the last element.
   }
 
-  _getUtoTmapping(u, distance) {
+  _getLtoTmapping(l, distance) {
     const arcLengths = this._getLengths();
     let i = 0;
     const il = arcLengths.length;
 
-    let targetArcLength; // The targeted u distance value to get
+    let targetArcLength; // The targeted l distance value to get
 
     if (distance) {
       targetArcLength = distance;
     } else {
-      targetArcLength = u * arcLengths[il - 1];
+      targetArcLength = l * arcLengths[il - 1];
     }
 
-    // binary search for the index with largest value smaller than target u distance
+    // binary search for the index with largest value smaller than target l distance
 
     let low = 0,
       high = il - 1,
@@ -139,6 +141,22 @@ export default class CurveInterpolator {
     return t;
   }
 
+
+  _getTangent(t) {
+    const delta = 0.0001;
+    let t1 = t - delta;
+    let t2 = t + delta;
+
+    // Capping
+    if (t1 < 0) t1 = 0;
+    if (t2 > 1) t2 = 1;
+
+    const p1 = this._getPoint(t1);
+    const p2 = this._getPoint(t2);
+
+    return math.getVector(p2, p1);
+  }
+
   getLength() {
     const lengths = this._getLengths();
     const length = lengths[lengths.length - 1];
@@ -154,8 +172,8 @@ export default class CurveInterpolator {
     });
   }
 
-  getPointAt(u, optionalTarget) {
-    const t = this._getUtoTmapping(u);
+  getPointAt(l, optionalTarget) {
+    const t = this._getLtoTmapping(l);
     const p = this._getPoint(t, optionalTarget);
 
     return ({
@@ -173,14 +191,19 @@ export default class CurveInterpolator {
     return points;
   }
 
+  getTangentAt(l) {
+    const t = this._getLtoTmapping(l);
+    return this._getTangent(t);
+  }
+
+
   y(x, isNormalized = false) {
     const nx = isNormalized ? x : math.normalizeValue(x, this.dx, this.minX);
     if (this.cache.xLookup[nx] !== undefined) {
       return this.denormalizeY(this.cache.xLookup[nx]);
     }
     const cp = math.determineControlPointsFrom(this.points, nx, p => p.x);
-    const coeff = math.getCoefficients(cp.p0.x, cp.p1.x, cp.p2.x, cp.p3.x, nx, this.tension);
-    const roots = polyRoots.getCubicRoots(coeff.a, coeff.b, coeff.c, coeff.d);
+    const roots = math.solveForT(cp.p0.x, cp.p1.x, cp.p2.x, cp.p3.x, nx, this.tension);
     const t = math.selectRootValue(roots);
     if (t !== undefined) {
       const y = math.getPointOnCurve(t, cp.p0.y, cp.p1.y, cp.p2.y, cp.p3.y, this.tension);
@@ -196,8 +219,7 @@ export default class CurveInterpolator {
       return this.denormalizeX(this.cache.yLookup[ny]);
     }
     const cp = math.determineControlPointsFrom(this.points, ny, p => p.y);
-    const coeff = math.getCoefficients(cp.p0.y, cp.p1.y, cp.p2.y, cp.p3.y, ny, this.tension);
-    const roots = polyRoots.getCubicRoots(coeff.a, coeff.b, coeff.c, coeff.d);
+    const roots = math.solveForT(cp.p0.y, cp.p1.y, cp.p2.y, cp.p3.y, ny, this.tension);
     const t = math.selectRootValue(roots);
     if (t !== undefined) {
       const x = math.getPointOnCurve(t, cp.p0.x, cp.p1.x, cp.p2.x, cp.p3.x, this.tension);

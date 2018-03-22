@@ -44,7 +44,11 @@
     "dev": "rollup -c -w",
     "test": "NODE_ENV=test mocha --require babel-register",
     "test:watch": "NODE_ENV=test mocha --require babel-register --reporter min --watch",
-    "lint": "eslint src test tools"
+    "lint": "eslint src test tools",
+    "prepub": "npm run build",
+    "pub": "npm publish",
+    "presample": "NODE_ENV=test babel-node test/createSampleData.js",
+    "sample": "cd test/static && python -m SimpleHTTPServer"
   },
   "files": [
     "dist"

@@ -1,3 +1,5 @@
+import polyRoots from 'minimatrix-polyroots';
+
 export const denormalizeValue = (v, dv, c) => v * dv + c;
 
 export const normalizeValue = (v, dv, c) => (v - c) / dv;
@@ -38,6 +40,21 @@ export function getLength(v) {
   return Math.sqrt(squared);
 }
 
+
+export function getVector(u, v) {
+  const vector = {
+    x: u.x - v.x,
+    y: u.y - v.y,
+  };
+
+  // normalize
+  const l = getLength(vector);
+  vector.x /= l;
+  vector.y /= l;
+
+  return vector;
+}
+
 export const getCoefficients = (p0, p1, p2, p3, v = 0, tension = 0) => {
   const v0 = (1 - tension) * (p2 - p0) * 0.5;
   const v1 = (1 - tension) * (p3 - p1) * 0.5;
@@ -65,7 +82,12 @@ export const selectRootValue = (roots) => {
   if (rootMatch.length === 1) {
     return rootMatch[0].real;
   } else if (rootMatch.length > 1) {
-    return rootMatch.reduce((t, r) => Math.max(r.real, t), 0);
+    return rootMatch.reduce((t, r) => Math.min(r.real, t), 0);
   }
   return undefined;
+};
+
+export const solveForT = (p0, p1, p2, p3, v, tension = 0) => {
+  const coeff = getCoefficients(p0, p1, p2, p3, v, tension);
+  return polyRoots.getCubicRoots(coeff.a, coeff.b, coeff.c, coeff.d);
 };

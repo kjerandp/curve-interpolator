@@ -29,8 +29,8 @@
             console.log(err);
             return;
         }
-        x.domain(d3.extent(data, function(d) { return d.x; }));
-        y.domain(d3.extent(data, function(d) { return d.y; }));
+        x.domain(d3.extent(data.controlPoints, function(d) { return d.x; }));
+        y.domain(d3.extent(data.controlPoints, function(d) { return d.y; }));
 
         g.append("g")
             .attr("transform", "translate(0," + height + ")")
@@ -40,7 +40,7 @@
             .call(d3.axisLeft(y));
 
         g.append("path")
-            .datum(data)
+            .datum(data.controlPoints)
             .attr("fill", "none")
             .attr("stroke", "steelblue")
             .attr("stroke-linejoin", "round")
@@ -50,7 +50,7 @@
 
         g.append("g")
             .selectAll("circle")
-            .data(data)
+            .data(data.controlPoints)
             .enter()
             .append("circle")
             .attr("cx", function(d){ return x(d.x); })
@@ -58,35 +58,19 @@
             .attr("r", function(d, i) { return 8; })
             .attr('fill', 'black');
 
-    });
+        g.append("path")
+            .datum(data.sample4)
+            .attr("fill", "none")
+            .attr("stroke", "rgba(255, 0, 0, 0.75)")
+            .attr("stroke-linejoin", "round")
+            .attr("stroke-linecap", "round")
+            .attr("stroke-width", 3)
+            .attr("d", line);
 
-    d3.json('interpolated_t.json', function(err, data){
-        if (err) {
-            console.log(err);
-            return;
-        }
-
-        g.append("g")
-            .selectAll("circle")
-            .data(data)
-            .enter()
-            .append("circle")
-            .attr("cx", function(d){ return x(d.x); })
-            .attr("cy", function(d){ return y(d.y); })
-            .attr("r", function(d, i) { return 2; })
-            .attr('fill', 'rgba(255, 0, 0, 0.75)');
-
-    });
-
-    d3.json('interpolated_x.json', function(err, data){
-        if (err) {
-            console.log(err);
-            return;
-        }
 
         g.append("g")
             .selectAll("circle")
-            .data(data)
+            .data(data.sample1)
             .enter()
             .append("circle")
             .attr("cx", function(d){ return x(d.x); })
@@ -94,17 +78,9 @@
             .attr("r", function(d, i) { return 8; })
             .attr('fill', 'rgba(0, 255, 0, 0.75)');
 
-    });
-
-    d3.json('interpolated_y.json', function(err, data){
-        if (err) {
-            console.log(err);
-            return;
-        }
-
         g.append("g")
             .selectAll("circle")
-            .data(data)
+            .data(data.sample2)
             .enter()
             .append("circle")
             .attr("cx", function(d){ return x(d.x); })
@@ -112,17 +88,9 @@
             .attr("r", function(d, i) { return 8; })
             .attr('fill', 'rgba(0, 0, 255, 0.75)');
 
-    });
-
-    d3.json('interpolated_t1.json', function(err, data){
-        if (err) {
-            console.log(err);
-            return;
-        }
-
         g.append("g")
             .selectAll("circle")
-            .data(data)
+            .data(data.sample3)
             .enter()
             .append("circle")
             .attr("cx", function(d){ return x(d.x); })
@@ -130,6 +98,18 @@
             .attr("r", function(d, i) { return 8; })
             .attr('fill', 'rgba(255, 0, 255, 0.75)');
 
+        // sample 5 - tangent
+		    const tangent = data.sample5;
+
+        const p = data.sample3[0];
+
+        g.append('line')
+          .attr('x1', x(p.x - tangent.x * 2))
+          .attr('x2', x(p.x + tangent.x * 2))
+          .attr('y1', y(p.y - tangent.y * 2))
+          .attr('y2', y(p.y + tangent.y * 2))
+          .attr('stroke', 'black')
+          .attr('stroke-width', 2);
     });
     </script>
 
