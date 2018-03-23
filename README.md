@@ -47,12 +47,16 @@ const x = interp.getXfromY(4.5);
 // l - a value between 0 and 1, where  
 //     l = 0 is at the beginning of the curve and
 //     l = 1 is at the end of the curve
-const point = interp.getPointAt(0.9);
-// returns: {'x': 7.455605538078618, 'y': 1.7555441418042927}
+const point = interp.getPointAt(0.73);
+// returns: {'x':5.513154875514987,'y':3.9793004099653295}
 
 // get a number of equally spaced points along the curve
 const pointsOnCurve = interp.getPoints(1000);
 // returns 1001 points on the curve (1000 segments/divisions)
+
+// get tangent at length l
+const vector = interp.getTangentAt(0.73);
+// returns {'x':0.557245952465003,'y':-0.830347486574971}
 ```
 ![Graph](https://raw.githubusercontent.com/kjerandp/curve-interpolator/master/test/static/graph.png)
 
