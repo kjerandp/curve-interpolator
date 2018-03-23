@@ -40,18 +40,18 @@ export function getLength(v) {
   return Math.sqrt(squared);
 }
 
+export function normalizeVector(v) {
+  const l = getLength(v);
+  v.x /= l;
+  v.y /= l;
+  return v;
+}
 
 export function getVector(u, v) {
   const vector = {
     x: u.x - v.x,
     y: u.y - v.y,
   };
-
-  // normalize
-  const l = getLength(vector);
-  vector.x /= l;
-  vector.y /= l;
-
   return vector;
 }
 
@@ -68,6 +68,12 @@ export const getCoefficients = (p0, p1, p2, p3, v = 0, tension = 0) => {
     c: v0,
     d: p1 - v,
   });
+};
+
+export const derivativeOfT = (t, p0, p1, p2, p3, tension = 0) => {
+  const t2 = t * t;
+  const coeff = getCoefficients(p0, p1, p2, p3, 0, tension);
+  return (3 * coeff.a * t2 + 2 * coeff.b * t + coeff.c);
 };
 
 export const getPointOnCurve = (t, p0, p1, p2, p3, tension = 0) => {

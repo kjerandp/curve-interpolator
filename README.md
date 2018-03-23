@@ -119,6 +119,26 @@ Find the tangent at a specific point l on the curve. Returns a normalized vector
 |---------------|--------------------------------------------|
 | l             | A value between 0 and 1, where 0 is at the start point of the curve and 1 is at the end point, according to the length of the curve.
 
+
+### getTangentAtX(x, [isNormalized = false]) 
+
+Find the tangent at the first occurance of the specified value X on the curve. Returns a normalized vector of [x, y].
+
+| Parameter     | Description
+|---------------|--------------------------------------------|
+| x             | Number
+| isNormalized  | Set to true if you want to pass _x_ as a value between 0 and 1, where x=0 represents the beginning of the curve on the x-scale and x=1 represents the end of the curve on the x-scale.
+
+### getTangentAtY(y, [isNormalized = false]) 
+
+Find the tangent at the first occurance of the specified value Y on the curve. Returns a normalized vector of [x, y].
+
+| Parameter     | Description
+|---------------|--------------------------------------------|
+| y             | Number
+| isNormalized  | Set to true if you want to pass _y_ as a value between 0 and 1, where y=0 represents the beginning of the curve on the y-scale and y=1 represents the end of the curve on the y-scale.
+
+
 ### getLength() 
 
 Returns the full length of the curve.

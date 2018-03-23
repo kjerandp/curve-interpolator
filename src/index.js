@@ -141,20 +141,13 @@ export default class CurveInterpolator {
     return t;
   }
 
+  _getTangent(t, p0, p1, p2, p3) {
+    const v = ({
+      x: math.derivativeOfT(t, p0.x, p1.x, p2.x, p3.x, this.tension),
+      y: math.derivativeOfT(t, p0.y, p1.y, p2.y, p3.y, this.tension),
+    });
 
-  _getTangent(t) {
-    const delta = 0.0001;
-    let t1 = t - delta;
-    let t2 = t + delta;
-
-    // Capping
-    if (t1 < 0) t1 = 0;
-    if (t2 > 1) t2 = 1;
-
-    const p1 = this._getPoint(t1);
-    const p2 = this._getPoint(t2);
-
-    return math.getVector(p2, p1);
+    return math.normalizeVector(v);
   }
 
   getLength() {
@@ -193,9 +186,41 @@ export default class CurveInterpolator {
 
   getTangentAt(l) {
     const t = this._getLtoTmapping(l);
-    return this._getTangent(t);
+    const { points } = this;
+    const p = (points.length - 1) * t;
+
+    const intPoint = Math.floor(p);
+    const weight = p - intPoint;
+
+    const p0 = points[intPoint === 0 ? intPoint : intPoint - 1];
+    const p1 = points[intPoint];
+    const p2 = points[intPoint > points.length - 2 ? points.length - 1 : intPoint + 1];
+    const p3 = points[intPoint > points.length - 3 ? points.length - 1 : intPoint + 2];
+
+    return this._getTangent(weight, p0, p1, p2, p3);
   }
 
+  getTangentAtX(x, isNormalized = false) {
+    const nx = isNormalized ? x : math.normalizeValue(x, this.dx, this.minX);
+    const cp = math.determineControlPointsFrom(this.points, nx, p => p.x);
+    const roots = math.solveForT(cp.p0.x, cp.p1.x, cp.p2.x, cp.p3.x, nx, this.tension);
+    const t = math.selectRootValue(roots);
+    if (t !== undefined) {
+      return this._getTangent(t, cp.p0, cp.p1, cp.p2, cp.p3);
+    }
+    throw new Error(`Unable to find tangent at x = ${x}`);
+  }
+
+  getTangentAtY(y, isNormalized = false) {
+    const ny = isNormalized ? y : math.normalizeValue(y, this.dy, this.minY);
+    const cp = math.determineControlPointsFrom(this.points, ny, p => p.y);
+    const roots = math.solveForT(cp.p0.y, cp.p1.y, cp.p2.y, cp.p3.y, ny, this.tension);
+    const t = math.selectRootValue(roots);
+    if (t !== undefined) {
+      return this._getTangent(t, cp.p0, cp.p1, cp.p2, cp.p3);
+    }
+    throw new Error(`Unable to find tanget at y = ${y}`);
+  }
 
   y(x, isNormalized = false) {
     const nx = isNormalized ? x : math.normalizeValue(x, this.dx, this.minX);
