@@ -12,6 +12,7 @@ const points = [
   { x: 7, y: 3 },
   { x: 8, y: 0 },
 ];
+
 const l = 0.73;
 const interpolator = new CurveInterpolator(points, 0.50);
 const data = {

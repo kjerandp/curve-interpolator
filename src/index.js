@@ -1,7 +1,7 @@
 import * as math from './mathHelper';
 
 export default class CurveInterpolator {
-  constructor(points, tension = 0, arcLengthDivisions = 300) {
+  constructor(inpPoints, tension = 0, arcLengthDivisions = 300) {
     this.tension = tension;
     this.arcLengthDivisions = arcLengthDivisions;
 
@@ -11,19 +11,30 @@ export default class CurveInterpolator {
       arcLengths: undefined,
     };
 
-    if (points.length < 4) {
+    if (inpPoints.length < 4) {
       throw new Error('You must provide a minimum of 4 controlpoints');
     }
 
+    let points = inpPoints;
+    if (Array.isArray(inpPoints[0])) {
+      points = inpPoints.map(p => ({ x: p[0], y: p[1] }));
+    }
     // get extent and cache ordering
-    this.sortedX = points.map((p, i) => ({ v: p.x, i })).sort((a, b) => a.v > b.v);
-    this.sortedY = points.map((p, i) => ({ v: p.y, i })).sort((a, b) => a.v > b.v);
 
-    this.minX = this.sortedX[0].v;
-    this.maxX = this.sortedX[this.sortedX.length - 1].v;
-
-    this.minY = this.sortedY[0].v;
-    this.maxY = this.sortedY[this.sortedY.length - 1].v;
+    points.forEach((p) => {
+      if (this.minX === undefined || p.x < this.minX) {
+        this.minX = p.x;
+      }
+      if (this.maxX === undefined || p.x > this.maxX) {
+        this.maxX = p.x;
+      }
+      if (this.minY === undefined || p.y < this.minY) {
+        this.minY = p.y;
+      }
+      if (this.maxY === undefined || p.y > this.maxY) {
+        this.maxY = p.y;
+      }
+    });
 
     this.dx = this.maxX - this.minX;
     this.dy = this.maxY - this.minY;
