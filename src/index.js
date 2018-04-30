@@ -39,17 +39,14 @@ export default class CurveInterpolator {
     this.dx = this.maxX - this.minX;
     this.dy = this.maxY - this.minY;
 
-    // normalize and add points to cache
-    this.convertionFactor = Math.sqrt((this.dx * this.dx + this.dy * this.dy) / 2);
-    this.points = points.map((p) => {
-      const np = {
-        x: math.normalizeValue(p.x, this.dx, this.minX),
-        y: math.normalizeValue(p.y, this.dy, this.minY),
-      };
-      this.cache.xLookup[np.x] = np.y;
-      this.cache.yLookup[np.y] = np.x;
-      return np;
+    // add points to cache
+    points.forEach((p) => {
+      this.cache.xLookup[p.x] = p.y;
+      this.cache.yLookup[p.y] = p.x;
+      return p;
     });
+
+    this.points = points;
   }
 
   _getPoint(t) {
@@ -164,7 +161,7 @@ export default class CurveInterpolator {
   getLength() {
     const lengths = this._getLengths();
     const length = lengths[lengths.length - 1];
-    return length * this.convertionFactor;
+    return length;
   }
 
   getExtent() {
@@ -180,10 +177,7 @@ export default class CurveInterpolator {
     const t = this._getLtoTmapping(l);
     const p = this._getPoint(t, optionalTarget);
 
-    return ({
-      x: this.denormalizeX(p.x),
-      y: this.denormalizeY(p.y),
-    });
+    return p;
   }
 
   getPoints(divisions) {
@@ -212,7 +206,7 @@ export default class CurveInterpolator {
   }
 
   getTangentAtX(x, isNormalized = false) {
-    const nx = isNormalized ? x : math.normalizeValue(x, this.dx, this.minX);
+    const nx = isNormalized ? math.denormalizeValue(x, this.dx, this.minX) : x;
     const cp = math.determineControlPointsFrom(this.points, nx, p => p.x);
     const roots = math.solveForT(cp.p0.x, cp.p1.x, cp.p2.x, cp.p3.x, nx, this.tension);
     const t = math.selectRootValue(roots);
@@ -223,7 +217,7 @@ export default class CurveInterpolator {
   }
 
   getTangentAtY(y, isNormalized = false) {
-    const ny = isNormalized ? y : math.normalizeValue(y, this.dy, this.minY);
+    const ny = isNormalized ? math.denormalizeValue(y, this.dy, this.minY) : y;
     const cp = math.determineControlPointsFrom(this.points, ny, p => p.y);
     const roots = math.solveForT(cp.p0.y, cp.p1.y, cp.p2.y, cp.p3.y, ny, this.tension);
     const t = math.selectRootValue(roots);
@@ -234,9 +228,9 @@ export default class CurveInterpolator {
   }
 
   y(x, isNormalized = false) {
-    const nx = isNormalized ? x : math.normalizeValue(x, this.dx, this.minX);
+    const nx = isNormalized ? math.denormalizeValue(x, this.dx, this.minX) : x;
     if (this.cache.xLookup[nx] !== undefined) {
-      return this.denormalizeY(this.cache.xLookup[nx]);
+      return this.cache.xLookup[nx];
     }
     const cp = math.determineControlPointsFrom(this.points, nx, p => p.x);
     const roots = math.solveForT(cp.p0.x, cp.p1.x, cp.p2.x, cp.p3.x, nx, this.tension);
@@ -244,15 +238,15 @@ export default class CurveInterpolator {
     if (t !== undefined) {
       const y = math.getPointOnCurve(t, cp.p0.y, cp.p1.y, cp.p2.y, cp.p3.y, this.tension);
       this.cache.xLookup[nx] = y;
-      return this.denormalizeY(y);
+      return y;
     }
     throw new Error(`Unable to solve for x = ${x}`);
   }
 
   x(y, isNormalized = false) {
-    const ny = isNormalized ? y : math.normalizeValue(y, this.dy, this.minY);
+    const ny = isNormalized ? math.denormalizeValue(y, this.dy, this.minY) : y;
     if (this.cache.yLookup[ny] !== undefined) {
-      return this.denormalizeX(this.cache.yLookup[ny]);
+      return this.cache.yLookup[ny];
     }
     const cp = math.determineControlPointsFrom(this.points, ny, p => p.y);
     const roots = math.solveForT(cp.p0.y, cp.p1.y, cp.p2.y, cp.p3.y, ny, this.tension);
@@ -260,7 +254,7 @@ export default class CurveInterpolator {
     if (t !== undefined) {
       const x = math.getPointOnCurve(t, cp.p0.x, cp.p1.x, cp.p2.x, cp.p3.x, this.tension);
       this.cache.yLookup[ny] = x;
-      return this.denormalizeX(x);
+      return x;
     }
     throw new Error(`Unable to solve for y = ${y}`);
   }
