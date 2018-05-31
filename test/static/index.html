@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
   <body>
-    <svg width="600" height="500"></svg>
+    <svg width="1000" height="1000"></svg>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script>
 
@@ -98,17 +98,37 @@
             .attr("r", function(d, i) { return 8; })
             .attr('fill', 'rgba(255, 0, 255, 0.75)');
 
+          g.append("path")
+            .datum(data.sample6)
+            .attr("fill", "none")
+            .attr("stroke", "rgba(255, 0, 255, 0.75)")
+            .attr("stroke-linejoin", "round")
+            .attr("stroke-linecap", "round")
+            .attr("stroke-width", 3)
+            .attr("d", line);
+
+
         // sample 5 - tangent
-		    const tangent = data.sample5;
+        const tangent = data.sample5;
+        const normal = data.sample7;
 
         const p = data.sample3[0];
 
         g.append('line')
-          .attr('x1', x(p.x - tangent.x * 2))
-          .attr('x2', x(p.x + tangent.x * 2))
-          .attr('y1', y(p.y - tangent.y * 2))
-          .attr('y2', y(p.y + tangent.y * 2))
+          .attr('x1', x(p.x - tangent.x))
+          .attr('x2', x(p.x + tangent.x))
+          .attr('y1', y(p.y - tangent.y))
+          .attr('y2', y(p.y + tangent.y))
           .attr('stroke', 'black')
+          .attr('stroke-width', 2);
+
+
+        g.append('line')
+          .attr('x1', x(p.x - normal.x))
+          .attr('x2', x(p.x + normal.x))
+          .attr('y1', y(p.y - normal.y))
+          .attr('y2', y(p.y + normal.y))
+          .attr('stroke', 'gray')
           .attr('stroke-width', 2);
     });
     </script>

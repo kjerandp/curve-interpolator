@@ -154,8 +154,7 @@ export default class CurveInterpolator {
       x: math.derivativeOfT(t, p0.x, p1.x, p2.x, p3.x, this.tension),
       y: math.derivativeOfT(t, p0.y, p1.y, p2.y, p3.y, this.tension),
     });
-
-    return math.normalizeVector(v);
+    return v;
   }
 
   getLength() {
@@ -180,11 +179,13 @@ export default class CurveInterpolator {
     return p;
   }
 
-  getPoints(divisions) {
-    if (divisions === undefined) divisions = 5;
+  getPoints(divisions = 10, from = 0, to = 1) {
+    if (from < 0 || to > 1 || to < from) return undefined;
     const points = [];
     for (let d = 0; d <= divisions; d++) {
-      points.push(this.getPointAt(d / divisions));
+      const l = from === 0 && to === 1 ?
+        d / divisions : from + ((d / divisions) * (to - from));
+      points.push(this.getPointAt(l));
     }
     return points;
   }
@@ -202,7 +203,13 @@ export default class CurveInterpolator {
     const p2 = points[intPoint > points.length - 2 ? points.length - 1 : intPoint + 1];
     const p3 = points[intPoint > points.length - 3 ? points.length - 1 : intPoint + 2];
 
-    return this._getTangent(weight, p0, p1, p2, p3);
+    const tan = this._getTangent(weight, p0, p1, p2, p3);
+    return math.normalizeVector(tan);
+  }
+
+  getNormalAt(l) {
+    const tan = this.getTangentAt(l);
+    return ({ x: tan.y, y: -tan.x });
   }
 
   getTangentAtX(x, isNormalized = false) {

@@ -28,6 +28,8 @@ const data = {
   sample3: [interpolator.getPointAt(l)],
   sample4: interpolator.getPoints(1000),
   sample5: interpolator.getTangentAt(l),
+  sample6: interpolator.getPoints(100, 0.5, 0.95),
+  sample7: interpolator.getNormalAt(l),
 };
 
 fs.writeFileSync(path.join(__dirname, './static/data.json'), JSON.stringify(data));

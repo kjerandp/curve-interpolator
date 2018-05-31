@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "curve-interpolator",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Interpolate values on a Cardinal/Catmull-Rom spline curve",
   "repository": "https://github.com/kjerandp/curve-interpolator",
   "author": "Kjerand Pedersen",
@@ -48,7 +48,7 @@
     "prepub": "npm run build",
     "pub": "npm publish",
     "presample": "NODE_ENV=test babel-node test/createSampleData.js",
-    "sample": "cd test/static && python -m SimpleHTTPServer"
+    "sample": "cd test/static && python -m http.server"
   },
   "files": [
     "dist"
