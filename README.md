@@ -107,13 +107,15 @@ Returns a point object with values for x and y at a specific point l on the curv
 | l             | A value between 0 and 1, where 0 is at the start point of the curve and 1 is at the end point, according to the length of the curve.
 
 
-### getPoints(divisions) 
+### getPoints(divisions, [from = 0, to = 1]) 
 
-Returns an array of points equally spaced along the curve.
+Returns an array of points equally spaced along the curve. Start and end points can be given in the range of 0 and 1, otherwise the points are distributed along the full curve (from = 0 and to = 1).
 
 | Parameter     | Description
 |---------------|--------------------------------------------|
 | divisions             | The number of segments to divide the curve into, where the number of points returned equals to divisions + 1 (start and end point of each segment).
+| from          | Point on curve from where to start
+| to            | Point on curve from where to end
 
 ### getTangentAt(l) 
 
@@ -142,6 +144,13 @@ Find the tangent at the first occurance of the specified value Y on the curve. R
 | y             | Number
 | isNormalized  | Set to true if you want to pass _y_ as a value between 0 and 1, where y=0 represents the beginning of the curve on the y-scale and y=1 represents the end of the curve on the y-scale.
 
+### getNormalAt(l) 
+
+Find the normal vector at a specific point l on the curve. Returns a normalized vector of [x, y].
+
+| Parameter     | Description
+|---------------|--------------------------------------------|
+| l             | A value between 0 and 1, where 0 is at the start point of the curve and 1 is at the end point, according to the length of the curve.
 
 ### getLength() 
 
