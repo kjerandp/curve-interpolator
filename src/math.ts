@@ -152,7 +152,7 @@ export function normalize(v:[number, number]|any) : [number, number]|any {
  * Rotates a vector 90 degrees to make it orthogonal (mutates input vector)
  * @param v vector to rotate
  */
-export function orthogonal(v:[number, number]|any) : [number, number]|any {
+export function orthogonal(v:number[]) : number[] {
   const x = -v[1];
   v[1] = v[0];
   v[0] = x;

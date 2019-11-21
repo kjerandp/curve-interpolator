@@ -27,13 +27,14 @@
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
     "test:watch": "mocha -r ts-node/register test/**/*.spec.ts --reporter min --watch --watch-extensions ts",
     "predocs": "rimraf docs",
-    "docs": "typedoc --out docs src",
+    "docs": "typedoc --out docs src --module es6",
     "postdocs": "copyfiles images/* docs && copyfiles .nojekyll docs"
   },
-  "main": "dist/curve-interpolator.cjs.js",
-  "module": "dist/curve-interpolator.esm.js",
-  "browser": "dist/curve-interpolator.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "browser": "dist/index.js",
   "devDependencies": {
+    "@types/chai": "^4.2.5",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
     "chai-deep-closeto": "^0.1.1",
@@ -54,5 +55,10 @@
   "files": [
     "dist"
   ],
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "moduleFileExtensions": [
+    "ts",
+    "tsx",
+    "js"
+  ]
 }

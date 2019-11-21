@@ -10,12 +10,13 @@ import {
   orthogonal,
   clamp,
 } from '../src/math';
-import Point from '../src/point';
 import { expect } from 'chai';
 import {
   compareNumArrays,
   compareNumArraysUnordered,
 } from './utils';
+
+const EPS = 0.000001;
 
 describe('math.ts', () => {
 
@@ -127,13 +128,10 @@ describe('math.ts', () => {
     let result = distance([0, 0], [-3, 0]);
     expect(result).to.equal(3);
 
-    result = distance(new Point(0, 0), new Point(-3, 0));
-    expect(result).to.equal(3);
+    result = distance([3, 0], [0, 3]);
+    expect(result).to.be.approximately(4.24264, EPS);
 
-    result = distance(new Point(3, 0), new Point(0, 3));
-    expect(result).to.be.approximately(4.24264, 5);
-
-    result = distance(new Point(2, 1), new Point(2, 1));
+    result = distance([2, 1], [2, 1]);
     expect(result).to.equal(0);
   });
 
@@ -141,16 +139,16 @@ describe('math.ts', () => {
     let result = normalize([-3, 0]);
     expect(result).to.eql([-1, 0]);
 
-    result = normalize(new Point(0, 0));
+    result = normalize([0, 0]);
     expect(result).to.eql([0, 0]);
 
-    result = normalize(new Point(3, 0));
+    result = normalize([3, 0]);
     expect(result).to.be.eql([1, 0]);
 
-    result = normalize(new Point(2, 2));
+    result = normalize([2, 2]);
     compareNumArrays(result, [0.707106, 0.707106]);
 
-    result = normalize(new Point(-2, 4));
+    result = normalize([-2, 4]);
     compareNumArrays(result, [-0.447213, 0.89442719]);
   });
 

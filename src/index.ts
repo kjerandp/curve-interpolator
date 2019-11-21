@@ -1,5 +1,4 @@
-import * as mathFunctions from './math';
-import * as utilityFunction from './utils';
-
-export const math = mathFunctions;
-export const utils = utilityFunction;
+export { default as CurveInterpolator } from './curve-interpolator';
+export * from './math';
+export * from './utils';
+export * from './core';
