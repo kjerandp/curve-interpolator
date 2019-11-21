@@ -36,6 +36,7 @@
   "devDependencies": {
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
+    "chai-deep-closeto": "^0.1.1",
     "copyfiles": "^2.1.1",
     "eslint": "^6.6.0",
     "eslint-config-airbnb-base": "^14.0.0",
@@ -52,5 +53,6 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "types": "dist/index.d.ts"
 }

@@ -1,3 +1,5 @@
-export function hello(name: string = 'npm'): string {
-  return `Hello ${name}!`;
-}
+import * as mathFunctions from './math';
+import * as utilityFunction from './utils';
+
+export const math = mathFunctions;
+export const utils = utilityFunction;
