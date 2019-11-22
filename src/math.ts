@@ -1,3 +1,7 @@
+import {
+  Vector,
+} from './interfaces';
+
 export const EPS = Math.pow(2, -42);
 
 /**
@@ -129,7 +133,7 @@ export function getDerivativeOfT(t:number, tension:number, v0:number, v1:number,
  * @param p1 coordinates of point 1
  * @param p2 coordinates of point 2
  */
-export function distance(p1:[number, number]|any, p2:[number, number]|any) : number {
+export function distance(p1:Vector, p2:Vector) : number {
   const dx = p2[0] - p1[0];
   const dy = p2[1] - p1[1];
   const squared = dx * dx + dy * dy;
@@ -140,7 +144,7 @@ export function distance(p1:[number, number]|any, p2:[number, number]|any) : num
  * Normalizes a vector (mutate input)
  * @param v input array/vector to normalize
  */
-export function normalize(v:[number, number]|any) : [number, number]|any {
+export function normalize(v:Vector) : Vector {
   const l = Math.sqrt(v[0] * v[0] + v[1] * v[1]);
   if (l === 0) return [0, 0];
   v[0] /= l;
@@ -152,7 +156,7 @@ export function normalize(v:[number, number]|any) : [number, number]|any {
  * Rotates a vector 90 degrees to make it orthogonal (mutates input vector)
  * @param v vector to rotate
  */
-export function orthogonal(v:number[]) : number[] {
+export function orthogonal(v:Vector) : Vector {
   const x = -v[1];
   v[1] = v[0];
   v[0] = x;

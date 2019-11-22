@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "curve-interpolator",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.2",
   "description": "Interpolate values on a Cardinal/Catmull-Rom spline curve",
   "repository": "https://github.com/kjerandp/curve-interpolator",
   "bugs": {
@@ -37,7 +37,6 @@
     "@types/chai": "^4.2.5",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
-    "chai-deep-closeto": "^0.1.1",
     "copyfiles": "^2.1.1",
     "eslint": "^6.6.0",
     "eslint-config-airbnb-base": "^14.0.0",

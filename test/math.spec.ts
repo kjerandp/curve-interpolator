@@ -14,7 +14,7 @@ import { expect } from 'chai';
 import {
   compareNumArrays,
   compareNumArraysUnordered,
-} from './utils';
+} from './test-utils';
 
 const EPS = 0.000001;
 

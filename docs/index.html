@@ -91,33 +91,10 @@
   [<span class="hljs-number">5.5</span>, <span class="hljs-number">4</span>],
   [<span class="hljs-number">7</span>, <span class="hljs-number">3</span>],
   [<span class="hljs-number">8</span>, <span class="hljs-number">0</span>],
+  ...
 ];
 
 <span class="hljs-keyword">const</span> interp = <span class="hljs-keyword">new</span> CurveInterpolator(points);</code></pre>
-				<p>You can now interpolate points by x, y or u (length):</p>
-				<pre><code class="language-js"><span class="hljs-comment">// x (first)</span>
-<span class="hljs-keyword">const</span> y = interp.x(<span class="hljs-number">6</span>, <span class="hljs-number">1</span>);
-<span class="hljs-comment">// returns: 3.6042079967035523</span>
-
-<span class="hljs-comment">// y (last)</span>
-<span class="hljs-keyword">const</span> x = interp.y(<span class="hljs-number">4.5</span>, <span class="hljs-number">-1</span>);
-<span class="hljs-comment">// returns: 2.15115721043274</span>
-
-<span class="hljs-comment">// u - a value between 0 and 1, where  </span>
-<span class="hljs-comment">//     u = 0 is at the beginning of the curve and</span>
-<span class="hljs-comment">//     u = 1 is at the end of the curve</span>
-<span class="hljs-keyword">const</span> point = interp.getPointAt(<span class="hljs-number">0.73</span>);
-<span class="hljs-comment">// returns: [5.513154875514987, 3.9793004099653295]</span>
-
-<span class="hljs-comment">// get a number of equally spaced points along the curve</span>
-<span class="hljs-keyword">const</span> pointsOnCurve = interp.getPoints(<span class="hljs-number">1000</span>);
-<span class="hljs-comment">// returns 1001 points on the curve (1000 segments/divisions)</span>
-
-<span class="hljs-comment">// get tangent at length l</span>
-<span class="hljs-keyword">const</span> vector = interp.getTangentAt(<span class="hljs-number">0.73</span>);
-<span class="hljs-comment">// returns [0.557245952465003, -0.830347486574971]</span></code></pre>
-				<p><img src="https://raw.githubusercontent.com/kjerandp/curve-interpolator/master/test/static/graph.png" alt="Graph"></p>
-				<p>In this graph the control points are plotted as black dots and connected with a blue line. The red curve is made out of the 1001 equally spaced points from the example above.</p>
 				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
 					<h2>License</h2>
 				</a>
@@ -140,7 +117,13 @@
 						<a href="modules/_index_.html">&quot;index&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="modules/_interfaces_.html">&quot;interfaces&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="modules/_math_.html">&quot;math&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_point_.html">&quot;point&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_utils_.html">&quot;utils&quot;</a>

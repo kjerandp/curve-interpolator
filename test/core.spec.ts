@@ -2,8 +2,9 @@ import 'mocha';
 import { expect } from 'chai';
 import {
   compareNumArrays,
-  compareNumArraysUnordered,
-} from './utils';
+  // compareNumArraysUnordered,
+} from './test-utils';
+import { points } from './test-data';
 import {
   getPointAtT,
   getTangentAtT,
@@ -13,24 +14,27 @@ import {
   getUtoTmapping,
   getTtoUmapping,
  } from '../src/core';
+import { Point } from '../src';
 
-const points = [[1, 18],[2, 13],[2.5, 10],[4, 7.5],[5, 8.5],[7, 9],[8, 8],[10, 8.5],[11, 8],[12, 7],[14, 5],[18, 6],[19, 2],[14, 1.5],[10, 3],[10, 10],[14, 12],[14.5, 11.5],[12, 10]];
 const EPS = 0.000001;
 
 describe('core.ts', () => {
 
   it('should be able to find the point on curve at t', () => {
-    let point = getPointAtT(0, points, 0.5);
-    compareNumArrays(point, [1, 18]);
+    let arr = getPointAtT(0, points, 0.5);
+    compareNumArrays(arr, [1, 18]);
 
-    point = getPointAtT(1, points, 0.5);
-    compareNumArrays(point, [12, 10]);
+    arr = getPointAtT(1, points, 0.5);
+    compareNumArrays(arr, [12, 10]);
 
-    point = getPointAtT(0.3, points, 0.5);
-    compareNumArrays(point, [7.387999, 8.64200]);
+    arr = getPointAtT(0.3, points, 0.5);
+    compareNumArrays(arr, [7.387999, 8.64200]);
 
-    point = getPointAtT(0.5, points, 0.5);
-    compareNumArrays(point, [12, 7]);
+    const point = getPointAtT(0.5, points, 0.5, new Point());
+    expect(point).to.be.instanceOf(Point);
+    expect(point.x).to.equal(12);
+    expect(point.y).to.equal(7);
+
   });
 
   it('should be able to find the tangent on curve at t', () => {

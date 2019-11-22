@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>BBox | curve-interpolator</title>
+	<title>&quot;interfaces&quot; | curve-interpolator</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,82 +56,122 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_core_.html">&quot;core&quot;</a>
-				</li>
-				<li>
-					<a href="_core_.bbox.html">BBox</a>
+					<a href="_interfaces_.html">&quot;interfaces&quot;</a>
 				</li>
 			</ul>
-			<h1>Interface BBox</h1>
+			<h1>External module &quot;interfaces&quot;</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-hierarchy">
-				<h3>Hierarchy</h3>
-				<ul class="tsd-hierarchy">
-					<li>
-						<span class="target">BBox</span>
-					</li>
-				</ul>
-			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Properties</h3>
+							<h3>Interfaces</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_core_.bbox.html#x1" class="tsd-kind-icon">x1</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_core_.bbox.html#x2" class="tsd-kind-icon">x2</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_core_.bbox.html#y1" class="tsd-kind-icon">y1</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_core_.bbox.html#y2" class="tsd-kind-icon">y2</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_interfaces_.bbox.html" class="tsd-kind-icon">BBox</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_interfaces_.bboxoptions.html" class="tsd-kind-icon">BBox<wbr>Options</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_interfaces_.lookupoptions.html" class="tsd-kind-icon">Lookup<wbr>Options</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_interfaces_.vectortype.html" class="tsd-kind-icon">Vector<wbr>Type</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Type aliases</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_interfaces_.html#pointfunction" class="tsd-kind-icon">Point<wbr>Function</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_interfaces_.html#vector" class="tsd-kind-icon">Vector</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="x1" class="tsd-anchor"></a>
-					<h3>x1</h3>
-					<div class="tsd-signature tsd-kind-icon">x1<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+				<h2>Type aliases</h2>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module">
+					<a name="pointfunction" class="tsd-anchor"></a>
+					<h3>Point<wbr>Function</h3>
+					<div class="tsd-signature tsd-kind-icon">Point<wbr>Function<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da75414/src/core.ts#L396">core.ts:396</a></li>
+							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/57e58ca/src/interfaces.ts#L10">interfaces.ts:10</a></li>
 						</ul>
 					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="x2" class="tsd-anchor"></a>
-					<h3>x2</h3>
-					<div class="tsd-signature tsd-kind-icon">x2<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da75414/src/core.ts#L398">core.ts:398</a></li>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Plugs point values into the derivative of the spline equation and return the result</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>interpolation time</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>curve tension</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>value of first control point</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>value of second control point</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>value of third control point</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>value of fourth control point</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias tsd-is-not-exported">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>t<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, tension<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, v0<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, idx<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>t: <span class="tsd-signature-type">number</span></h5>
+											</li>
+											<li>
+												<h5>tension: <span class="tsd-signature-type">number</span></h5>
+											</li>
+											<li>
+												<h5>v0: <span class="tsd-signature-type">number</span></h5>
+											</li>
+											<li>
+												<h5>v1: <span class="tsd-signature-type">number</span></h5>
+											</li>
+											<li>
+												<h5>v2: <span class="tsd-signature-type">number</span></h5>
+											</li>
+											<li>
+												<h5>v3: <span class="tsd-signature-type">number</span></h5>
+											</li>
+											<li>
+												<h5><span class="tsd-flag ts-flagOptional">Optional</span> idx: <span class="tsd-signature-type">number</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+									</li>
+								</ul>
+							</li>
 						</ul>
-					</aside>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="y1" class="tsd-anchor"></a>
-					<h3>y1</h3>
-					<div class="tsd-signature tsd-kind-icon">y1<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module">
+					<a name="vector" class="tsd-anchor"></a>
+					<h3>Vector</h3>
+					<div class="tsd-signature tsd-kind-icon">Vector<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_interfaces_.vectortype.html" class="tsd-signature-type">VectorType</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da75414/src/core.ts#L397">core.ts:397</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="y2" class="tsd-anchor"></a>
-					<h3>y2</h3>
-					<div class="tsd-signature tsd-kind-icon">y2<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da75414/src/core.ts#L399">core.ts:399</a></li>
+							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/57e58ca/src/interfaces.ts#L19">interfaces.ts:19</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -143,105 +183,48 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_core_.html">&quot;core&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_curve_interpolator_.html">&quot;curve-<wbr>interpolator&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_index_.html">&quot;index&quot;</a>
+					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_core_.html">&quot;core&quot;</a>
+						<a href="_interfaces_.html">&quot;interfaces&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_curve_interpolator_.html">&quot;curve-<wbr>interpolator&quot;</a>
+						<a href="_math_.html">&quot;math&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_index_.html">&quot;index&quot;</a>
+						<a href="_point_.html">&quot;point&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_math_.html">&quot;math&quot;</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_utils_.html">&quot;utils&quot;</a>
+						<a href="_utils_.html">&quot;utils&quot;</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_core_.bbox.html" class="tsd-kind-icon">BBox</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_core_.bbox.html#x1" class="tsd-kind-icon">x1</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_core_.bbox.html#x2" class="tsd-kind-icon">x2</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_core_.bbox.html#y1" class="tsd-kind-icon">y1</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_core_.bbox.html#y2" class="tsd-kind-icon">y2</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_core_.bboxoptions.html" class="tsd-kind-icon">BBox<wbr>Options</a>
+						<a href="../interfaces/_interfaces_.bbox.html" class="tsd-kind-icon">BBox</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_core_.lookupoptions.html" class="tsd-kind-icon">Lookup<wbr>Options</a>
+						<a href="../interfaces/_interfaces_.bboxoptions.html" class="tsd-kind-icon">BBox<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_core_.html#angelslookup" class="tsd-kind-icon">angels<wbr>Lookup</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_interfaces_.lookupoptions.html" class="tsd-kind-icon">Lookup<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_core_.html#getangleatt" class="tsd-kind-icon">get<wbr>Angle<wbr>AtT</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_interfaces_.vectortype.html" class="tsd-kind-icon">Vector<wbr>Type</a>
 					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_core_.html#getangleatu" class="tsd-kind-icon">get<wbr>Angle<wbr>AtU</a>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="_interfaces_.html#pointfunction" class="tsd-kind-icon">Point<wbr>Function</a>
 					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_core_.html#getarclengths" class="tsd-kind-icon">get<wbr>Arc<wbr>Lengths</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_core_.html#getboundingbox" class="tsd-kind-icon">get<wbr>Bounding<wbr>Box</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_core_.html#getnormalatt" class="tsd-kind-icon">get<wbr>Normal<wbr>AtT</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_core_.html#getnormalatu" class="tsd-kind-icon">get<wbr>Normal<wbr>AtU</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_core_.html#getpointatt" class="tsd-kind-icon">get<wbr>Point<wbr>AtT</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_core_.html#getpointatu" class="tsd-kind-icon">get<wbr>Point<wbr>AtU</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_core_.html#gettatvalue" class="tsd-kind-icon">getTAt<wbr>Value</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_core_.html#gettangentatt" class="tsd-kind-icon">get<wbr>Tangent<wbr>AtT</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_core_.html#gettangentatu" class="tsd-kind-icon">get<wbr>Tangent<wbr>AtU</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_core_.html#getttoumapping" class="tsd-kind-icon">get<wbr>Tto<wbr>Umapping</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_core_.html#getutotmapping" class="tsd-kind-icon">get<wbr>Uto<wbr>Tmapping</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_core_.html#lengthslookup" class="tsd-kind-icon">lengths<wbr>Lookup</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_core_.html#normalslookup" class="tsd-kind-icon">normals<wbr>Lookup</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_core_.html#tangentslookup" class="tsd-kind-icon">tangents<wbr>Lookup</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_core_.html#valueslookup" class="tsd-kind-icon">values<wbr>Lookup</a>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="_interfaces_.html#vector" class="tsd-kind-icon">Vector</a>
 					</li>
 				</ul>
 			</nav>
