@@ -10,10 +10,10 @@ npm install --save curve-interpolator
 Reference the CurveInterpolator class:
 ```js
 // commonjs
-const CurveInterpolator = require('curve-interpolator');
+const CurveInterpolator = require('curve-interpolator').CurveInterpolator;
 
 // es6
-import CurveInterpolator from 'curve-interpolator';
+import { CurveInterpolator } from 'curve-interpolator';
 
 ```
 
