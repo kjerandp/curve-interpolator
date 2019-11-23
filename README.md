@@ -56,6 +56,9 @@ const xintersects = interp.x(position, max);
 const bbox = interp.getBoundingBox();
 ```
 
+Online example on ObservableHQ:
+https://observablehq.com/@kjerandp/curve-interpolator-v1
+
 ## Docs
 Docs are generated using typedoc in `./docs`. To create:
 ```bash
