@@ -61,7 +61,7 @@ Docs are generated using typedoc in `./docs`. To create:
 ```bash
 npm run docs
 ```
-
+Online: https://kjerandp.github.io/curve-interpolator/
 
 ## License
 MIT
