@@ -3,10 +3,10 @@
 A lib for interpolating values over a cubic Cardinal/Catmull-Rom spline curve.
 
 ## Installation
-```
+```bash
 npm install --save curve-interpolator
 ```
-## Usage
+## Basic usage
 Reference the CurveInterpolator class:
 ```js
 // commonjs
@@ -31,8 +31,37 @@ const points = [
   ...
 ];
 
-const interp = new CurveInterpolator(points);
+const tension = 0.2;
+const interp = new CurveInterpolator(points, tension);
+
+// get single point
+const position = 0.3 // [0 - 1]
+const pt = interp.getPointAt(position)
+
+// get points evently distributed along the curve
+const nPoints = 1000;
+const pts = interp.getPoints(nPoints - 1);
+
+// lookup values along x and y axises
+const yintersects = interp.y(position);
+
+/*
+max number of solutions (0 = all (default), 1 = first, -1 = last)
+A negative max value counts solutions from end of curve
+*/
+const max = -1;
+const xintersects = interp.x(position, max);
+
+// get bounding box
+const bbox = interp.getBoundingBox();
 ```
+
+## Docs
+Docs are generated using typedoc in `./docs`. To create:
+```bash
+npm run docs
+```
+
 
 ## License
 MIT

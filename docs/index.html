@@ -71,9 +71,9 @@
 				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
 					<h2>Installation</h2>
 				</a>
-				<pre><code>npm install --<span class="hljs-keyword">save</span> <span class="hljs-built_in">curve</span>-interpolator</code></pre>
-				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
-					<h2>Usage</h2>
+				<pre><code class="language-bash">npm install --save curve-interpolator</code></pre>
+				<a href="#basic-usage" id="basic-usage" style="color: inherit; text-decoration: none;">
+					<h2>Basic usage</h2>
 				</a>
 				<p>Reference the CurveInterpolator class:</p>
 				<pre><code class="language-js"><span class="hljs-comment">// commonjs</span>
@@ -94,7 +94,34 @@
   ...
 ];
 
-<span class="hljs-keyword">const</span> interp = <span class="hljs-keyword">new</span> CurveInterpolator(points);</code></pre>
+<span class="hljs-keyword">const</span> tension = <span class="hljs-number">0.2</span>;
+<span class="hljs-keyword">const</span> interp = <span class="hljs-keyword">new</span> CurveInterpolator(points, tension);
+
+<span class="hljs-comment">// get single point</span>
+<span class="hljs-keyword">const</span> position = <span class="hljs-number">0.3</span> <span class="hljs-comment">// [0 - 1]</span>
+<span class="hljs-keyword">const</span> pt = interp.getPointAt(position)
+
+<span class="hljs-comment">// get points evently distributed along the curve</span>
+<span class="hljs-keyword">const</span> nPoints = <span class="hljs-number">1000</span>;
+<span class="hljs-keyword">const</span> pts = interp.getPoints(nPoints - <span class="hljs-number">1</span>);
+
+<span class="hljs-comment">// lookup values along x and y axises</span>
+<span class="hljs-keyword">const</span> yintersects = interp.y(position);
+
+<span class="hljs-comment">/*
+max number of solutions (0 = all (default), 1 = first, -1 = last)
+A negative max value counts solutions from end of curve
+*/</span>
+<span class="hljs-keyword">const</span> max = <span class="hljs-number">-1</span>;
+<span class="hljs-keyword">const</span> xintersects = interp.x(position, max);
+
+<span class="hljs-comment">// get bounding box</span>
+<span class="hljs-keyword">const</span> bbox = interp.getBoundingBox();</code></pre>
+				<a href="#docs" id="docs" style="color: inherit; text-decoration: none;">
+					<h2>Docs</h2>
+				</a>
+				<p>Docs are generated using typedoc in <code>./docs</code>. To create:</p>
+				<pre><code class="language-bash">npm run docs</code></pre>
 				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
 					<h2>License</h2>
 				</a>

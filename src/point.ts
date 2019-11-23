@@ -1,3 +1,8 @@
+/**
+ * Sample class that may be used as Return type.
+ * @example interp.getPointAt(0.2, new Point());
+ * @example interp.getPoints(1000, Point);
+ */
 export default class Point {
   x: number;
   y: number;

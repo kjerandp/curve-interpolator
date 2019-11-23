@@ -44,7 +44,13 @@ export default class CurveInterpolator {
   _arcDivisions: number;
   _cache: { arcLengths: number[]; };
 
-  constructor(points, tension = 0.5, arcDivisions = 300) {
+  /**
+   * Create a new interpolator instance
+   * @param points control points
+   * @param tension curve tension (0 = Catmull-Rom, 1 = linear)
+   * @param arcDivisions number of segments used to estimate curve length
+   */
+  constructor(points:Vector[], tension = 0.5, arcDivisions = 300) {
     this._cache = {
       arcLengths: undefined,
     };
@@ -65,12 +71,22 @@ export default class CurveInterpolator {
     );
   }
 
+  /**
+   * Interpolate a point at the given position.
+   * @param position position on curve (0 - 1)
+   * @param target optional target
+   */
   getPointAt<T extends VectorType>(position:number, target: T) : T
   getPointAt(position:number) : Vector
   getPointAt(position:number, target?:VectorType) : Vector {
     return getPointAtT(this.getT(position), this.points, this.tension, target);
   }
 
+  /**
+   * Get the tangent at the given position.
+   * @param position position on curve (0 - 1)
+   * @param target optional target
+   */
   getTangentAt<T extends VectorType>(position:number, target: T) : T
   getTangentAt(position: number) : Vector
   getTangentAt(position: number, target:Vector = null) : Vector {
@@ -83,6 +99,11 @@ export default class CurveInterpolator {
     return normalize(tan);
   }
 
+  /**
+   * Get the normal at the given position.
+   * @param position position on curve (0 - 1)
+   * @param target optional target
+   */
   getNormalAt<T extends VectorType>(position:number, target: T) : T
   getNormalAt(position: number) : Vector
   getNormalAt(position:number, target?:Vector) : Vector {
@@ -95,6 +116,11 @@ export default class CurveInterpolator {
     return normalize(nrm);
   }
 
+  /**
+   * Get the angle (in radians) at the given position.
+   * @param position position on curve (0 - 1)
+   * @param target optional target
+   */
   getAngleAt(position:number) : number {
     const angle = getAngleAtT(
       this.getT(position),
@@ -104,6 +130,12 @@ export default class CurveInterpolator {
     return angle;
   }
 
+  /**
+   * Get a bounding box for the curve or the segment given by the
+   * from and to parameters
+   * @param from position from
+   * @param to position to
+   */
   getBoundingBox(from:number = 0, to:number = 1) : BBox {
     return getBoundingBox(
       this.points,
@@ -116,6 +148,13 @@ export default class CurveInterpolator {
     );
   }
 
+  /**
+   * Get uniformaly sampled points along the curve. Returns samples + 1 points.
+   * @param samples number of samples (segments)
+   * @param returnType optional return type
+   * @param from start at position
+   * @param to end at position
+   */
   getPoints<T extends VectorType>(samples:number, returnType: { new() : T }) : T[]
   getPoints<T extends VectorType>(samples:number, returnType: { new() : T }, from:number) : T[]
   getPoints<T extends VectorType>(samples:number, returnType: { new() : T }, from:number, to:number) : T[]
@@ -134,6 +173,12 @@ export default class CurveInterpolator {
     return pts;
   }
 
+  /**
+   * Find at which value(s) of x the curve is intersected by the given value
+   * along the y-axis
+   * @param y value at y-axis
+   * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
+   */
   x(y:number, max:number = 0) : number[] | number {
     const matches = valuesLookup(
       y,
@@ -149,6 +194,12 @@ export default class CurveInterpolator {
     return Math.abs(max) === 1 ? matches[0] : matches;
   }
 
+  /**
+   * Find at which value(s) of y the curve is intersected by the given value
+   * along the x-axis
+   * @param x value at x-axis
+   * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
+   */
   y(x: number, max:number = 0) : number[] | number {
     const matches = valuesLookup(
       x,

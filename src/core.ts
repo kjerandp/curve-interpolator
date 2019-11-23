@@ -18,8 +18,6 @@ import {
   VectorType,
 } from './interfaces';
 
-
-
 /**
  * Find the point on the curve at time t, where t is a number between 0 and 1.
  * Note that splines (curve segements) may have different lengths, thus t will
@@ -213,13 +211,13 @@ export function getTtoUmapping(t: number, arcLengths: number[]): number {
 }
 
 /**
- *
- * @param lookup
- * @param tension
- * @param v0
- * @param v1
- * @param v2
- * @param v3
+ * Gets and solves the cubic spline equation for t
+ * @param lookup target lookup value
+ * @param tension curve tension
+ * @param v0 axis value of control point 0
+ * @param v1 axis value of control point 1
+ * @param v2 axis value of control point 2
+ * @param v3 axis value of control point 3
  */
 export function getTAtValue(lookup: number, tension: number, v0: number, v1: number, v2: number, v3: number): number[] {
   const [a, b, c, d] = getCoefficients(v0, v1, v2, v3, lookup, tension);
@@ -231,10 +229,10 @@ export function getTAtValue(lookup: number, tension: number, v0: number, v1: num
 }
 
 /**
- *
- * @param lookup
- * @param points
- * @param options
+ * Looks up values intersecting the curve at either the x-axis or y-axis.
+ * @param lookup lookup value along the axis
+ * @param points control points
+ * @param options lookup options to control axis, tension, max solutions etc.
  */
 export function valuesLookup(lookup: number, points: Vector[], options?: LookupOptions): Vector[] | number[] {
 
@@ -295,10 +293,10 @@ export function valuesLookup(lookup: number, points: Vector[], options?: LookupO
 }
 
 /**
- *
- * @param lookup
- * @param points
- * @param options
+ * Lookup tangents at the intersection points formed by a value along the x-axis or y-axis.
+ * @param lookup lookup value along the axis
+ * @param points control points
+ * @param options lookup options to control axis, tension, max solutions etc.
  */
 export function tangentsLookup(lookup: number, points: Vector[], options?: LookupOptions): Vector[] {
   return valuesLookup(lookup, points, {
@@ -309,10 +307,10 @@ export function tangentsLookup(lookup: number, points: Vector[], options?: Looku
 }
 
 /**
- *
- * @param lookup
- * @param points
- * @param options
+ * Lookup normals at the intersection points formed by a value along the x-axis or y-axis.
+ * @param lookup lookup value along the axis
+ * @param points control points
+ * @param options lookup options to control axis, tension, max solutions etc.
  */
 export function normalsLookup(lookup: number, points: Vector[], options?: LookupOptions): Vector[] {
   const tans = tangentsLookup(lookup, points, options);
@@ -320,10 +318,10 @@ export function normalsLookup(lookup: number, points: Vector[], options?: Lookup
 }
 
 /**
- *
- * @param lookup
- * @param points
- * @param options
+ * Lookup angles at the intersection points formed by a value along the x-axis or y-axis.
+ * @param lookup lookup value along the axis
+ * @param points control points
+ * @param options lookup options to control axis, tension, max solutions etc.
  */
 export function anglesLookup(lookup: number, points: Vector[], options?: LookupOptions): number[] {
   const tans = tangentsLookup(lookup, points, options);

@@ -9,6 +9,10 @@
 */
 export type PointFunction = (t: number, tension: number, v0: number, v1: number, v2: number, v3: number, idx?: number) => number;
 
+/**
+ * Any objects that supports indexing values by number may be used as input or return types.
+ * See the Point class for an example.
+ */
 export interface VectorType {
   0: number,
   1: number,
@@ -16,8 +20,14 @@ export interface VectorType {
   y?: number,
 }
 
+/**
+ * Either a number array or an object implementing the VectorType interface
+ */
 export type Vector = (number[] | VectorType);
 
+/**
+ * Used by the valuesLookup function to set axis, tension etc.
+ */
 export interface LookupOptions {
   axis?: number,
   tension?: number,
@@ -27,6 +37,9 @@ export interface LookupOptions {
   processXY?: boolean,
 }
 
+/**
+ * Bounding box interface
+ */
 export interface BBox {
   x1: number,
   y1: number,
@@ -34,6 +47,9 @@ export interface BBox {
   y2: number,
 }
 
+/**
+ * Options to control calculation of bounding box
+ */
 export interface BBoxOptions {
   tension?: number,
   from?: number,
