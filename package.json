@@ -28,7 +28,7 @@
     "test:watch": "mocha -r ts-node/register test/**/*.spec.ts --reporter min --watch --watch-extensions ts",
     "predocs": "rimraf docs",
     "docs": "typedoc --out docs src --module es6",
-    "postdocs": "copyfiles images/* docs && copyfiles .nojekyll docs"
+    "postdocs": "copyfiles _config.yml docs"
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
