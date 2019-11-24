@@ -77,10 +77,10 @@
 				</a>
 				<p>Reference the CurveInterpolator class:</p>
 				<pre><code class="language-js"><span class="hljs-comment">// commonjs</span>
-<span class="hljs-keyword">const</span> CurveInterpolator = <span class="hljs-built_in">require</span>(<span class="hljs-string">'curve-interpolator'</span>);
+<span class="hljs-keyword">const</span> CurveInterpolator = <span class="hljs-built_in">require</span>(<span class="hljs-string">'curve-interpolator'</span>).CurveInterpolator;
 
 <span class="hljs-comment">// es6</span>
-<span class="hljs-keyword">import</span> CurveInterpolator <span class="hljs-keyword">from</span> <span class="hljs-string">'curve-interpolator'</span>;
+<span class="hljs-keyword">import</span> { CurveInterpolator } <span class="hljs-keyword">from</span> <span class="hljs-string">'curve-interpolator'</span>;
 </code></pre>
 				<p>Define controlpoints you want the curve to pass through and pass it to the constructor of the CurveInterpolator to create an instance:</p>
 				<pre><code class="language-js"><span class="hljs-keyword">const</span> points = [

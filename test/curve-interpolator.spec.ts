@@ -64,6 +64,19 @@ describe('curve-interpolator.ts', () => {
     result.every(r => expect(r).to.be.instanceof(Point));
   });
 
+  it('should be able to get bounds of curve', () => {
+    const interp = new CurveInterpolator(points, 0);
 
+    const bbox = interp.getBoundingBox();
+    expect(bbox.x1).to.eq(1);
+    expect(bbox.x2).to.be.approximately(19.2422599, EPS);
+    expect(bbox.y1).to.be.approximately(1.3872035, EPS);
+    expect(bbox.y2).to.eq(18);
+
+    expect(interp.minX).to.be.eq(bbox.x1);
+    expect(interp.maxX).to.be.eq(bbox.x2);
+    expect(interp.minY).to.be.eq(bbox.y1);
+    expect(interp.maxY).to.be.eq(bbox.y2);
+  });
 });
 

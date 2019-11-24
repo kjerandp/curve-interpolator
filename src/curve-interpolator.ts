@@ -42,7 +42,7 @@ export default class CurveInterpolator {
   _points: Vector[];
   _tension: number;
   _arcDivisions: number;
-  _cache: { arcLengths: number[]; };
+  _cache: { arcLengths: number[], bbox: BBox; };
 
   /**
    * Create a new interpolator instance
@@ -53,6 +53,7 @@ export default class CurveInterpolator {
   constructor(points:Vector[], tension = 0.5, arcDivisions = 300) {
     this._cache = {
       arcLengths: undefined,
+      bbox: undefined,
     };
     this.tension = tension;
     this.arcDivisions = arcDivisions;
@@ -137,7 +138,11 @@ export default class CurveInterpolator {
    * @param to position to
    */
   getBoundingBox(from:number = 0, to:number = 1) : BBox {
-    return getBoundingBox(
+    if (from === 0 && to === 1 && this._cache.bbox) {
+      return this._cache.bbox;
+    }
+
+    const bbox = getBoundingBox(
       this.points,
       {
         tension: this.tension,
@@ -146,6 +151,9 @@ export default class CurveInterpolator {
         arcLengths: this.arcLengths,
       },
     );
+    if (from === 0 && to === 1) this._cache.bbox = bbox;
+
+    return bbox;
   }
 
   /**
@@ -231,6 +239,26 @@ export default class CurveInterpolator {
   get length() {
     const lengths = this.arcLengths;
     return lengths[lengths.length - 1];
+  }
+
+  get minX() {
+    const bbox = this.getBoundingBox();
+    return bbox.x1;
+  }
+
+  get maxX() {
+    const bbox = this.getBoundingBox();
+    return bbox.x2;
+  }
+
+  get minY() {
+    const bbox = this.getBoundingBox();
+    return bbox.y1;
+  }
+
+  get maxY() {
+    const bbox = this.getBoundingBox();
+    return bbox.y2;
   }
 
   set points(pts:Vector[]) {
