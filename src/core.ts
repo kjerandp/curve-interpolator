@@ -381,7 +381,7 @@ export function getBoundingBox(points: Vector[], options: BBoxOptions = {}): BBo
       const xroots = getQuadRoots(3 * ax, 2 * bx, cx);
       const yroots = getQuadRoots(3 * ay, 2 * by, cy);
 
-      const valid = t => t >= 0 && t <= 1 && (i - 1 !== i0 || t > w0) && (i !== i1 || t < w1);
+      const valid = t => t > -EPS && t <= 1 + EPS && (i - 1 !== i0 || t > w0) && (i !== i1 || t < w1);
 
       xroots.filter(valid).forEach(t => {
         const x = solveForT(t, tension, p0[0], p1[0], p2[0], p3[0]);

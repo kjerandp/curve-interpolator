@@ -77,6 +77,27 @@ describe('curve-interpolator.ts', () => {
     expect(interp.maxX).to.be.eq(bbox.x2);
     expect(interp.minY).to.be.eq(bbox.y1);
     expect(interp.maxY).to.be.eq(bbox.y2);
+
+    expect(interp.x(interp.maxY, 1)).to.be.approximately(1, EPS);
+    expect(interp.x(interp.minY, 1)).to.be.approximately(16.054653, EPS);
+    expect(interp.y(interp.maxX, 1)).to.be.approximately(2.8918343, EPS);
+    expect(interp.y(interp.minX, 1)).to.be.approximately(18, EPS);
+  });
+
+  it('should clear cache if new points, tension or arcDivisions are set', () => {
+    const interp = new CurveInterpolator(points, 0);
+
+    expect(Object.keys(interp._cache).length).to.eq(0);
+    interp.getPoints(100, Point);
+    expect(interp._cache.arcLengths).to.not.be.undefined;
+    expect(interp._cache.bbox).to.be.undefined;
+    interp.maxX;
+    expect(interp._cache.bbox).to.not.be.undefined;
+    interp.tension = 0; // value not changed
+    expect(Object.keys(interp._cache).length).to.eq(2);
+    interp.tension = 0.5;
+    expect(Object.keys(interp._cache).length).to.eq(0);
+
   });
 });
 

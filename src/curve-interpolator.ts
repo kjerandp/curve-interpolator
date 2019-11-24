@@ -34,6 +34,7 @@ function extrapolateArgs(args:Vector[]) : Vector[] {
   return args;
 }
 
+
 /**
  * Cubic curve interpolator
  */
@@ -42,7 +43,7 @@ export default class CurveInterpolator {
   _points: Vector[];
   _tension: number;
   _arcDivisions: number;
-  _cache: { arcLengths: number[], bbox: BBox; };
+  _cache: { arcLengths?: number[], bbox?: BBox; };
 
   /**
    * Create a new interpolator instance
@@ -51,10 +52,7 @@ export default class CurveInterpolator {
    * @param arcDivisions number of segments used to estimate curve length
    */
   constructor(points:Vector[], tension = 0.5, arcDivisions = 300) {
-    this._cache = {
-      arcLengths: undefined,
-      bbox: undefined,
-    };
+    this._cache = {};
     this.tension = tension;
     this.arcDivisions = arcDivisions;
     this.points = points;
@@ -223,6 +221,16 @@ export default class CurveInterpolator {
     return Math.abs(max) === 1 ? matches[0] : matches;
   }
 
+  /**
+   * Invalidates/clears cache
+   */
+  invalidateCache() {
+    Object.keys(this._cache).forEach(key => {
+      delete this._cache[key];
+    });
+    return this;
+  }
+
   get points() { return this._points; }
   get tension() { return this._tension; }
   get arcDivisions() { return this._arcDivisions; }
@@ -265,19 +273,20 @@ export default class CurveInterpolator {
     if (pts.length > 0 && pts.length < 4) {
       pts = extrapolateArgs(pts);
     }
+    this.invalidateCache();
     this._points = pts;
   }
 
   set tension(t:number) {
     if (t !== this._tension) {
+      this.invalidateCache();
       this._tension = t;
-      delete this._cache.arcLengths;
     }
   }
   set arcDivisions(n:number) {
     if (n !== this._arcDivisions) {
       this._arcDivisions = n;
-      delete this._cache.arcLengths;
+      this.invalidateCache();
     }
     this._arcDivisions = n;
   }
