@@ -185,7 +185,7 @@ export default class CurveInterpolator {
    * @param y value at y-axis
    * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
    */
-  x(y:number, max:number = 0) : number[] | number {
+  x(y:number, max:number = 0, margin:number = this._lmargin) : number[] | number {
     const matches = valuesLookup(
       y,
       this.points,
@@ -193,7 +193,7 @@ export default class CurveInterpolator {
         axis: 1,
         tension: this.tension,
         max,
-        margin: this._lmargin,
+        margin,
       },
     ) as number[];
 
@@ -206,7 +206,7 @@ export default class CurveInterpolator {
    * @param x value at x-axis
    * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
    */
-  y(x: number, max:number = 0) : number[] | number {
+  y(x: number, max:number = 0, margin:number = this._lmargin) : number[] | number {
     const matches = valuesLookup(
       x,
       this.points,
@@ -214,7 +214,7 @@ export default class CurveInterpolator {
         axis: 0,
         tension: this.tension,
         max,
-        margin: this._lmargin,
+        margin,
       },
     ) as number[];
 
