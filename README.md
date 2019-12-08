@@ -1,3 +1,5 @@
+![](https://github.com/kjerandp/curve-interpolator/workflows/Node%20CI/badge.svg)
+![](https://img.shields.io/npm/v/curve-interpolator)
 # Curve Interpolator
 
 A lib for interpolating values over a cubic Cardinal/Catmull-Rom spline curve.
