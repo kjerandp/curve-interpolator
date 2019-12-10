@@ -1,0 +1,5 @@
+{
+  "mode": "file",
+  "excludeNotExported": false,
+  "excludePrivate": false
+}
