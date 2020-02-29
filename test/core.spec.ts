@@ -2,9 +2,8 @@ import 'mocha';
 import { expect } from 'chai';
 import {
   compareNumArrays,
-  // compareNumArraysUnordered,
 } from './test-utils';
-import { points } from './test-data';
+import { points, points3d } from './test-data';
 import {
   getPointAtT,
   getTangentAtT,
@@ -35,6 +34,24 @@ describe('core.ts', () => {
     expect(point.x).to.equal(12);
     expect(point.y).to.equal(7);
 
+  });
+
+  it('should be able to find the point on a 3d curve at t', () => {
+    let arr = getPointAtT(0, points3d, 0.5);
+    compareNumArrays(arr, [1, 0, 1]);
+
+    arr = getPointAtT(1, points3d, 0.5);
+    compareNumArrays(arr, [10, -4.8, 10]);
+
+    arr = getPointAtT(0.3, points3d, 0.5);
+    compareNumArrays(arr, [1.0074, -2.06175, 1.96525]);
+
+    const point = getPointAtT(0.5, points3d, 0.5, new Point());
+    // 1.35625, -4.03125, 2.984375
+    expect(point).to.be.instanceOf(Point);
+    expect(point.x).to.equal(1.35625);
+    expect(point.y).to.equal(-4.03125);
+    expect(point.z).to.equal(2.984375);
   });
 
   it('should be able to find the tangent on curve at t', () => {
@@ -85,6 +102,14 @@ describe('core.ts', () => {
     expect(arcLengths.length).to.equal(11);
     expect(arcLengths[0]).to.equal(0);
     expect(arcLengths[10]).to.be.approximately(48.44474, EPS);
+  });
+
+  it('should be able to divide a 3d curve into segments and estimate each segments length', () => {
+    const arcLengths = getArcLengths(points3d, 10, 0);
+
+    expect(arcLengths.length).to.equal(11);
+    expect(arcLengths[0]).to.equal(0);
+    expect(arcLengths[10]).to.be.approximately(22.9961309, EPS);
   });
 
   it('should be able to map between t and u indexes', () => {

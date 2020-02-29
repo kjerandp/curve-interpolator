@@ -176,6 +176,8 @@ describe('math.ts', () => {
 
     result = orthogonal([2, 2]);
     expect(result).to.eql([-2, 2]);
+
+    expect(() => orthogonal([1, 2, 3])).to.throw('Only supported for 2d vectors');
   });
 
   it('should be able to clamp values', () => {
