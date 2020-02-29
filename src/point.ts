@@ -6,10 +6,12 @@
 export default class Point {
   x: number;
   y: number;
+  z?: number;
 
-  constructor(x:number = 0, y:number = 0) {
+  constructor(x:number = 0, y:number = 0, z:number = null) {
     this.x = x;
     this.y = y;
+    this.z = z;
   }
 
   get 0() {
@@ -26,5 +28,17 @@ export default class Point {
 
   set 1(y:number) {
     this.y = y;
+  }
+
+  get 2() {
+    return this.z;
+  }
+
+  set 2(z:number) {
+    this.z = z;
+  }
+
+  get length() : number {
+    return Number.isFinite(this.z) ? 3 : 2;
   }
 }

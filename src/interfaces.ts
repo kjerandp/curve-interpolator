@@ -16,8 +16,11 @@ export type PointFunction = (t: number, tension: number, v0: number, v1: number,
 export interface VectorType {
   0: number,
   1: number,
+  2: number,
   x?: number,
   y?: number,
+  z?: number,
+  length: number,
 }
 
 /**

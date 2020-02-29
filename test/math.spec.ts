@@ -133,6 +133,12 @@ describe('math.ts', () => {
 
     result = distance([2, 1], [2, 1]);
     expect(result).to.equal(0);
+
+    result = distance([2, 1, -3], [2, 1, 8]);
+    expect(result).to.equal(11);
+
+    result = distance([0, 0, 0], [2, 1, 2]);
+    expect(result).to.equal(3);
   });
 
   it('should be able to normalize vectors', () => {
@@ -150,6 +156,18 @@ describe('math.ts', () => {
 
     result = normalize([-2, 4]);
     compareNumArrays(result, [-0.447213, 0.89442719]);
+
+    result = normalize([0, 0, 0]);
+    expect(result).to.eql([0, 0, 0]);
+
+    result = normalize([3, 0, 0]);
+    expect(result).to.be.eql([1, 0, 0]);
+
+    result = normalize([2, 2, 1]);
+    compareNumArrays(result, [2/3, 2/3, 1/3]);
+
+    result = normalize([-2, 2, 5]);
+    compareNumArrays(result, [-0.3481553119, 0.3481553119, 0.87038828]);
   });
 
   it('should be able to rotate vectors 90 degrees', () => {

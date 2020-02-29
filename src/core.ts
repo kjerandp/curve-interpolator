@@ -43,15 +43,11 @@ export function getPointAtT(t: number, points: Vector[], tension?: number, targe
   const p2 = points[idx > points.length - 2 ? points.length - 1 : idx + 1];
   const p3 = points[idx > points.length - 3 ? points.length - 1 : idx + 2];
 
-  const x = func(weight, tension, p0[0], p1[0], p2[0], p3[0]);
-  const y = func(weight, tension, p0[1], p1[1], p2[1], p3[1]);
-
-  if (target) {
-    target[0] = x;
-    target[1] = y;
-    return target;
+  target = target || new Array(p0.length);
+  for (let i = 0; i < p0.length; i++) {
+    target[i] = func(weight, tension, p0[i], p1[i], p2[i], p3[i]);
   }
-  return [x, y];
+  return target;
 }
 
 /**
