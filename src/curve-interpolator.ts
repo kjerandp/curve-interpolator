@@ -187,12 +187,12 @@ export default class CurveInterpolator {
    * @param axis index of axis [0=x, 1=y, 2=z ...]
    * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
    */
-  lookup(v:number, max:number = 0, axis:number = 0, margin:number = this._lmargin) : Vector[] | Vector {
+  lookup(v:number, axis:number = 0, max:number = 0, margin:number = this._lmargin) : Vector[] | Vector {
     const matches = valuesLookup(
       v,
       this.points,
       {
-        axis: 1,
+        axis,
         tension: this.tension,
         max,
         margin,
