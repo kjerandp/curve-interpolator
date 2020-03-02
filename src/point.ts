@@ -7,11 +7,13 @@ export default class Point {
   x: number;
   y: number;
   z?: number;
+  w?: number;
 
-  constructor(x:number = 0, y:number = 0, z:number = null) {
+  constructor(x:number = 0, y:number = 0, z:number = null, w:number = null) {
     this.x = x;
     this.y = y;
     this.z = z;
+    this.w = w;
   }
 
   get 0() {
@@ -38,7 +40,15 @@ export default class Point {
     this.z = z;
   }
 
+  get 3() {
+    return this.w;
+  }
+
+  set 3(w:number) {
+    this.w = w;
+  }
+
   get length() : number {
-    return Number.isFinite(this.z) ? 3 : 2;
+    return Number.isFinite(this.w) ? 4 : Number.isFinite(this.z) ? 3 : 2;
   }
 }

@@ -16,10 +16,12 @@ export type PointFunction = (t: number, tension: number, v0: number, v1: number,
 export interface VectorType {
   0: number,
   1: number,
-  2: number,
+  2?: number,
+  3?: number,
   x?: number,
   y?: number,
   z?: number,
+  w?: number,
   length: number,
 }
 
@@ -37,17 +39,15 @@ export interface LookupOptions {
   margin?: number,
   max?: number,
   func?: PointFunction,
-  processXY?: boolean,
+  processRefAxis?: boolean,
 }
 
 /**
  * Bounding box interface
  */
 export interface BBox {
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number,
+  min: Vector,
+  max: Vector,
 }
 
 /**

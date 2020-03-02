@@ -74,6 +74,7 @@ export function getTangentAtT(t: number, points: Vector[], tension: number = 0.5
 }
 
 /**
+ * @deprecated This is only valid for 2d curves. Use the tangent function instead.
  * Find the normal on the curve at time t, where t is a number between 0 and 1.
  * Note that splines (curve segements) may have different lengths, thus t will
  * not be evenly distributed.
@@ -93,6 +94,7 @@ export function getNormalAtT(t: number, points: Vector[], tension: number = 0.5,
 }
 
 /**
+ * @deprecated This is only valid for 2d curves. Use the tangent function instead.
  * Find the angle in radians on the curve at time t, where t is a number between 0 and 1.
  * Note that splines (curve segements) may have different lengths, thus t will
  * not be evenly distributed.
@@ -230,24 +232,22 @@ export function getTAtValue(lookup: number, tension: number, v0: number, v1: num
  * @param points control points
  * @param options lookup options to control axis, tension, max solutions etc.
  */
-export function valuesLookup(lookup: number, points: Vector[], options?: LookupOptions): Vector[] | number[] {
+export function valuesLookup(lookup: number, points: Vector[], options?: LookupOptions): Vector[] {
 
-  const { func, axis, tension, margin, max, processXY } = {
+  const { func, axis, tension, margin, max, processRefAxis } = {
     axis: 0,
     tension: 0.5,
     margin: 0.5,
     max: 0,
-    processXY: false,
+    processRefAxis: false,
     func: solveForT,
     ...options,
   };
 
   const k = axis;
-  const l = k ? 0 : 1;
+  const solutions = [];
 
-  const solutions = new Set<(any)>();
-
-  for (let i = 1; i < points.length; i++) {
+  for (let i = 1; i < points.length; i+=1) {
     const idx = max < 0 ? points.length - i : i;
 
     const p1 = points[idx - 1];
@@ -270,22 +270,26 @@ export function valuesLookup(lookup: number, points: Vector[], options?: LookupO
       // sort on t to solve in order of curve length if max != 0
       if (max < 0) ts.sort((a, b) => b - a);
       else if (max >= 0) ts.sort((a, b) => a - b);
-
       for (let j = 0; j < ts.length; j++) {
-        const v = func(ts[j], tension, p0[l], p1[l], p2[l], p3[l], idx - 1);
-        if (processXY) {
-          const av = func(ts[j], tension, p0[k], p1[k], p2[k], p3[k], idx - 1);
-          const pt = axis === 0 ? [av, v] : [v, av];
-          solutions.add(pt);
-        } else {
-          solutions.add(v);
+        if (ts[j] === 0 && i > 0) continue; // avoid duplicate
+        const coord = [];
+        for (let c = 0; c < p0.length; c++) {
+          let v;
+          if (c !== k || processRefAxis) {
+            v = func(ts[j], tension, p0[c], p1[c], p2[c], p3[c], idx - 1);
+          } else {
+            v = lookup;
+          }
+          coord[c] = v;
         }
-        if (solutions.size === Math.abs(max)) return Array.from(solutions);
+        solutions.push(coord);
+
+        if (solutions.length === Math.abs(max)) return solutions;
       }
     }
   }
 
-  return Array.from(solutions);
+  return solutions;
 }
 
 /**
@@ -298,7 +302,7 @@ export function tangentsLookup(lookup: number, points: Vector[], options?: Looku
   return valuesLookup(lookup, points, {
     ...options,
     func: getDerivativeOfT,
-    processXY: true,
+    processRefAxis: true,
   }) as Vector[];
 }
 
@@ -350,20 +354,23 @@ export function getBoundingBox(points: Vector[], options: BBoxOptions = {}): BBo
   const start = getPointAtT(t0, points, tension);
   const end = getPointAtT(t1, points, tension);
 
-  let x1 = Math.min(start[0], end[0]);
-  let x2 = Math.max(start[0], end[0]);
-  let y1 = Math.min(start[1], end[1]);
-  let y2 = Math.max(start[1], end[1]);
+  const min = [];
+  const max = [];
+
+  for (let c = 0; c < start.length; c++) {
+    min[c] = Math.min(start[c], end[c]);
+    max[c] = Math.max(start[c], end[c]);
+  }
 
   for (let i = i0 + 1; i <= i1; i++) {
     const p1 = points[i - 1];
     const p2 = points[i];
 
     if (i < i1) {
-      if (p2[0] < x1) x1 = p2[0];
-      if (p2[0] > x2) x2 = p2[0];
-      if (p2[1] < y1) y1 = p2[1];
-      if (p2[1] > y2) y2 = p2[1];
+      for (let c = 0; c < p2.length; c++) {
+        if (p2[c] < min[c]) min[c] = p2[c];
+        if (p2[c] > max[c]) max[c] = p2[c];
+      }
     }
 
     const w0 = (points.length - 1) * t0 - (i - 1);
@@ -372,26 +379,23 @@ export function getBoundingBox(points: Vector[], options: BBoxOptions = {}): BBo
     if (tension < 1) {
       const p0 = points[i - 2 < 0 ? 0 : i - 2];
       const p3 = points[i > points.length - 2 ? points.length - 1 : i + 1];
-      const [ax, bx, cx] = getCoefficients(p0[0], p1[0], p2[0], p3[0], 0, tension);
-      const [ay, by, cy] = getCoefficients(p0[1], p1[1], p2[1], p3[1], 0, tension);
-      const xroots = getQuadRoots(3 * ax, 2 * bx, cx);
-      const yroots = getQuadRoots(3 * ay, 2 * by, cy);
 
       const valid = t => t > -EPS && t <= 1 + EPS && (i - 1 !== i0 || t > w0) && (i !== i1 || t < w1);
 
-      xroots.filter(valid).forEach(t => {
-        const x = solveForT(t, tension, p0[0], p1[0], p2[0], p3[0]);
-        if (x < x1) x1 = x;
-        if (x > x2) x2 = x;
-      });
+      for (let c = 0; c < p0.length; c++) {
+        const [k, l, m] = getCoefficients(p0[c], p1[c], p2[c], p3[c], 0, tension);
 
-      yroots.filter(valid).forEach(t => {
-        const y = solveForT(t, tension, p0[1], p1[1], p2[1], p3[1]);
-        if (y < y1) y1 = y;
-        if (y > y2) y2 = y;
-      });
+        const roots = getQuadRoots(3 * k, 2 * l, m);
+
+        roots.filter(valid).forEach(t => {
+          const v = solveForT(t, tension, p0[c], p1[c], p2[c], p3[c]);
+          if (v < min[c]) min[c] = v;
+          if (v > max[c]) max[c] = v;
+        });
+      }
+
     }
   }
 
-  return { x1, y1, x2, y2 };
+  return { min, max };
 }

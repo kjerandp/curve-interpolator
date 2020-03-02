@@ -1,3 +1,41 @@
+import { Vector } from "./interfaces";
+
+/**
+ * Fill all components of a vector with a value
+ * @param v vector
+ * @param val fill value
+ */
+export function fill(v:Vector, val:number) : Vector {
+  for (let i = 0; i < v.length; i++) {
+    v[i] = val;
+  }
+  return v;
+}
+
+/**
+ * Map all components of a vector using provided mapping function.
+ * @param v vector
+ * @param func mapping function
+ */
+export function map(v:Vector, func: (c:number, i:number) => number) : Vector {
+  for (let i = 0; i < v.length; i++) {
+    v[i] = func(v[i], i);
+  }
+  return v;
+}
+
+/**
+ * Reduce a vector to a single valie using the provided reduce function.
+ * @param v vector
+ * @param func reduce function
+ * @param r initial value
+ */
+export function reduce(v:Vector, func: (s: number, c:number, i:number) => number, r:number = 0) : number {
+  for (let i = 0; i < v.length; i++) {
+    r = func(r, v[i], i);
+  }
+  return r;
+}
 
 /**
  * Reduce the set of coordinates for a curve by eliminating points that are not
@@ -5,9 +43,9 @@
  * segment.
  * @param inputArr set of coordinates
  * @param maxOffset threshold to use for determining if a point is part of a linear line segment
- * @param maxDistance if
+ * @param maxDistance points will not be removed if the distance equals or is greater than the given maxDistance
  */
-export function simplify(inputArr:number[][], maxOffset:number = 0.001, maxDistance:number = 10) : number[][] {
+export function simplify2d(inputArr:number[][], maxOffset:number = 0.001, maxDistance:number = 10) : number[][] {
   if (inputArr.length <= 4) return inputArr;
   const [o0, o1] = inputArr[0];
   const arr = inputArr.map(d => [d[0] - o0, d[1] - o1]);

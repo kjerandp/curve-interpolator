@@ -1,29 +1,9 @@
 import {
   Vector,
 } from './interfaces';
+import { reduce, fill, map } from './utils';
 
 export const EPS = Math.pow(2, -42);
-
-function fill(v:Vector, val:number) : Vector {
-  for (let i = 0; i < v.length; i++) {
-    v[i] = val;
-  }
-  return v;
-}
-
-function map(v:Vector, func: (c:number, i:number) => number) : Vector {
-  for (let i = 0; i < v.length; i++) {
-    v[i] = func(v[i], i);
-  }
-  return v;
-}
-
-function reduce(v:Vector, func: (s: number, c:number, i:number) => number, r:number = 0) : number {
-  for (let i = 0; i < v.length; i++) {
-    r = func(r, v[i], i);
-  }
-  return r;
-}
 
 /**
  * Take the cube root of a number

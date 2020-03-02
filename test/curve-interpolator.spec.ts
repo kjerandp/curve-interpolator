@@ -68,15 +68,17 @@ describe('curve-interpolator.ts', () => {
     const interp = new CurveInterpolator(points, 0);
 
     const bbox = interp.getBoundingBox();
-    expect(bbox.x1).to.eq(1);
-    expect(bbox.x2).to.be.approximately(19.2422599, EPS);
-    expect(bbox.y1).to.be.approximately(1.3872035, EPS);
-    expect(bbox.y2).to.eq(18);
+    expect(bbox.min[0]).to.eq(1);
+    expect(bbox.max[0]).to.be.approximately(19.2422599, EPS);
+    expect(bbox.min[1]).to.be.approximately(1.3872035, EPS);
+    expect(bbox.max[1]).to.eq(18);
+    expect(bbox.min[2]).to.be.undefined;
+    expect(bbox.max[2]).to.be.undefined;
 
-    expect(interp.minX).to.be.eq(bbox.x1);
-    expect(interp.maxX).to.be.eq(bbox.x2);
-    expect(interp.minY).to.be.eq(bbox.y1);
-    expect(interp.maxY).to.be.eq(bbox.y2);
+    expect(interp.minX).to.be.eq(bbox.min[0]);
+    expect(interp.maxX).to.be.eq(bbox.max[0]);
+    expect(interp.minY).to.be.eq(bbox.min[1]);
+    expect(interp.maxY).to.be.eq(bbox.max[1]);
 
     expect(interp.x(interp.maxY, 1)).to.be.approximately(1, EPS);
     expect(interp.x(interp.minY, 1)).to.be.approximately(16.054653, EPS);

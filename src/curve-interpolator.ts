@@ -99,6 +99,7 @@ export default class CurveInterpolator {
   }
 
   /**
+   * @deprecated This is only valid for 2d curves. Use the tangent function instead.
    * Get the normal at the given position.
    * @param position position on curve (0 - 1)
    * @param target optional target
@@ -116,6 +117,7 @@ export default class CurveInterpolator {
   }
 
   /**
+   * @deprecated This is only valid for 2d curves. Use the tangent function instead.
    * Get the angle (in radians) at the given position.
    * @param position position on curve (0 - 1)
    * @param target optional target
@@ -180,12 +182,37 @@ export default class CurveInterpolator {
   }
 
   /**
+   * Find point(s) on the curve intersected by the given value along a given axis
+   * @param v lookup value
+   * @param axis index of axis [0=x, 1=y, 2=z ...]
+   * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
+   */
+  lookup(v:number, max:number = 0, axis:number = 0, margin:number = this._lmargin) : Vector[] | Vector {
+    const matches = valuesLookup(
+      v,
+      this.points,
+      {
+        axis: 1,
+        tension: this.tension,
+        max,
+        margin,
+      },
+    );
+
+    return Math.abs(max) === 1 ? matches[0] : matches;
+  }
+
+  /**
+   * @deprecated Use lookup function
    * Find at which value(s) of x the curve is intersected by the given value
    * along the y-axis
    * @param y value at y-axis
    * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
    */
   x(y:number, max:number = 0, margin:number = this._lmargin) : number[] | number {
+    if (this._points.length && this._points[0].length > 2) {
+      throw Error('This function is only supported for 2d curves and is now depricated. You should use the lookup function instead.');
+    }
     const matches = valuesLookup(
       y,
       this.points,
@@ -195,18 +222,22 @@ export default class CurveInterpolator {
         max,
         margin,
       },
-    ) as number[];
+    );
 
-    return Math.abs(max) === 1 ? matches[0] : matches;
+    return Math.abs(max) === 1 ? matches[0][0] : matches.map(d => d[0]);
   }
 
   /**
+   * @deprecated Use lookup function
    * Find at which value(s) of y the curve is intersected by the given value
    * along the x-axis
    * @param x value at x-axis
    * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
    */
   y(x: number, max:number = 0, margin:number = this._lmargin) : number[] | number {
+    if (this._points.length && this._points[0].length > 2) {
+      throw Error('This function is only supported for 2d curves and is now depricated. You should use the lookup function instead.');
+    }
     const matches = valuesLookup(
       x,
       this.points,
@@ -216,9 +247,9 @@ export default class CurveInterpolator {
         max,
         margin,
       },
-    ) as number[];
+    );
 
-    return Math.abs(max) === 1 ? matches[0] : matches;
+    return Math.abs(max) === 1 ? matches[0][1] : matches.map(d => d[1]);
   }
 
   /**
@@ -251,22 +282,32 @@ export default class CurveInterpolator {
 
   get minX() {
     const bbox = this.getBoundingBox();
-    return bbox.x1;
+    return bbox.min[0];
   }
 
   get maxX() {
     const bbox = this.getBoundingBox();
-    return bbox.x2;
+    return bbox.max[0];
   }
 
   get minY() {
     const bbox = this.getBoundingBox();
-    return bbox.y1;
+    return bbox.min[1];
   }
 
   get maxY() {
     const bbox = this.getBoundingBox();
-    return bbox.y2;
+    return bbox.max[1];
+  }
+
+  get minZ() {
+    const bbox = this.getBoundingBox();
+    return bbox.min[2];
+  }
+
+  get maxZ() {
+    const bbox = this.getBoundingBox();
+    return bbox.max[2];
   }
 
   set points(pts:Vector[]) {
