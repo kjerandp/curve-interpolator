@@ -1,8 +1,6 @@
 import {
   getPointAtT,
   getTangentAtT,
-  getNormalAtT,
-  getAngleAtT,
   getBoundingBox,
   valuesLookup,
   getArcLengths,
@@ -17,7 +15,16 @@ import {
   BBox,
   Vector,
   VectorType,
+  CurveOptions,
 } from './interfaces';
+
+/** TODO
+ * 1) Add function for getting unevenly distributed points
+ * 2) Option to return lengts from lookup instead of coords
+ * 3) Set default lmargin depending on tension and add to options
+ * 4) Make lookup and bbox work properly for closed curves
+ * 5) Add tests for closed curves
+ */
 
 /**
  * Extrapolates input array if points have length less than 4 by copying first and last
@@ -34,6 +41,9 @@ function extrapolateArgs(args:Vector[]) : Vector[] {
   return args;
 }
 
+export interface CurveInterpolatorOptions extends CurveOptions {
+  arcDivisions?: number,
+}
 
 /**
  * Cubic curve interpolator
@@ -43,6 +53,7 @@ export default class CurveInterpolator {
   _points: Vector[];
   _tension: number;
   _arcDivisions: number;
+  _closed: boolean;
   _cache: { arcLengths?: number[], bbox?: BBox; };
 
   /**
@@ -51,12 +62,21 @@ export default class CurveInterpolator {
    * @param tension curve tension (0 = Catmull-Rom, 1 = linear)
    * @param arcDivisions number of segments used to estimate curve length
    */
-  constructor(points:Vector[], tension = 0.5, arcDivisions = 300) {
+  constructor(points:Vector[], options: CurveInterpolatorOptions = {}) {
+    options = {
+      tension: 0.5,
+      arcDivisions: 300,
+      closed: false,
+      ...options,
+    };
+
     this._cache = {};
-    this.tension = tension;
-    this.arcDivisions = arcDivisions;
-    this.points = points;
+    this._tension = options.tension;
+    this._arcDivisions = options.arcDivisions;
     this._lmargin = 0.5;
+    this._closed = options.closed;
+
+    this.points = points;
   }
 
   /**
@@ -78,7 +98,11 @@ export default class CurveInterpolator {
   getPointAt<T extends VectorType>(position:number, target: T) : T
   getPointAt(position:number) : Vector
   getPointAt(position:number, target?:VectorType) : Vector {
-    return getPointAtT(this.getT(position), this.points, this.tension, target);
+    const options = {
+      tension: this.tension,
+      closed: this.closed,
+    };
+    return getPointAtT(this.getT(position), this.points, options, target);
   }
 
   /**
@@ -92,43 +116,10 @@ export default class CurveInterpolator {
     const tan = getTangentAtT(
       this.getT(position),
       this.points,
-      this.tension,
+      { tension: this.tension, closed: this.closed },
       target,
     );
     return normalize(tan);
-  }
-
-  /**
-   * @deprecated This is only valid for 2d curves. Use the tangent function instead.
-   * Get the normal at the given position.
-   * @param position position on curve (0 - 1)
-   * @param target optional target
-   */
-  getNormalAt<T extends VectorType>(position:number, target: T) : T
-  getNormalAt(position: number) : Vector
-  getNormalAt(position:number, target?:Vector) : Vector {
-    const nrm = getNormalAtT(
-      this.getT(position),
-      this.points,
-      this.tension,
-      target,
-    );
-    return normalize(nrm);
-  }
-
-  /**
-   * @deprecated This is only valid for 2d curves. Use the tangent function instead.
-   * Get the angle (in radians) at the given position.
-   * @param position position on curve (0 - 1)
-   * @param target optional target
-   */
-  getAngleAt(position:number) : number {
-    const angle = getAngleAtT(
-      this.getT(position),
-      this.points,
-      this.tension,
-    );
-    return angle;
   }
 
   /**
@@ -145,9 +136,10 @@ export default class CurveInterpolator {
     const bbox = getBoundingBox(
       this.points,
       {
-        tension: this.tension,
         from,
         to,
+        tension: this.tension,
+        closed: this.closed,
         arcLengths: this.arcLengths,
       },
     );
@@ -194,62 +186,13 @@ export default class CurveInterpolator {
       {
         axis,
         tension: this.tension,
+        closed: this.closed,
         max,
         margin,
       },
     );
 
     return Math.abs(max) === 1 ? matches[0] : matches;
-  }
-
-  /**
-   * @deprecated Use lookup function
-   * Find at which value(s) of x the curve is intersected by the given value
-   * along the y-axis
-   * @param y value at y-axis
-   * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
-   */
-  x(y:number, max:number = 0, margin:number = this._lmargin) : number[] | number {
-    if (this._points.length && this._points[0].length > 2) {
-      throw Error('This function is only supported for 2d curves and is now depricated. You should use the lookup function instead.');
-    }
-    const matches = valuesLookup(
-      y,
-      this.points,
-      {
-        axis: 1,
-        tension: this.tension,
-        max,
-        margin,
-      },
-    );
-
-    return Math.abs(max) === 1 ? matches[0][0] : matches.map(d => d[0]);
-  }
-
-  /**
-   * @deprecated Use lookup function
-   * Find at which value(s) of y the curve is intersected by the given value
-   * along the x-axis
-   * @param x value at x-axis
-   * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
-   */
-  y(x: number, max:number = 0, margin:number = this._lmargin) : number[] | number {
-    if (this._points.length && this._points[0].length > 2) {
-      throw Error('This function is only supported for 2d curves and is now depricated. You should use the lookup function instead.');
-    }
-    const matches = valuesLookup(
-      x,
-      this.points,
-      {
-        axis: 0,
-        tension: this.tension,
-        max,
-        margin,
-      },
-    );
-
-    return Math.abs(max) === 1 ? matches[0][1] : matches.map(d => d[1]);
   }
 
   /**
@@ -264,13 +207,18 @@ export default class CurveInterpolator {
 
   get points() { return this._points; }
   get tension() { return this._tension; }
+  get closed() { return this._closed; }
   get arcDivisions() { return this._arcDivisions; }
 
   get arcLengths() {
     if (this._cache.arcLengths) {
       return this._cache.arcLengths;
     }
-    const arcLengths = getArcLengths(this.points, this.arcDivisions, this.tension);
+    const arcLengths = getArcLengths(
+      this.points,
+      this.arcDivisions,
+      { tension: this.tension, closed: this.closed },
+    );
     this._cache.arcLengths = arcLengths;
     return arcLengths;
   }
@@ -314,21 +262,28 @@ export default class CurveInterpolator {
     if (pts.length > 0 && pts.length < 4) {
       pts = extrapolateArgs(pts);
     }
-    this.invalidateCache();
     this._points = pts;
+    this.invalidateCache();
   }
 
   set tension(t:number) {
     if (t !== this._tension) {
-      this.invalidateCache();
       this._tension = t;
+      this.invalidateCache();
     }
   }
+
   set arcDivisions(n:number) {
     if (n !== this._arcDivisions) {
       this._arcDivisions = n;
       this.invalidateCache();
     }
-    this._arcDivisions = n;
+  }
+
+  set closed(isClosed:boolean) {
+    if (isClosed !== this._closed) {
+      this._closed = isClosed;
+      this.invalidateCache();
+    }
   }
 }

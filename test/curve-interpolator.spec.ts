@@ -13,12 +13,12 @@ describe('curve-interpolator.ts', () => {
     expect(result.tension).to.eq(0.5);
     expect(result.arcDivisions).to.eq(300);
 
-    result = new CurveInterpolator(points, 0);
+    result = new CurveInterpolator(points, { tension: 0 });
     expect(result).to.be.instanceof(CurveInterpolator);
     expect(result.tension).to.eq(0);
     expect(result.arcDivisions).to.eq(300);
 
-    result = new CurveInterpolator(points, 0, 500);
+    result = new CurveInterpolator(points, { tension: 0, arcDivisions: 500 });
     expect(result).to.be.instanceof(CurveInterpolator);
     expect(result.tension).to.eq(0);
     expect(result.arcDivisions).to.eq(500);
@@ -31,21 +31,21 @@ describe('curve-interpolator.ts', () => {
 
     const prevLength = interp.length;
 
-    interp = new CurveInterpolator(points, 0);
+    interp = new CurveInterpolator(points, { tension: 0 });
     expect(interp.length).to.be.greaterThan(prevLength);
 
-    interp = new CurveInterpolator(points, 1);
+    interp = new CurveInterpolator(points, { tension: 1 });
     expect(interp.length).to.be.lessThan(prevLength);
 
-    interp = new CurveInterpolator(points, 0.5, 1000);
+    interp = new CurveInterpolator(points, { tension: 0.5, arcDivisions: 1000 });
     expect(interp.length).to.be.greaterThan(prevLength);
 
-    interp = new CurveInterpolator(points, 0.5, 100);
+    interp = new CurveInterpolator(points, { tension: 0.5, arcDivisions: 100 });
     expect(interp.length).to.be.lessThan(prevLength);
   });
 
   it('should be able to get points on curve', () => {
-    const interp = new CurveInterpolator(points, 0);
+    const interp = new CurveInterpolator(points, { tension: 0 });
 
     const result = interp.getPointAt(0.7, new Point());
     expect(result.x).to.approximately(11.024214, EPS);
@@ -53,7 +53,7 @@ describe('curve-interpolator.ts', () => {
   });
 
   it('should be able to get multiple, evenly distributed points, on curve', () => {
-    const interp = new CurveInterpolator(points, 0);
+    const interp = new CurveInterpolator(points, { tension: 0 });
 
     const result = interp.getPoints(100, Point);
     expect(result.length).to.eq(101);
@@ -65,7 +65,7 @@ describe('curve-interpolator.ts', () => {
   });
 
   it('should be able to get bounds of curve', () => {
-    const interp = new CurveInterpolator(points, 0);
+    const interp = new CurveInterpolator(points, { tension: 0 });
 
     const bbox = interp.getBoundingBox();
     expect(bbox.min[0]).to.eq(1);
@@ -80,14 +80,14 @@ describe('curve-interpolator.ts', () => {
     expect(interp.minY).to.be.eq(bbox.min[1]);
     expect(interp.maxY).to.be.eq(bbox.max[1]);
 
-    expect(interp.x(interp.maxY, 1)).to.be.approximately(1, EPS);
-    expect(interp.x(interp.minY, 1)).to.be.approximately(16.054653, EPS);
-    expect(interp.y(interp.maxX, 1)).to.be.approximately(2.8918343, EPS);
-    expect(interp.y(interp.minX, 1)).to.be.approximately(18, EPS);
+    expect(interp.lookup(interp.maxY, 1, 1)[0]).to.be.approximately(1, EPS);
+    expect(interp.lookup(interp.minY, 1, 1)[0]).to.be.approximately(16.054653, EPS);
+    expect(interp.lookup(interp.maxX, 0, 1)[1]).to.be.approximately(2.8918343, EPS);
+    expect(interp.lookup(interp.minX, 0, 1)[1]).to.be.approximately(18, EPS);
   });
 
   it('should clear cache if new points, tension or arcDivisions are set', () => {
-    const interp = new CurveInterpolator(points, 0);
+    const interp = new CurveInterpolator(points, { tension: 0 });
 
     expect(Object.keys(interp._cache).length).to.eq(0);
     interp.getPoints(100, Point);

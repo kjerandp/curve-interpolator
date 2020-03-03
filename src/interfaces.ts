@@ -31,11 +31,28 @@ export interface VectorType {
 export type Vector = (number[] | VectorType);
 
 /**
+ * Curve characteristics
+ */
+export interface CurveOptions {
+  /* curve tension (0 = Catmull-Rom curve, 1 = linear curve) */
+  tension?: number,
+  /* flag to set if the curve should be closed or not */
+  closed?: boolean,
+}
+
+/**
+ * Used by getPointAtT to control curve characteristics and
+ * which function to use to process the curve coordinates.
+ */
+export interface InterpolationOptions extends CurveOptions {
+  func?: PointFunction,
+}
+
+/**
  * Used by the valuesLookup function to set axis, tension etc.
  */
-export interface LookupOptions {
+export interface LookupOptions extends CurveOptions {
   axis?: number,
-  tension?: number,
   margin?: number,
   max?: number,
   func?: PointFunction,
@@ -53,8 +70,7 @@ export interface BBox {
 /**
  * Options to control calculation of bounding box
  */
-export interface BBoxOptions {
-  tension?: number,
+export interface BBoxOptions extends CurveOptions{
   from?: number,
   to?: number,
   arcDivisions?: number,

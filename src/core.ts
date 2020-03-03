@@ -4,19 +4,39 @@ import {
   getCoefficients,
   getCubicRoots,
   distance,
-  orthogonal,
   clamp,
   EPS,
   getQuadRoots,
 } from './math';
 import {
   Vector,
-  PointFunction,
   LookupOptions,
   BBoxOptions,
   BBox,
   VectorType,
+  CurveOptions,
+  InterpolationOptions,
 } from './interfaces';
+
+function getControlPoints(idx: number, points: Vector[], closed: boolean) : Vector[] {
+  const maxIndex = points.length - 1;
+
+  let p0, p1, p2, p3;
+
+  if (closed) {
+    p0 = points[idx - 1 < 0 ? maxIndex : idx - 1];
+    p1 = points[idx % points.length];
+    p2 = points[(idx + 1) % points.length];
+    p3 = points[(idx + 2) % points.length];
+  } else {
+    p0 = points[Math.max(0, idx - 1)];
+    p1 = points[idx];
+    p2 = points[Math.min(maxIndex, idx + 1)];
+    p3 = points[Math.min(maxIndex, idx + 2)];
+  }
+
+  return [p0, p1, p2, p3];
+}
 
 /**
  * Find the point on the curve at time t, where t is a number between 0 and 1.
@@ -24,24 +44,25 @@ import {
  * not be evenly distributed.
  * @param t time along curve (0 - 1)
  * @param points set of coordinates/control points making out the curve
- * @param tension curve tension (0 = Catmull-Rom curve, 1 = linear curve)
+ * @param options interpolation options
  * @param target optional target instance to add results to
- * @param func override function used to retrieve the x and y values of the point at t
  */
 export function getPointAtT<T extends VectorType>(t: number, points: Vector[], target: T): T
-export function getPointAtT<T extends VectorType>(t: number, points: Vector[], tension: number, target: T): T
-export function getPointAtT(t: number, points: Vector[], tension: number): Vector
-export function getPointAtT(t: number, points: Vector[], tension: number, target: Vector): Vector
-export function getPointAtT(t: number, points: Vector[], tension: number, target: Vector, func: PointFunction): Vector
-export function getPointAtT(t: number, points: Vector[], tension?: number, target?: Vector, func: PointFunction = solveForT): Vector {
-  const p = (points.length - 1) * t;
+export function getPointAtT<T extends VectorType>(t: number, points: Vector[], options: InterpolationOptions, target: T): T
+export function getPointAtT(t: number, points: Vector[], options: null, target: Vector): Vector
+export function getPointAtT(t: number, points: Vector[], options: InterpolationOptions): Vector
+export function getPointAtT(t: number, points: Vector[], options: InterpolationOptions, target: Vector): Vector
+export function getPointAtT(t: number, points: Vector[], options: InterpolationOptions = {}, target?: Vector) : Vector {
+  const tension = Number.isFinite(options.tension) ? options.tension : 0.5;
+  const closed = !!options.closed;
+  const func = options.func || solveForT;
+
+  const nPoints = closed ? points.length : points.length - 1;
+  const p = nPoints * t;
   const idx = Math.floor(p);
   const weight = p - idx;
 
-  const p0 = points[idx === 0 ? idx : idx - 1];
-  const p1 = points[idx];
-  const p2 = points[idx > points.length - 2 ? points.length - 1 : idx + 1];
-  const p3 = points[idx > points.length - 3 ? points.length - 1 : idx + 2];
+  const [p0, p1, p2, p3] = getControlPoints(idx, points, closed);
 
   target = target || new Array(p0.length);
   for (let i = 0; i < p0.length; i++) {
@@ -59,52 +80,21 @@ export function getPointAtT(t: number, points: Vector[], tension?: number, targe
  * @param tension curve tension (0 = Catmull-Rom curve, 1 = linear curve)
  * @param target optional target instance to add results to
  */
-export function getTangentAtT<T extends VectorType>(t: number, points: Vector[], tension: null, target: T): T
-export function getTangentAtT<T extends VectorType>(t: number, points: Vector[], tension: number, target: T): T
+export function getTangentAtT<T extends VectorType>(t: number, points: Vector[], options: null, target: T): T
+export function getTangentAtT<T extends VectorType>(t: number, points: Vector[], options: CurveOptions, target: T): T
 export function getTangentAtT(t: number, points: Vector[]): Vector
-export function getTangentAtT(t: number, points: Vector[], tension: number): Vector
-export function getTangentAtT(t: number, points: Vector[], tension: number, target: Vector): Vector
-export function getTangentAtT(t: number, points: Vector[], tension: number = 0.5, target?: Vector): Vector {
+export function getTangentAtT(t: number, points: Vector[], options: CurveOptions): Vector
+export function getTangentAtT(t: number, points: Vector[], options: CurveOptions, target: Vector): Vector
+export function getTangentAtT(t: number, points: Vector[], options: CurveOptions = {}, target?: Vector): Vector {
+  const tension = Number.isFinite(options.tension) ? options.tension : 0.5;
+  const closed = !!options.closed;
+
   if (tension === 1 && t === 0) {
     t += EPS;
   } else if (tension === 1 && t === 1) {
     t -= EPS;
   }
-  return getPointAtT(t, points, tension, target, getDerivativeOfT);
-}
-
-/**
- * @deprecated This is only valid for 2d curves. Use the tangent function instead.
- * Find the normal on the curve at time t, where t is a number between 0 and 1.
- * Note that splines (curve segements) may have different lengths, thus t will
- * not be evenly distributed.
- * @param t time along curve (0 - 1)
- * @param points set of coordinates/control points making out the curve
- * @param tension curve tension (0 = Catmull-Rom curve, 1 = linear curve)
- * @param target optional target instance to add results to
- */
-export function getNormalAtT<T extends VectorType>(t: number, points: Vector[], tension: null, target: T): T
-export function getNormalAtT<T extends VectorType>(t: number, points: Vector[], tension: number, target: T): T
-export function getNormalAtT(t: number, points: Vector[]): Vector
-export function getNormalAtT(t: number, points: Vector[], tension: number): Vector
-export function getNormalAtT(t: number, points: Vector[], tension: number, target: Vector): Vector
-export function getNormalAtT(t: number, points: Vector[], tension: number = 0.5, target?: Vector): Vector {
-  const res = getTangentAtT(t, points, tension, target);
-  return orthogonal(res as Vector);
-}
-
-/**
- * @deprecated This is only valid for 2d curves. Use the tangent function instead.
- * Find the angle in radians on the curve at time t, where t is a number between 0 and 1.
- * Note that splines (curve segements) may have different lengths, thus t will
- * not be evenly distributed.
- * @param t time along curve (0 - 1)
- * @param points set of coordinates/control points making out the curve
- * @param tension curve tension (0 = Catmull-Rom curve, 1 = linear curve)
- */
-export function getAngleAtT(t: number, points: Vector[], tension: number): number {
-  const tan = getTangentAtT(t, points, tension);
-  return Math.atan2(tan[1], tan[0]);
+  return getPointAtT(t, points, { tension, closed, func: getDerivativeOfT }, target);
 }
 
 /**
@@ -112,11 +102,11 @@ export function getAngleAtT(t: number, points: Vector[], tension: number): numbe
  * Used for mapping between t and u along the curve.
  * @param points set of coordinates/control points making out the curve
  * @param divisions number of segments to divide the curve into to estimate its length
- * @param tension curve tension (0 = Catmull-Rom curve, 1 = linear curve)
+ * @param options curve options
  */
-export function getArcLengths(points: Vector[], divisions: number, tension: number = 0.5) {
+export function getArcLengths(points: Vector[], divisions: number, options: CurveOptions = {}) {
   const lengths = [];
-  let current: Vector, last = getPointAtT(0, points, tension) as Vector;
+  let current: Vector, last = getPointAtT(0, points, options) as Vector;
   let sum = 0;
 
   divisions = divisions || 300;
@@ -124,7 +114,7 @@ export function getArcLengths(points: Vector[], divisions: number, tension: numb
   lengths.push(0);
 
   for (let p = 1; p <= divisions; p++) {
-    current = getPointAtT(p / divisions, points, tension) as Vector;
+    current = getPointAtT(p / divisions, points, options) as Vector;
     sum += distance(current, last);
     lengths.push(sum);
     last = current;
@@ -234,9 +224,10 @@ export function getTAtValue(lookup: number, tension: number, v0: number, v1: num
  */
 export function valuesLookup(lookup: number, points: Vector[], options?: LookupOptions): Vector[] {
 
-  const { func, axis, tension, margin, max, processRefAxis } = {
+  const { func, axis, tension, closed, margin, max, processRefAxis } = {
     axis: 0,
     tension: 0.5,
+    closed: false,
     margin: 0.5,
     max: 0,
     processRefAxis: false,
@@ -248,10 +239,9 @@ export function valuesLookup(lookup: number, points: Vector[], options?: LookupO
   const solutions = [];
 
   for (let i = 1; i < points.length; i+=1) {
-    const idx = max < 0 ? points.length - i : i;
+    const idx = (max < 0 ? points.length - i : i) - 1;
 
-    const p1 = points[idx - 1];
-    const p2 = points[idx];
+    const [p0, p1, p2, p3] = getControlPoints(idx, points, closed);
 
     let vmin, vmax;
     if (p1[k] < p2[k]) {
@@ -263,8 +253,6 @@ export function valuesLookup(lookup: number, points: Vector[], options?: LookupO
     }
 
     if (lookup - margin <= vmax && lookup + margin >= vmin) {
-      const p0 = points[idx - 1 === 0 ? 0 : idx - 2];
-      const p3 = points[idx > points.length - 2 ? points.length - 1 : idx + 1];
       const ts = getTAtValue(lookup, tension, p0[k], p1[k], p2[k], p3[k]);
 
       // sort on t to solve in order of curve length if max != 0
@@ -307,52 +295,31 @@ export function tangentsLookup(lookup: number, points: Vector[], options?: Looku
 }
 
 /**
- * Lookup normals at the intersection points formed by a value along the x-axis or y-axis.
- * @param lookup lookup value along the axis
- * @param points control points
- * @param options lookup options to control axis, tension, max solutions etc.
- */
-export function normalsLookup(lookup: number, points: Vector[], options?: LookupOptions): Vector[] {
-  const tans = tangentsLookup(lookup, points, options);
-  return tans.map(v => orthogonal(v));
-}
-
-/**
- * Lookup angles at the intersection points formed by a value along the x-axis or y-axis.
- * @param lookup lookup value along the axis
- * @param points control points
- * @param options lookup options to control axis, tension, max solutions etc.
- */
-export function anglesLookup(lookup: number, points: Vector[], options?: LookupOptions): number[] {
-  const tans = tangentsLookup(lookup, points, options);
-  return tans.map(tan => Math.atan2(tan[1], tan[0]));
-}
-
-/**
  * Get the bounding box for the curve or a segment of the curve
  * @param points Curve points
  * @param options Bounding box options
  */
 export function getBoundingBox(points: Vector[], options: BBoxOptions = {}): BBox {
-  let { tension, from: u0, to: u1, arcLengths, arcDivisions } = {
+  let { tension, closed, from: u0, to: u1, arcLengths, arcDivisions } = {
     tension: 0.5,
+    closed: false,
     from: 0,
     to: 1,
     arcLengths: null,
     arcDivisions: 300,
     ...options,
   };
-
-  arcLengths = arcLengths || getArcLengths(points, arcDivisions, tension);
+  const nPoints = closed ? points.length : points.length - 1;
+  arcLengths = arcLengths || getArcLengths(points, arcDivisions, { tension, closed });
 
   const t0 = getUtoTmapping(u0, arcLengths);
   const t1 = getUtoTmapping(u1, arcLengths);
 
-  const i0 = Math.floor((points.length - 1) * t0);
-  const i1 = Math.ceil((points.length - 1) * t1);
+  const i0 = Math.floor(nPoints * t0);
+  const i1 = Math.ceil(nPoints * t1);
 
-  const start = getPointAtT(t0, points, tension);
-  const end = getPointAtT(t1, points, tension);
+  const start = getPointAtT(t0, points, { tension, closed  });
+  const end = getPointAtT(t1, points, { tension, closed });
 
   const min = [];
   const max = [];
@@ -363,8 +330,7 @@ export function getBoundingBox(points: Vector[], options: BBoxOptions = {}): BBo
   }
 
   for (let i = i0 + 1; i <= i1; i++) {
-    const p1 = points[i - 1];
-    const p2 = points[i];
+    const [p0, p1, p2, p3] = getControlPoints(i - 1, points, closed);
 
     if (i < i1) {
       for (let c = 0; c < p2.length; c++) {
@@ -373,12 +339,9 @@ export function getBoundingBox(points: Vector[], options: BBoxOptions = {}): BBo
       }
     }
 
-    const w0 = (points.length - 1) * t0 - (i - 1);
-    const w1 = (points.length - 1) * t1 - (i - 1);
-
     if (tension < 1) {
-      const p0 = points[i - 2 < 0 ? 0 : i - 2];
-      const p3 = points[i > points.length - 2 ? points.length - 1 : i + 1];
+      const w0 = nPoints * t0 - (i - 1);
+      const w1 = nPoints * t1 - (i - 1);
 
       const valid = t => t > -EPS && t <= 1 + EPS && (i - 1 !== i0 || t > w0) && (i !== i1 || t < w1);
 
@@ -393,7 +356,6 @@ export function getBoundingBox(points: Vector[], options: BBoxOptions = {}): BBo
           if (v > max[c]) max[c] = v;
         });
       }
-
     }
   }
 
