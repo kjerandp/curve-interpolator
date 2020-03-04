@@ -192,7 +192,7 @@ export default class CurveInterpolator {
       },
     );
 
-    return Math.abs(max) === 1 ? matches[0] : matches;
+    return Math.abs(max) === 1 && matches.length === 1 ? matches[0] : matches;
   }
 
   /**

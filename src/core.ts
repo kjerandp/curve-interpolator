@@ -238,8 +238,10 @@ export function valuesLookup(lookup: number, points: Vector[], options?: LookupO
   const k = axis;
   const solutions = [];
 
-  for (let i = 1; i < points.length; i+=1) {
-    const idx = (max < 0 ? points.length - i : i) - 1;
+  const nPoints = closed ? points.length : points.length - 1;
+
+  for (let i = 0; i < nPoints; i += 1) {
+    const idx = (max < 0 ? points.length - i : i);
 
     const [p0, p1, p2, p3] = getControlPoints(idx, points, closed);
 
@@ -318,7 +320,7 @@ export function getBoundingBox(points: Vector[], options: BBoxOptions = {}): BBo
   const i0 = Math.floor(nPoints * t0);
   const i1 = Math.ceil(nPoints * t1);
 
-  const start = getPointAtT(t0, points, { tension, closed  });
+  const start = getPointAtT(t0, points, { tension, closed });
   const end = getPointAtT(t1, points, { tension, closed });
 
   const min = [];
