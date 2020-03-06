@@ -125,7 +125,7 @@ export function getArcLengths(points: Vector[], divisions: number, options: Curv
 }
 
 /**
- * This maps a value of t (time along curve) to a value of u, where u is an uniformly
+ * This maps a value of normalized t (time along curve) to a value of u, where u is an uniformly
  * distributed index along the curve between 0 and 1
  * @param u point on curve between 0 and 1.
  * @param arcLengths aggregated curve segment lengths
@@ -174,8 +174,7 @@ export function getUtoTmapping(u: number, arcLengths: number[]): number {
 }
 
 /**
- * This maps a value of u (uniformly distributed along curve) to a value of t,
- * where t is equally split between all segments.
+ * This maps a normalized value of T (0-1) to a global uniform position U (0-1),
  * @param t point on curve between 0 and 1.
  * @param arcLengths aggregated curve segment lengths
  */
@@ -186,6 +185,7 @@ export function getTtoUmapping(t: number, arcLengths: number[]): number {
   const al = arcLengths.length - 1;
   const totalLength = arcLengths[al];
 
+  // need to denormalize t to find the matching length
   const tIdx = t * al;
 
   const subIdx = Math.floor(tIdx);
@@ -263,7 +263,7 @@ export function valuesLookup(lookup: number, points: Vector[], options?: LookupO
       else if (max >= 0) ts.sort((a, b) => a - b);
 
       for (let j = 0; j < ts.length; j++) {
-        if (ts[j] === 0 && i > 0) continue; // avoid duplicate
+        if (ts[j] === 0 && i > 0) continue; // avoid duplicate (0 would be found as 1 in previous iteration)
         const coord = [];
         for (let c = 0; c < p0.length; c++) {
           let v;
@@ -328,9 +328,9 @@ export function positionsLookup(lookup: number, points: Vector[], options?: Posi
       else if (max >= 0) ts.sort((a, b) => a - b);
 
       for (let j = 0; j < ts.length; j++) {
-        if (ts[j] === 0 && i > 0) continue; // avoid duplicate
-
-        const u = getTtoUmapping(ts[j], arcLengths);
+        if (ts[j] === 0 && i > 0) continue; // avoid duplicate (0 would be found as 1 in previous iteration)
+        const nt = (ts[j] + idx) / nPoints; // normalize t
+        const u = getTtoUmapping(nt, arcLengths);
         solutions.add(u);
 
         if (solutions.size === Math.abs(max)) return Array.from(solutions);
