@@ -129,8 +129,6 @@ export function getDerivativeOfT(t:number, tension:number, v0:number, v1:number,
   return (3 * a * t2 + 2 * b * t + c);
 }
 
-
-
 /**
  * Calculate the distance between two points
  * @param p1 coordinates of point 1

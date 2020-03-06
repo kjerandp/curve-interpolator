@@ -102,8 +102,10 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="point.html#w" class="tsd-kind-icon">w</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="point.html#x" class="tsd-kind-icon">x</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="point.html#y" class="tsd-kind-icon">y</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="point.html#z" class="tsd-kind-icon">z</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -111,6 +113,9 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="point.html#0" class="tsd-kind-icon">0</a></li>
 								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="point.html#1" class="tsd-kind-icon">1</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="point.html#2" class="tsd-kind-icon">2</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="point.html#3" class="tsd-kind-icon">3</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="point.html#length" class="tsd-kind-icon">length</a></li>
 							</ul>
 						</section>
 					</div>
@@ -122,13 +127,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Point<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, y<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="point.html" class="tsd-signature-type">Point</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Point<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, y<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, z<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, w<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="point.html" class="tsd-signature-type">Point</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/22f2696/src/point.ts#L8">point.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/point.ts#L10">point.ts:10</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -139,6 +144,12 @@
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> y: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> z: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> w: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="point.html" class="tsd-signature-type">Point</a></h4>
 						</li>
@@ -148,12 +159,22 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="w" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> w</h3>
+					<div class="tsd-signature tsd-kind-icon">w<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/point.ts#L10">point.ts:10</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="x" class="tsd-anchor"></a>
 					<h3>x</h3>
 					<div class="tsd-signature tsd-kind-icon">x<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/22f2696/src/point.ts#L7">point.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/point.ts#L7">point.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -163,7 +184,17 @@
 					<div class="tsd-signature tsd-kind-icon">y<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/22f2696/src/point.ts#L8">point.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/point.ts#L8">point.ts:8</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="z" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> z</h3>
+					<div class="tsd-signature tsd-kind-icon">z<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/point.ts#L9">point.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -181,7 +212,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/22f2696/src/point.ts#L15">point.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/point.ts#L19">point.ts:19</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -189,7 +220,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/22f2696/src/point.ts#L19">point.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/point.ts#L23">point.ts:23</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -213,7 +244,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/22f2696/src/point.ts#L23">point.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/point.ts#L27">point.ts:27</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -221,7 +252,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/22f2696/src/point.ts#L27">point.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/point.ts#L31">point.ts:31</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -231,6 +262,87 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="2" class="tsd-anchor"></a>
+					<h3>2</h3>
+					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> 2<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> 2<span class="tsd-signature-symbol">(</span>z<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/point.ts#L35">point.ts:35</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/point.ts#L39">point.ts:39</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>z: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="3" class="tsd-anchor"></a>
+					<h3>3</h3>
+					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> 3<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> 3<span class="tsd-signature-symbol">(</span>w<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/point.ts#L43">point.ts:43</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/point.ts#L47">point.ts:47</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>w: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="length" class="tsd-anchor"></a>
+					<h3>length</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> length<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/point.ts#L51">point.ts:51</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -258,16 +370,31 @@
 								<a href="point.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="point.html#w" class="tsd-kind-icon">w</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="point.html#x" class="tsd-kind-icon">x</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="point.html#y" class="tsd-kind-icon">y</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="point.html#z" class="tsd-kind-icon">z</a>
 							</li>
 							<li class=" tsd-kind-accessor tsd-parent-kind-class">
 								<a href="point.html#0" class="tsd-kind-icon">0</a>
 							</li>
 							<li class=" tsd-kind-accessor tsd-parent-kind-class">
 								<a href="point.html#1" class="tsd-kind-icon">1</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="point.html#2" class="tsd-kind-icon">2</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="point.html#3" class="tsd-kind-icon">3</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="point.html#length" class="tsd-kind-icon">length</a>
 							</li>
 						</ul>
 					</li>
@@ -280,7 +407,19 @@
 						<a href="../interfaces/bboxoptions.html" class="tsd-kind-icon">BBox<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="../interfaces/curveinterpolatoroptions.html" class="tsd-kind-icon">Curve<wbr>Interpolator<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/curveoptions.html" class="tsd-kind-icon">Curve<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/interpolationoptions.html" class="tsd-kind-icon">Interpolation<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="../interfaces/lookupoptions.html" class="tsd-kind-icon">Lookup<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/positionlookupoptions.html" class="tsd-kind-icon">Position<wbr>Lookup<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="../interfaces/vectortype.html" class="tsd-kind-icon">Vector<wbr>Type</a>
@@ -295,9 +434,6 @@
 						<a href="../globals.html#eps" class="tsd-kind-icon">EPS</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="../globals.html#angleslookup" class="tsd-kind-icon">angles<wbr>Lookup</a>
-					</li>
-					<li class=" tsd-kind-function">
 						<a href="../globals.html#clamp" class="tsd-kind-icon">clamp</a>
 					</li>
 					<li class=" tsd-kind-function tsd-is-not-exported">
@@ -310,7 +446,7 @@
 						<a href="../globals.html#extrapolateargs" class="tsd-kind-icon">extrapolate<wbr>Args</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="../globals.html#getangleatt" class="tsd-kind-icon">get<wbr>Angle<wbr>AtT</a>
+						<a href="../globals.html#fill" class="tsd-kind-icon">fill</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="../globals.html#getarclengths" class="tsd-kind-icon">get<wbr>Arc<wbr>Lengths</a>
@@ -321,14 +457,14 @@
 					<li class=" tsd-kind-function">
 						<a href="../globals.html#getcoefficients" class="tsd-kind-icon">get<wbr>Coefficients</a>
 					</li>
+					<li class=" tsd-kind-function tsd-is-not-exported">
+						<a href="../globals.html#getcontrolpoints" class="tsd-kind-icon">get<wbr>Control<wbr>Points</a>
+					</li>
 					<li class=" tsd-kind-function">
 						<a href="../globals.html#getcubicroots" class="tsd-kind-icon">get<wbr>Cubic<wbr>Roots</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="../globals.html#getderivativeoft" class="tsd-kind-icon">get<wbr>Derivative<wbr>OfT</a>
-					</li>
-					<li class=" tsd-kind-function tsd-has-type-parameter">
-						<a href="../globals.html#getnormalatt" class="tsd-kind-icon">get<wbr>Normal<wbr>AtT</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="../globals.html#getpointatt" class="tsd-kind-icon">get<wbr>Point<wbr>AtT</a>
@@ -349,16 +485,22 @@
 						<a href="../globals.html#getutotmapping" class="tsd-kind-icon">get<wbr>Uto<wbr>Tmapping</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="../globals.html#normalize" class="tsd-kind-icon">normalize</a>
+						<a href="../globals.html#map" class="tsd-kind-icon">map</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="../globals.html#normalslookup" class="tsd-kind-icon">normals<wbr>Lookup</a>
+						<a href="../globals.html#normalize" class="tsd-kind-icon">normalize</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="../globals.html#orthogonal" class="tsd-kind-icon">orthogonal</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="../globals.html#simplify" class="tsd-kind-icon">simplify</a>
+						<a href="../globals.html#positionslookup" class="tsd-kind-icon">positions<wbr>Lookup</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#reduce" class="tsd-kind-icon">reduce</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#simplify2d" class="tsd-kind-icon">simplify2d</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="../globals.html#solvefort" class="tsd-kind-icon">solve<wbr>ForT</a>

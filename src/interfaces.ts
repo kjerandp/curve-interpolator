@@ -60,6 +60,17 @@ export interface LookupOptions extends CurveOptions {
 }
 
 /**
+ * Used by the positions lookup function
+ */
+export interface PositionLookupOptions extends CurveOptions {
+  axis?: number,
+  margin?: number,
+  max?: number,
+  arcDivisions?: number,
+  arcLengths?: number[],
+}
+
+/**
  * Bounding box interface
  */
 export interface BBox {

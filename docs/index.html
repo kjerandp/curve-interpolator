@@ -69,7 +69,7 @@
 				<a href="#curve-interpolator" id="curve-interpolator" style="color: inherit; text-decoration: none;">
 					<h1>Curve Interpolator</h1>
 				</a>
-				<p>A lib for interpolating values over a cubic Cardinal/Catmull-Rom spline curve.</p>
+				<p>A lib for interpolating values over a cubic Cardinal/Catmull-Rom spline curve of n-dimenesions.</p>
 				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
 					<h2>Installation</h2>
 				</a>
@@ -96,26 +96,27 @@
   ...
 ];
 
-<span class="hljs-keyword">const</span> tension = <span class="hljs-number">0.2</span>;
-<span class="hljs-keyword">const</span> interp = <span class="hljs-keyword">new</span> CurveInterpolator(points, tension);
+<span class="hljs-keyword">const</span> interp = <span class="hljs-keyword">new</span> CurveInterpolator(points, { <span class="hljs-attr">tension</span>: <span class="hljs-number">0.2</span> });
 
 <span class="hljs-comment">// get single point</span>
 <span class="hljs-keyword">const</span> position = <span class="hljs-number">0.3</span> <span class="hljs-comment">// [0 - 1]</span>
 <span class="hljs-keyword">const</span> pt = interp.getPointAt(position)
 
 <span class="hljs-comment">// get points evently distributed along the curve</span>
-<span class="hljs-keyword">const</span> nPoints = <span class="hljs-number">1000</span>;
-<span class="hljs-keyword">const</span> pts = interp.getPoints(nPoints - <span class="hljs-number">1</span>);
+<span class="hljs-keyword">const</span> segments = <span class="hljs-number">1000</span>;
+<span class="hljs-keyword">const</span> pts = interp.getPoints(segments);
 
 <span class="hljs-comment">// lookup values along x and y axises</span>
-<span class="hljs-keyword">const</span> yintersects = interp.y(position);
+<span class="hljs-keyword">const</span> axis = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">const</span> yintersects = interp.lookup(<span class="hljs-number">7</span>, axis);
 
 <span class="hljs-comment">/*
 max number of solutions (0 = all (default), 1 = first, -1 = last)
 A negative max value counts solutions from end of curve
 */</span>
+<span class="hljs-keyword">const</span> axis = <span class="hljs-number">0</span>;
 <span class="hljs-keyword">const</span> max = <span class="hljs-number">-1</span>;
-<span class="hljs-keyword">const</span> xintersects = interp.x(position, max);
+<span class="hljs-keyword">const</span> xintersects = interp.lookup(<span class="hljs-number">3.2</span>, axis, max);
 
 <span class="hljs-comment">// get bounding box</span>
 <span class="hljs-keyword">const</span> bbox = interp.getBoundingBox();</code></pre>
@@ -156,7 +157,19 @@ A negative max value counts solutions from end of curve
 						<a href="interfaces/bboxoptions.html" class="tsd-kind-icon">BBox<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="interfaces/curveinterpolatoroptions.html" class="tsd-kind-icon">Curve<wbr>Interpolator<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/curveoptions.html" class="tsd-kind-icon">Curve<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/interpolationoptions.html" class="tsd-kind-icon">Interpolation<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/lookupoptions.html" class="tsd-kind-icon">Lookup<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/positionlookupoptions.html" class="tsd-kind-icon">Position<wbr>Lookup<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/vectortype.html" class="tsd-kind-icon">Vector<wbr>Type</a>
@@ -171,9 +184,6 @@ A negative max value counts solutions from end of curve
 						<a href="globals.html#eps" class="tsd-kind-icon">EPS</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="globals.html#angleslookup" class="tsd-kind-icon">angles<wbr>Lookup</a>
-					</li>
-					<li class=" tsd-kind-function">
 						<a href="globals.html#clamp" class="tsd-kind-icon">clamp</a>
 					</li>
 					<li class=" tsd-kind-function tsd-is-not-exported">
@@ -186,7 +196,7 @@ A negative max value counts solutions from end of curve
 						<a href="globals.html#extrapolateargs" class="tsd-kind-icon">extrapolate<wbr>Args</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="globals.html#getangleatt" class="tsd-kind-icon">get<wbr>Angle<wbr>AtT</a>
+						<a href="globals.html#fill" class="tsd-kind-icon">fill</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#getarclengths" class="tsd-kind-icon">get<wbr>Arc<wbr>Lengths</a>
@@ -197,14 +207,14 @@ A negative max value counts solutions from end of curve
 					<li class=" tsd-kind-function">
 						<a href="globals.html#getcoefficients" class="tsd-kind-icon">get<wbr>Coefficients</a>
 					</li>
+					<li class=" tsd-kind-function tsd-is-not-exported">
+						<a href="globals.html#getcontrolpoints" class="tsd-kind-icon">get<wbr>Control<wbr>Points</a>
+					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#getcubicroots" class="tsd-kind-icon">get<wbr>Cubic<wbr>Roots</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#getderivativeoft" class="tsd-kind-icon">get<wbr>Derivative<wbr>OfT</a>
-					</li>
-					<li class=" tsd-kind-function tsd-has-type-parameter">
-						<a href="globals.html#getnormalatt" class="tsd-kind-icon">get<wbr>Normal<wbr>AtT</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="globals.html#getpointatt" class="tsd-kind-icon">get<wbr>Point<wbr>AtT</a>
@@ -225,16 +235,22 @@ A negative max value counts solutions from end of curve
 						<a href="globals.html#getutotmapping" class="tsd-kind-icon">get<wbr>Uto<wbr>Tmapping</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="globals.html#normalize" class="tsd-kind-icon">normalize</a>
+						<a href="globals.html#map" class="tsd-kind-icon">map</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="globals.html#normalslookup" class="tsd-kind-icon">normals<wbr>Lookup</a>
+						<a href="globals.html#normalize" class="tsd-kind-icon">normalize</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#orthogonal" class="tsd-kind-icon">orthogonal</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="globals.html#simplify" class="tsd-kind-icon">simplify</a>
+						<a href="globals.html#positionslookup" class="tsd-kind-icon">positions<wbr>Lookup</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#reduce" class="tsd-kind-icon">reduce</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#simplify2d" class="tsd-kind-icon">simplify2d</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#solvefort" class="tsd-kind-icon">solve<wbr>ForT</a>

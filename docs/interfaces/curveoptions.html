@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>BBoxOptions | curve-interpolator</title>
+	<title>CurveOptions | curve-interpolator</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="bboxoptions.html">BBoxOptions</a>
+					<a href="curveoptions.html">CurveOptions</a>
 				</li>
 			</ul>
-			<h1>Interface BBoxOptions</h1>
+			<h1>Interface CurveOptions</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Options to control calculation of bounding box</p>
+						<p>Curve characteristics</p>
 					</div>
 				</div>
 			</section>
@@ -77,10 +77,22 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="curveoptions.html" class="tsd-signature-type">CurveOptions</a>
+						<span class="target">CurveOptions</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">BBoxOptions</span>
+								<a href="interpolationoptions.html" class="tsd-signature-type">InterpolationOptions</a>
+							</li>
+							<li>
+								<a href="lookupoptions.html" class="tsd-signature-type">LookupOptions</a>
+							</li>
+							<li>
+								<a href="positionlookupoptions.html" class="tsd-signature-type">PositionLookupOptions</a>
+							</li>
+							<li>
+								<a href="bboxoptions.html" class="tsd-signature-type">BBoxOptions</a>
+							</li>
+							<li>
+								<a href="curveinterpolatoroptions.html" class="tsd-signature-type">CurveInterpolatorOptions</a>
 							</li>
 						</ul>
 					</li>
@@ -93,12 +105,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bboxoptions.html#arcdivisions" class="tsd-kind-icon">arc<wbr>Divisions</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bboxoptions.html#arclengths" class="tsd-kind-icon">arc<wbr>Lengths</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="bboxoptions.html#closed" class="tsd-kind-icon">closed</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bboxoptions.html#from" class="tsd-kind-icon">from</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="bboxoptions.html#tension" class="tsd-kind-icon">tension</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bboxoptions.html#to" class="tsd-kind-icon">to</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="curveoptions.html#closed" class="tsd-kind-icon">closed</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="curveoptions.html#tension" class="tsd-kind-icon">tension</a></li>
 							</ul>
 						</section>
 					</div>
@@ -107,64 +115,22 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="arcdivisions" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> arc<wbr>Divisions</h3>
-					<div class="tsd-signature tsd-kind-icon">arc<wbr>Divisions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/interfaces.ts#L87">interfaces.ts:87</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="arclengths" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> arc<wbr>Lengths</h3>
-					<div class="tsd-signature tsd-kind-icon">arc<wbr>Lengths<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/interfaces.ts#L88">interfaces.ts:88</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="closed" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> closed</h3>
 					<div class="tsd-signature tsd-kind-icon">closed<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="curveoptions.html">CurveOptions</a>.<a href="curveoptions.html#closed">closed</a></p>
 						<ul>
 							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/interfaces.ts#L40">interfaces.ts:40</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="from" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> from</h3>
-					<div class="tsd-signature tsd-kind-icon">from<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/interfaces.ts#L85">interfaces.ts:85</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="tension" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> tension</h3>
 					<div class="tsd-signature tsd-kind-icon">tension<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="curveoptions.html">CurveOptions</a>.<a href="curveoptions.html#tension">tension</a></p>
 						<ul>
 							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/interfaces.ts#L38">interfaces.ts:38</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="to" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> to</h3>
-					<div class="tsd-signature tsd-kind-icon">to<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/d62f354/src/interfaces.ts#L86">interfaces.ts:86</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -189,39 +155,27 @@
 					<li class=" tsd-kind-interface">
 						<a href="bbox.html" class="tsd-kind-icon">BBox</a>
 					</li>
+					<li class=" tsd-kind-interface">
+						<a href="bboxoptions.html" class="tsd-kind-icon">BBox<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="curveinterpolatoroptions.html" class="tsd-kind-icon">Curve<wbr>Interpolator<wbr>Options</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="bboxoptions.html" class="tsd-kind-icon">BBox<wbr>Options</a>
+						<a href="curveoptions.html" class="tsd-kind-icon">Curve<wbr>Options</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="bboxoptions.html#arcdivisions" class="tsd-kind-icon">arc<wbr>Divisions</a>
+								<a href="curveoptions.html#closed" class="tsd-kind-icon">closed</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="bboxoptions.html#arclengths" class="tsd-kind-icon">arc<wbr>Lengths</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="bboxoptions.html#closed" class="tsd-kind-icon">closed</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="bboxoptions.html#from" class="tsd-kind-icon">from</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="bboxoptions.html#tension" class="tsd-kind-icon">tension</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="bboxoptions.html#to" class="tsd-kind-icon">to</a>
+								<a href="curveoptions.html#tension" class="tsd-kind-icon">tension</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface">
-						<a href="curveinterpolatoroptions.html" class="tsd-kind-icon">Curve<wbr>Interpolator<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="curveoptions.html" class="tsd-kind-icon">Curve<wbr>Options</a>
-					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interpolationoptions.html" class="tsd-kind-icon">Interpolation<wbr>Options</a>
 					</li>

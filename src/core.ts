@@ -16,6 +16,7 @@ import {
   VectorType,
   CurveOptions,
   InterpolationOptions,
+  PositionLookupOptions,
 } from './interfaces';
 
 function getControlPoints(idx: number, points: Vector[], closed: boolean) : Vector[] {
@@ -77,7 +78,7 @@ export function getPointAtT(t: number, points: Vector[], options: InterpolationO
  * not be evenly distributed.
  * @param t time along curve (0 - 1)
  * @param points set of coordinates/control points making out the curve
- * @param tension curve tension (0 = Catmull-Rom curve, 1 = linear curve)
+ * @param options curve options (tension [0-1], closed [true/false])
  * @param target optional target instance to add results to
  */
 export function getTangentAtT<T extends VectorType>(t: number, points: Vector[], options: null, target: T): T
@@ -102,7 +103,7 @@ export function getTangentAtT(t: number, points: Vector[], options: CurveOptions
  * Used for mapping between t and u along the curve.
  * @param points set of coordinates/control points making out the curve
  * @param divisions number of segments to divide the curve into to estimate its length
- * @param options curve options
+ * @param options curve options (tension [0-1], closed [true/false])
  */
 export function getArcLengths(points: Vector[], divisions: number, options: CurveOptions = {}) {
   const lengths = [];
@@ -217,7 +218,7 @@ export function getTAtValue(lookup: number, tension: number, v0: number, v1: num
 }
 
 /**
- * Looks up values intersecting the curve at either the x-axis or y-axis.
+ * Looks up values intersecting the curve along one of the axises (x=0, y=1, z=2 ...).
  * @param lookup lookup value along the axis
  * @param points control points
  * @param options lookup options to control axis, tension, max solutions etc.
@@ -260,6 +261,7 @@ export function valuesLookup(lookup: number, points: Vector[], options?: LookupO
       // sort on t to solve in order of curve length if max != 0
       if (max < 0) ts.sort((a, b) => b - a);
       else if (max >= 0) ts.sort((a, b) => a - b);
+
       for (let j = 0; j < ts.length; j++) {
         if (ts[j] === 0 && i > 0) continue; // avoid duplicate
         const coord = [];
@@ -283,7 +285,65 @@ export function valuesLookup(lookup: number, points: Vector[], options?: LookupO
 }
 
 /**
- * Lookup tangents at the intersection points formed by a value along the x-axis or y-axis.
+ * Looks up positions (U values) intersecting the curve along one of the axises (x=0, y=1, z=2 ...).
+ * @param lookup lookup value along the axis
+ * @param points control points
+ * @param options lookup options to control axis, tension, max solutions etc.
+ */
+export function positionsLookup(lookup: number, points: Vector[], options?: PositionLookupOptions): number[] {
+
+  const { axis, tension, closed, margin, max } = {
+    axis: 0,
+    tension: 0.5,
+    closed: false,
+    margin: 0.5,
+    max: 0,
+    ...options,
+  };
+
+  const k = axis;
+  const solutions = new Set<number>();
+  const arcLengths = options.arcLengths || getArcLengths(points, options.arcDivisions || 300, { tension, closed });
+  const nPoints = closed ? points.length : points.length - 1;
+
+  for (let i = 0; i < nPoints; i += 1) {
+    const idx = (max < 0 ? points.length - i : i);
+
+    const [p0, p1, p2, p3] = getControlPoints(idx, points, closed);
+
+    let vmin, vmax;
+    if (p1[k] < p2[k]) {
+      vmin = p1[k];
+      vmax = p2[k];
+    } else {
+      vmin = p2[k];
+      vmax = p1[k];
+    }
+
+    if (lookup - margin <= vmax && lookup + margin >= vmin) {
+      const ts = getTAtValue(lookup, tension, p0[k], p1[k], p2[k], p3[k]);
+
+      // sort on t to solve in order of curve length if max != 0
+      if (max < 0) ts.sort((a, b) => b - a);
+      else if (max >= 0) ts.sort((a, b) => a - b);
+
+      for (let j = 0; j < ts.length; j++) {
+        if (ts[j] === 0 && i > 0) continue; // avoid duplicate
+
+        const u = getTtoUmapping(ts[j], arcLengths);
+        solutions.add(u);
+
+        if (solutions.size === Math.abs(max)) return Array.from(solutions);
+      }
+    }
+  }
+
+  return Array.from(solutions);
+}
+
+
+/**
+ * Lookup tangents at the intersection points formed by a value along one of the axises (x=0, y=1, z=2 ...).
  * @param lookup lookup value along the axis
  * @param points control points
  * @param options lookup options to control axis, tension, max solutions etc.

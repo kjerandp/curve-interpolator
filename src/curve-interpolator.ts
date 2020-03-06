@@ -5,6 +5,7 @@ import {
   valuesLookup,
   getArcLengths,
   getUtoTmapping,
+  positionsLookup,
 } from './core';
 
 import {
@@ -19,10 +20,6 @@ import {
 } from './interfaces';
 
 /** TODO
- * 1) Add function for getting unevenly distributed points
- * 2) Option to return lengts from lookup instead of coords
- * 3) Set default lmargin depending on tension and add to options
- * 4) Make lookup and bbox work properly for closed curves
  * 5) Add tests for closed curves
  */
 
@@ -43,6 +40,7 @@ function extrapolateArgs(args:Vector[]) : Vector[] {
 
 export interface CurveInterpolatorOptions extends CurveOptions {
   arcDivisions?: number,
+  lmargin?: number,
 }
 
 /**
@@ -59,8 +57,7 @@ export default class CurveInterpolator {
   /**
    * Create a new interpolator instance
    * @param points control points
-   * @param tension curve tension (0 = Catmull-Rom, 1 = linear)
-   * @param arcDivisions number of segments used to estimate curve length
+   * @param options curve interpolator options
    */
   constructor(points:Vector[], options: CurveInterpolatorOptions = {}) {
     options = {
@@ -73,7 +70,7 @@ export default class CurveInterpolator {
     this._cache = {};
     this._tension = options.tension;
     this._arcDivisions = options.arcDivisions;
-    this._lmargin = 0.5;
+    this._lmargin = options.lmargin || 1 - this._tension;
     this._closed = options.closed;
 
     this.points = points;
@@ -160,7 +157,7 @@ export default class CurveInterpolator {
   getPoints<T extends VectorType>(samples:number, returnType: { new() : T }, from:number, to:number) : T[]
   getPoints(samples:number)
   getPoints(samples:number, returnType: null, from:number, to:number) : Vector[]
-  getPoints(samples:number = 100, returnType?: { new() : VectorType }, from:number = 0, to:number = 1, ) : Vector[] {
+  getPoints(samples:number = 100, returnType?: { new() : VectorType }, from:number = 0, to:number = 1) : Vector[] {
     if (from < 0 || to > 1 || to < from) return undefined;
 
     const pts = [];
@@ -193,6 +190,29 @@ export default class CurveInterpolator {
     );
 
     return Math.abs(max) === 1 && matches.length === 1 ? matches[0] : matches;
+  }
+
+  /**
+   * Find positions (0-1) on the curve intersected by the given value along a given axis
+   * @param v lookup value
+   * @param axis index of axis [0=x, 1=y, 2=z ...]
+   * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
+   */
+  lookupPositions(v:number, axis:number = 0, max:number = 0, margin:number = this._lmargin) : number[] {
+    const matches = positionsLookup(
+      v,
+      this.points,
+      {
+        axis,
+        arcLengths: this.arcLengths,
+        tension: this.tension,
+        closed: this.closed,
+        max,
+        margin,
+      },
+    );
+
+    return matches;
   }
 
   /**
