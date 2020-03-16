@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>BBox | curve-interpolator</title>
+	<title>BBoxLegacy | curve-interpolator</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="bbox.html">BBox</a>
+					<a href="bboxlegacy.html">BBoxLegacy</a>
 				</li>
 			</ul>
-			<h1>Interface BBox</h1>
+			<h1>Interface BBoxLegacy</h1>
 		</div>
 	</div>
 </header>
@@ -77,10 +77,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">BBox</span>
+						<a href="bbox.html" class="tsd-signature-type">BBox</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<a href="bboxlegacy.html" class="tsd-signature-type">BBoxLegacy</a>
+								<span class="target">BBoxLegacy</span>
 							</li>
 						</ul>
 					</li>
@@ -93,8 +93,12 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bbox.html#max" class="tsd-kind-icon">max</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bbox.html#min" class="tsd-kind-icon">min</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="bboxlegacy.html#max" class="tsd-kind-icon">max</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="bboxlegacy.html#min" class="tsd-kind-icon">min</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bboxlegacy.html#x1" class="tsd-kind-icon">x1</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bboxlegacy.html#x2" class="tsd-kind-icon">x2</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bboxlegacy.html#y1" class="tsd-kind-icon">y1</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bboxlegacy.html#y2" class="tsd-kind-icon">y2</a></li>
 							</ul>
 						</section>
 					</div>
@@ -102,23 +106,65 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="max" class="tsd-anchor"></a>
 					<h3>max</h3>
 					<div class="tsd-signature tsd-kind-icon">max<span class="tsd-signature-symbol">:</span> <a href="../globals.html#vector" class="tsd-signature-type">Vector</a></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="bbox.html">BBox</a>.<a href="bbox.html#max">max</a></p>
 						<ul>
 							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/63d8d37/src/interfaces.ts#L78">interfaces.ts:78</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="min" class="tsd-anchor"></a>
 					<h3>min</h3>
 					<div class="tsd-signature tsd-kind-icon">min<span class="tsd-signature-symbol">:</span> <a href="../globals.html#vector" class="tsd-signature-type">Vector</a></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="bbox.html">BBox</a>.<a href="bbox.html#min">min</a></p>
 						<ul>
 							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/63d8d37/src/interfaces.ts#L77">interfaces.ts:77</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="x1" class="tsd-anchor"></a>
+					<h3>x1</h3>
+					<div class="tsd-signature tsd-kind-icon">x1<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in curve-interpolator-2d.ts:10</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="x2" class="tsd-anchor"></a>
+					<h3>x2</h3>
+					<div class="tsd-signature tsd-kind-icon">x2<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in curve-interpolator-2d.ts:12</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="y1" class="tsd-anchor"></a>
+					<h3>y1</h3>
+					<div class="tsd-signature tsd-kind-icon">y1<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in curve-interpolator-2d.ts:11</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="y2" class="tsd-anchor"></a>
+					<h3>y2</h3>
+					<div class="tsd-signature tsd-kind-icon">y2<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in curve-interpolator-2d.ts:13</li>
 						</ul>
 					</aside>
 				</section>
@@ -137,13 +183,25 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="bbox.html" class="tsd-kind-icon">BBox</a>
+						<a href="bboxlegacy.html" class="tsd-kind-icon">BBox<wbr>Legacy</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="bbox.html#max" class="tsd-kind-icon">max</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="bboxlegacy.html#max" class="tsd-kind-icon">max</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="bboxlegacy.html#min" class="tsd-kind-icon">min</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="bbox.html#min" class="tsd-kind-icon">min</a>
+								<a href="bboxlegacy.html#x1" class="tsd-kind-icon">x1</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="bboxlegacy.html#x2" class="tsd-kind-icon">x2</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="bboxlegacy.html#y1" class="tsd-kind-icon">y1</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="bboxlegacy.html#y2" class="tsd-kind-icon">y2</a>
 							</li>
 						</ul>
 					</li>
