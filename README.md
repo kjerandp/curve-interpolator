@@ -60,6 +60,7 @@ const bbox = interp.getBoundingBox();
 ```
 
 Online example on ObservableHQ:
+https://observablehq.com/@kjerandp/curve-interpolator-v2
 https://observablehq.com/@kjerandp/curve-interpolator-v1
 
 ## Docs

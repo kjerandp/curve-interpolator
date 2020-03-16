@@ -19,10 +19,6 @@ import {
   CurveOptions,
 } from './interfaces';
 
-/** TODO
- * 5) Add tests for closed curves
- */
-
 /**
  * Extrapolates input array if points have length less than 4 by copying first and last
  * points, so there is a minimum of 4 control points (required to do cubic spline calculations)

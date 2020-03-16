@@ -31,6 +31,17 @@ describe('core.ts', () => {
     expect(point).to.be.instanceOf(Point);
     expect(point.x).to.equal(12);
     expect(point.y).to.equal(7);
+  });
+
+  it('should be able to find the point on closed curve at t', () => {
+    const start = getPointAtT(0, points, { tension: 0.5, closed: true });
+    compareNumArrays(start, [1, 18]);
+
+    const end = getPointAtT(1, points, { tension: 0.5, closed: true });
+    compareNumArrays(end, [1, 18]);
+
+    const arr = getPointAtT(0.96, points, { tension: 0, closed: true });
+    compareNumArrays(arr, [9.686496, 11.5460799]);
 
   });
 
