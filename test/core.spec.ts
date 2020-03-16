@@ -2,14 +2,11 @@ import 'mocha';
 import { expect } from 'chai';
 import {
   compareNumArrays,
-  // compareNumArraysUnordered,
 } from './test-utils';
-import { points } from './test-data';
+import { points, points3d } from './test-data';
 import {
   getPointAtT,
   getTangentAtT,
-  getNormalAtT,
-  getAngleAtT,
   getArcLengths,
   getUtoTmapping,
   getTtoUmapping,
@@ -21,74 +18,83 @@ const EPS = 0.000001;
 describe('core.ts', () => {
 
   it('should be able to find the point on curve at t', () => {
-    let arr = getPointAtT(0, points, 0.5);
+    let arr = getPointAtT(0, points, { tension: 0.5 });
     compareNumArrays(arr, [1, 18]);
 
-    arr = getPointAtT(1, points, 0.5);
+    arr = getPointAtT(1, points, { tension: 0.5 });
     compareNumArrays(arr, [12, 10]);
 
-    arr = getPointAtT(0.3, points, 0.5);
+    arr = getPointAtT(0.3, points, { tension: 0.5 });
     compareNumArrays(arr, [7.387999, 8.64200]);
 
-    const point = getPointAtT(0.5, points, 0.5, new Point());
+    const point = getPointAtT(0.5, points, { tension: 0.5 }, new Point());
     expect(point).to.be.instanceOf(Point);
     expect(point.x).to.equal(12);
     expect(point.y).to.equal(7);
+  });
 
+  it('should be able to find the point on closed curve at t', () => {
+    const start = getPointAtT(0, points, { tension: 0.5, closed: true });
+    compareNumArrays(start, [1, 18]);
+
+    const end = getPointAtT(1, points, { tension: 0.5, closed: true });
+    compareNumArrays(end, [1, 18]);
+
+    const arr = getPointAtT(0.96, points, { tension: 0, closed: true });
+    compareNumArrays(arr, [9.686496, 11.5460799]);
+
+  });
+
+  it('should be able to find the point on a 3d curve at t', () => {
+    let arr = getPointAtT(0, points3d, { tension: 0.5 });
+    compareNumArrays(arr, [1, 0, 1]);
+
+    arr = getPointAtT(1, points3d, { tension: 0.5 });
+    compareNumArrays(arr, [10, -4.8, 10]);
+
+    arr = getPointAtT(0.3, points3d, { tension: 0.5 });
+    compareNumArrays(arr, [1.0074, -2.06175, 1.96525]);
+
+    const point = getPointAtT(0.5, points3d, { tension: 0.5 }, new Point());
+    // 1.35625, -4.03125, 2.984375
+    expect(point).to.be.instanceOf(Point);
+    expect(point.x).to.equal(1.35625);
+    expect(point.y).to.equal(-4.03125);
+    expect(point.z).to.equal(2.984375);
   });
 
   it('should be able to find the tangent on curve at t', () => {
-    let tan = getTangentAtT(0, points, 0.5);
+    let tan = getTangentAtT(0, points, { tension: 0.5 });
     compareNumArrays(tan, [0.25, -1.25]);
 
-    tan = getTangentAtT(1, points, 0.5);
+    tan = getTangentAtT(1, points, { tension: 0.5 });
     compareNumArrays(tan, [-0.625, -0.375]);
 
-    tan = getTangentAtT(0.3, points, 0.5);
+    tan = getTangentAtT(0.3, points, { tension: 0.5 });
     compareNumArrays(tan, [1.109999, -1.384999]);
 
-    tan = getTangentAtT(0.5, points, 0.5);
+    tan = getTangentAtT(0.5, points, { tension: 0.5 });
     compareNumArrays(tan, [0.75, -0.75]);
   });
 
-  it('should be able to find the normal on curve at t', () => {
-    let nrm = getNormalAtT(0, points, 0.5);
-    compareNumArrays(nrm, [1.25, 0.25]);
-
-    nrm = getNormalAtT(1, points, 0.5);
-    compareNumArrays(nrm, [0.375, -0.625]);
-
-    nrm = getNormalAtT(0.3, points, 0.5);
-    compareNumArrays(nrm, [1.384999, 1.109999]);
-
-    nrm = getNormalAtT(0.5, points, 0.5);
-    compareNumArrays(nrm, [0.75, 0.75]);
-  });
-
-  it('should be able to find the angle on curve at t', () => {
-    let angle = getAngleAtT(0, points, 0.5);
-    expect(angle).to.be.approximately(-1.37340, EPS);
-
-    angle = getAngleAtT(1, points, 0.5);
-    expect(angle).to.be.approximately(-2.601173, EPS);
-
-    angle = getAngleAtT(0.3, points, 0.5);
-    expect(angle).to.be.approximately(-0.895175, EPS);
-
-    angle = getAngleAtT(0.5, points, 0.5);
-    expect(angle).to.be.approximately(-0.785398, EPS);
-  });
-
   it('should be able to divide a curve into segments and estimate each segments length', () => {
-    const arcLengths = getArcLengths(points, 10, 0);
+    const arcLengths = getArcLengths(points, 10, { tension: 0 });
 
     expect(arcLengths.length).to.equal(11);
     expect(arcLengths[0]).to.equal(0);
     expect(arcLengths[10]).to.be.approximately(48.44474, EPS);
   });
 
+  it('should be able to divide a 3d curve into segments and estimate each segments length', () => {
+    const arcLengths = getArcLengths(points3d, 10, { tension: 0 });
+
+    expect(arcLengths.length).to.equal(11);
+    expect(arcLengths[0]).to.equal(0);
+    expect(arcLengths[10]).to.be.approximately(22.9961309, EPS);
+  });
+
   it('should be able to map between t and u indexes', () => {
-    const arcLengths = getArcLengths(points, 300, 0);
+    const arcLengths = getArcLengths(points, 300, { tension: 0 });
 
     expect(getUtoTmapping(0, arcLengths)).to.equal(0);
     expect(getUtoTmapping(1, arcLengths)).to.equal(1);
@@ -104,7 +110,7 @@ describe('core.ts', () => {
   });
 
   it('should be able to map between u and t indexes', () => {
-    const arcLengths = getArcLengths(points, 300, 0);
+    const arcLengths = getArcLengths(points, 300, { tension: 0 });
 
     expect(getTtoUmapping(0, arcLengths)).to.equal(0);
     expect(getTtoUmapping(1, arcLengths)).to.equal(1);

@@ -2,7 +2,7 @@
 ![](https://img.shields.io/npm/v/curve-interpolator)
 # Curve Interpolator
 
-A lib for interpolating values over a cubic Cardinal/Catmull-Rom spline curve.
+A lib for interpolating values over a cubic Cardinal/Catmull-Rom spline curve of n-dimenesions.
 
 ## Installation
 ```bash
@@ -33,32 +33,34 @@ const points = [
   ...
 ];
 
-const tension = 0.2;
-const interp = new CurveInterpolator(points, tension);
+const interp = new CurveInterpolator(points, { tension: 0.2 });
 
 // get single point
 const position = 0.3 // [0 - 1]
 const pt = interp.getPointAt(position)
 
 // get points evently distributed along the curve
-const nPoints = 1000;
-const pts = interp.getPoints(nPoints - 1);
+const segments = 1000;
+const pts = interp.getPoints(segments);
 
 // lookup values along x and y axises
-const yintersects = interp.y(position);
+const axis = 1;
+const yintersects = interp.lookup(7, axis);
 
 /*
 max number of solutions (0 = all (default), 1 = first, -1 = last)
 A negative max value counts solutions from end of curve
 */
+const axis = 0;
 const max = -1;
-const xintersects = interp.x(position, max);
+const xintersects = interp.lookup(3.2, axis, max);
 
 // get bounding box
 const bbox = interp.getBoundingBox();
 ```
 
 Online example on ObservableHQ:
+https://observablehq.com/@kjerandp/curve-interpolator-v2
 https://observablehq.com/@kjerandp/curve-interpolator-v1
 
 ## Docs

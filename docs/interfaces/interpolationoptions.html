@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LookupOptions | curve-interpolator</title>
+	<title>InterpolationOptions | curve-interpolator</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="lookupoptions.html">LookupOptions</a>
+					<a href="interpolationoptions.html">InterpolationOptions</a>
 				</li>
 			</ul>
-			<h1>Interface LookupOptions</h1>
+			<h1>Interface InterpolationOptions</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,8 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Used by the valuesLookup function to set axis, tension etc.</p>
+						<p>Used by getPointAtT to control curve characteristics and
+						which function to use to process the curve coordinates.</p>
 					</div>
 				</div>
 			</section>
@@ -80,7 +81,7 @@
 						<a href="curveoptions.html" class="tsd-signature-type">CurveOptions</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">LookupOptions</span>
+								<span class="target">InterpolationOptions</span>
 							</li>
 						</ul>
 					</li>
@@ -93,13 +94,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="lookupoptions.html#axis" class="tsd-kind-icon">axis</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="lookupoptions.html#closed" class="tsd-kind-icon">closed</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="lookupoptions.html#func" class="tsd-kind-icon">func</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="lookupoptions.html#margin" class="tsd-kind-icon">margin</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="lookupoptions.html#max" class="tsd-kind-icon">max</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="lookupoptions.html#processrefaxis" class="tsd-kind-icon">process<wbr>Ref<wbr>Axis</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="lookupoptions.html#tension" class="tsd-kind-icon">tension</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="interpolationoptions.html#closed" class="tsd-kind-icon">closed</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="interpolationoptions.html#func" class="tsd-kind-icon">func</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="interpolationoptions.html#tension" class="tsd-kind-icon">tension</a></li>
 							</ul>
 						</section>
 					</div>
@@ -107,16 +104,6 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="axis" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> axis</h3>
-					<div class="tsd-signature tsd-kind-icon">axis<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/461a42a/src/interfaces.ts#L55">interfaces.ts:55</a></li>
-						</ul>
-					</aside>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="closed" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> closed</h3>
@@ -134,37 +121,7 @@
 					<div class="tsd-signature tsd-kind-icon">func<span class="tsd-signature-symbol">:</span> <a href="../globals.html#pointfunction" class="tsd-signature-type">PointFunction</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/461a42a/src/interfaces.ts#L58">interfaces.ts:58</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="margin" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> margin</h3>
-					<div class="tsd-signature tsd-kind-icon">margin<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/461a42a/src/interfaces.ts#L56">interfaces.ts:56</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="max" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> max</h3>
-					<div class="tsd-signature tsd-kind-icon">max<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/461a42a/src/interfaces.ts#L57">interfaces.ts:57</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="processrefaxis" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> process<wbr>Ref<wbr>Axis</h3>
-					<div class="tsd-signature tsd-kind-icon">process<wbr>Ref<wbr>Axis<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/461a42a/src/interfaces.ts#L59">interfaces.ts:59</a></li>
+							<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/461a42a/src/interfaces.ts#L48">interfaces.ts:48</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -209,39 +166,27 @@
 					<li class=" tsd-kind-interface">
 						<a href="curveoptions.html" class="tsd-kind-icon">Curve<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interpolationoptions.html" class="tsd-kind-icon">Interpolation<wbr>Options</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="lookupoptions.html" class="tsd-kind-icon">Lookup<wbr>Options</a>
+						<a href="interpolationoptions.html" class="tsd-kind-icon">Interpolation<wbr>Options</a>
 						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="interpolationoptions.html#closed" class="tsd-kind-icon">closed</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="lookupoptions.html#axis" class="tsd-kind-icon">axis</a>
+								<a href="interpolationoptions.html#func" class="tsd-kind-icon">func</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="lookupoptions.html#closed" class="tsd-kind-icon">closed</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="lookupoptions.html#func" class="tsd-kind-icon">func</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="lookupoptions.html#margin" class="tsd-kind-icon">margin</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="lookupoptions.html#max" class="tsd-kind-icon">max</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="lookupoptions.html#processrefaxis" class="tsd-kind-icon">process<wbr>Ref<wbr>Axis</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="lookupoptions.html#tension" class="tsd-kind-icon">tension</a>
+								<a href="interpolationoptions.html#tension" class="tsd-kind-icon">tension</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-interface">
+						<a href="lookupoptions.html" class="tsd-kind-icon">Lookup<wbr>Options</a>
+					</li>
 					<li class=" tsd-kind-interface">
 						<a href="positionlookupoptions.html" class="tsd-kind-icon">Position<wbr>Lookup<wbr>Options</a>
 					</li>

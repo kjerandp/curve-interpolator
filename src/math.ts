@@ -1,6 +1,7 @@
 import {
   Vector,
 } from './interfaces';
+import { reduce, fill, map } from './utils';
 
 export const EPS = Math.pow(2, -42);
 
@@ -134,10 +135,7 @@ export function getDerivativeOfT(t:number, tension:number, v0:number, v1:number,
  * @param p2 coordinates of point 2
  */
 export function distance(p1:Vector, p2:Vector) : number {
-  const dx = p2[0] - p1[0];
-  const dy = p2[1] - p1[1];
-  const squared = dx * dx + dy * dy;
-  return Math.sqrt(squared);
+  return Math.sqrt(reduce(p2, (s, c, i) => s + (c - p1[i]) ** 2));
 }
 
 /**
@@ -145,11 +143,11 @@ export function distance(p1:Vector, p2:Vector) : number {
  * @param v input array/vector to normalize
  */
 export function normalize(v:Vector) : Vector {
-  const l = Math.sqrt(v[0] * v[0] + v[1] * v[1]);
-  if (l === 0) return [0, 0];
-  v[0] /= l;
-  v[1] /= l;
-  return v;
+  const squared = reduce(v, (s, c) => s + c ** 2);
+  const l = Math.sqrt(squared);
+  if (l === 0) return fill(v, 0);
+
+  return map(v, c => c / l);
 }
 
 /**
@@ -157,6 +155,7 @@ export function normalize(v:Vector) : Vector {
  * @param v vector to rotate
  */
 export function orthogonal(v:Vector) : Vector {
+  if (v.length > 2) throw Error('Only supported for 2d vectors');
   const x = -v[1];
   v[1] = v[0];
   v[0] = x;
