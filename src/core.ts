@@ -242,7 +242,7 @@ export function valuesLookup(lookup: number, points: Vector[], options?: LookupO
   const nPoints = closed ? points.length : points.length - 1;
 
   for (let i = 0; i < nPoints; i += 1) {
-    const idx = (max < 0 ? points.length - i : i);
+    const idx = (max < 0 ? points.length - (i + 1) : i);
 
     const [p0, p1, p2, p3] = getControlPoints(idx, points, closed);
 

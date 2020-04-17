@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import Point from '../src/point';
 import CurveInterpolator from '../src/curve-interpolator';
 import { points } from './test-data';
+import { compareNumArrays } from './test-utils';
 
 const EPS = 0.000001;
 
@@ -62,6 +63,16 @@ describe('curve-interpolator.ts', () => {
     expect(result[result.length - 1].x).to.eq(points[points.length - 1][0]);
     expect(result[result.length - 1].y).to.eq(points[points.length - 1][1]);
     result.every(r => expect(r).to.be.instanceof(Point));
+  });
+
+  it('should be able to lookup values on curve', () => {
+    const interp = new CurveInterpolator(points, { tension: 0 });
+
+    const actual = interp.lookup(2.2, 1, 0) as number[];
+    compareNumArrays(actual.map(d => d[0]), [19.1250098, 10.682604]);
+    expect(interp.lookup(2.2, 1, 1)[0]).to.be.approximately(19.125009, EPS);
+    expect(interp.lookup(2.2, 1, -1)[0]).to.be.approximately(10.682604, EPS);
+
   });
 
   it('should be able to get bounds of curve', () => {
