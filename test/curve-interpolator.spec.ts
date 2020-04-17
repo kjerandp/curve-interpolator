@@ -68,10 +68,16 @@ describe('curve-interpolator.ts', () => {
   it('should be able to lookup values on curve', () => {
     const interp = new CurveInterpolator(points, { tension: 0 });
 
-    const actual = interp.lookup(2.2, 1, 0) as number[];
+    let actual = interp.lookup(2.2, 1, 0) as number[];
     compareNumArrays(actual.map(d => d[0]), [19.1250098, 10.682604]);
     expect(interp.lookup(2.2, 1, 1)[0]).to.be.approximately(19.125009, EPS);
     expect(interp.lookup(2.2, 1, -1)[0]).to.be.approximately(10.682604, EPS);
+
+    actual = interp.lookup(1.1, 0, 0) as number[];
+
+    compareNumArrays(actual.map(d => d[1]), [17.504739]);
+    expect(interp.lookup(1.1, 0, 1)[1]).to.be.approximately(17.504739, EPS);
+    expect(interp.lookup(1.1, 0, -1)[1]).to.be.approximately(17.504739, EPS);
 
   });
 
