@@ -132,8 +132,6 @@ describe('curve-interpolator.ts', () => {
     expect(closeToStart[0]).to.be.lessThan(888.48611);
     expect(closeToEnd[1]).to.be.greaterThan(158.964299);
 
-    const lookup = interp.lookup(389, 0, 0);
-
     interp = new CurveInterpolator([
       [888.48611, 481.364299],
       [389.28611, 158.964299],
