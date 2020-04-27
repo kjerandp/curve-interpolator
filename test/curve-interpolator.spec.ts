@@ -118,5 +118,19 @@ describe('curve-interpolator.ts', () => {
     expect(Object.keys(interp._cache).length).to.eq(0);
 
   });
+
+  it('should work with too few control points', () => {
+    const interp = new CurveInterpolator([
+      [888.48611, 481.364299],
+      [389.28611, 489.364299],
+      [389.28611, 258.964299],
+    ], { tension: 0 });
+
+    const closeToStart = interp.getPointAt(0.02);
+    const closeToEnd = interp.getPointAt(0.98);
+
+    expect(closeToStart[0]).to.be.lessThan(888.48611);
+    expect(closeToEnd[0]).to.eq(389.28611);
+  });
 });
 

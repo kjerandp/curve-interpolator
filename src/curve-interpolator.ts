@@ -25,9 +25,6 @@ import {
  * @param args input array
  */
 function extrapolateArgs(args:Vector[]) : Vector[] {
-  if (args.length < 4) {
-    args.unshift(args[0]);
-  }
   while (args.length < 4) {
     args.push(args[args.length - 1]);
   }
