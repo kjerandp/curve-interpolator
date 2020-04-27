@@ -67,18 +67,10 @@ export function getPointAtT(t: number, points: Vector[], options: InterpolationO
 
   target = target || new Array(p0.length);
 
-  // handle special case that occurs when number of control points are less than 4
-  // and the last point is used to extrapolate the missing control points
-  if (nPoints === 3 && p0 == p1 && p1 === p2 && p2 === p3) {
-    for (let i = 0; i < p1.length; i++) {
-      target[i] = p1[i];
-    }
-    return target;
-  }
-
   for (let i = 0; i < p0.length; i++) {
     target[i] = func(weight, tension, p0[i], p1[i], p2[i], p3[i]);
   }
+  if (nPoints === 3 && target[1] < 158) debugger;
   return target;
 }
 

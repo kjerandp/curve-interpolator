@@ -119,18 +119,41 @@ describe('curve-interpolator.ts', () => {
 
   });
 
-  it('should work with too few control points', () => {
-    const interp = new CurveInterpolator([
+  it('should work with less than 4 control points', () => {
+    let interp = new CurveInterpolator([
       [888.48611, 481.364299],
       [389.28611, 489.364299],
-      [389.28611, 258.964299],
+      [389.28611, 158.964299],
     ], { tension: 0 });
 
-    const closeToStart = interp.getPointAt(0.02);
-    const closeToEnd = interp.getPointAt(0.98);
+    let closeToStart = interp.getPointAt(0.02);
+    let closeToEnd = interp.getPointAt(0.98);
 
     expect(closeToStart[0]).to.be.lessThan(888.48611);
-    expect(closeToEnd[0]).to.eq(389.28611);
+    expect(closeToEnd[1]).to.be.greaterThan(158.964299);
+
+    const lookup = interp.lookup(389, 0, 0);
+
+    interp = new CurveInterpolator([
+      [888.48611, 481.364299],
+      [389.28611, 158.964299],
+    ], { tension: 0 });
+
+    closeToStart = interp.getPointAt(0.02);
+    closeToEnd = interp.getPointAt(0.98);
+
+    expect(closeToStart[0]).to.be.lessThan(888.48611);
+    expect(closeToEnd[1]).to.be.greaterThan(158.964299);
+
+    interp = new CurveInterpolator([
+      [888.48611, 481.364299],
+    ], { tension: 0 });
+
+    closeToStart = interp.getPointAt(0.02);
+    closeToEnd = interp.getPointAt(0.98);
+
+    expect(closeToStart[0]).to.eq(888.48611);
+    expect(closeToEnd[1]).to.eq(481.364299);
   });
 });
 

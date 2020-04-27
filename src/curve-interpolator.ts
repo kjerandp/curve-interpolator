@@ -19,17 +19,6 @@ import {
   CurveOptions,
 } from './interfaces';
 
-/**
- * Extrapolates input array if points have length less than 4 by copying first and last
- * points, so there is a minimum of 4 control points (required to do cubic spline calculations)
- * @param args input array
- */
-function extrapolateArgs(args:Vector[]) : Vector[] {
-  while (args.length < 4) {
-    args.push(args[args.length - 1]);
-  }
-  return args;
-}
 
 export interface CurveInterpolatorOptions extends CurveOptions {
   arcDivisions?: number,
@@ -272,9 +261,6 @@ export default class CurveInterpolator {
   }
 
   set points(pts:Vector[]) {
-    if (pts.length > 0 && pts.length < 4) {
-      pts = extrapolateArgs(pts);
-    }
     this._points = pts;
     this.invalidateCache();
   }
