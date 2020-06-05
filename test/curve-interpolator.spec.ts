@@ -63,6 +63,9 @@ describe('curve-interpolator.ts', () => {
     expect(result[result.length - 1].x).to.eq(points[points.length - 1][0]);
     expect(result[result.length - 1].y).to.eq(points[points.length - 1][1]);
     result.every(r => expect(r).to.be.instanceof(Point));
+
+    expect(() => interp.getPoints(0)).to.throw();
+    expect(() => interp.getPoints()).not.to.throw();
   });
 
   it('should be able to lookup values on curve', () => {

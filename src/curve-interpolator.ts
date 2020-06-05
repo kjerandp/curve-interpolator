@@ -137,9 +137,11 @@ export default class CurveInterpolator {
   getPoints<T extends VectorType>(samples:number, returnType: { new() : T }) : T[]
   getPoints<T extends VectorType>(samples:number, returnType: { new() : T }, from:number) : T[]
   getPoints<T extends VectorType>(samples:number, returnType: { new() : T }, from:number, to:number) : T[]
+  getPoints()
   getPoints(samples:number)
   getPoints(samples:number, returnType: null, from:number, to:number) : Vector[]
   getPoints(samples:number = 100, returnType?: { new() : VectorType }, from:number = 0, to:number = 1) : Vector[] {
+    if (!samples || samples <= 0) throw Error('Invalid arguments passed to getPoints(). You must specify at least 1 sample/segment.')
     if (from < 0 || to > 1 || to < from) return undefined;
 
     const pts = [];
