@@ -70,7 +70,7 @@ export function getPointAtT(t: number, points: Vector[], options: InterpolationO
   for (let i = 0; i < p0.length; i++) {
     target[i] = func(weight, tension, p0[i], p1[i], p2[i], p3[i]);
   }
-  if (nPoints === 3 && target[1] < 158) debugger;
+
   return target;
 }
 
@@ -364,17 +364,16 @@ export function tangentsLookup(lookup: number, points: Vector[], options?: Looku
  * @param options Bounding box options
  */
 export function getBoundingBox(points: Vector[], options: BBoxOptions = {}): BBox {
-  let { tension, closed, from: u0, to: u1, arcLengths, arcDivisions } = {
+  const { tension, closed, from: u0, to: u1, arcDivisions } = {
     tension: 0.5,
     closed: false,
     from: 0,
     to: 1,
-    arcLengths: null,
     arcDivisions: 300,
     ...options,
   };
   const nPoints = closed ? points.length : points.length - 1;
-  arcLengths = arcLengths || getArcLengths(points, arcDivisions, { tension, closed });
+  const arcLengths = options.arcLengths || getArcLengths(points, arcDivisions, { tension, closed });
 
   const t0 = getUtoTmapping(u0, arcLengths);
   const t1 = getUtoTmapping(u1, arcLengths);

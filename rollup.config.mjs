@@ -1,8 +1,8 @@
-import typescript from 'rollup-plugin-typescript2';
-import resolve from 'rollup-plugin-node-resolve';
-import { terser } from 'rollup-plugin-terser';
+import typescript from '@rollup/plugin-typescript';
+import resolve from '@rollup/plugin-node-resolve';
+import terser from '@rollup/plugin-terser';
 
-import pkg from './package.json';
+import pkg from './package.json' assert { type: "json" };
 
 export default [
   {
@@ -21,10 +21,7 @@ export default [
       ...Object.keys(pkg.dependencies || {}),
     ],
     plugins: [
-      typescript({
-        // eslint-disable-next-line global-require
-        typescript: require('typescript'),
-      }),
+      typescript(),
       terser({
         mangle: false,
       }),
@@ -39,10 +36,7 @@ export default [
     },
     plugins: [
       resolve(),
-      typescript({
-        // eslint-disable-next-line global-require
-        typescript: require('typescript'),
-      }),
+      typescript(),
       terser({
         mangle: false,
       }),

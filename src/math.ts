@@ -87,7 +87,7 @@ export function getCubicRoots(a: number, b: number, c: number, d: number) : numb
  * @param v target value
  * @param tension curve tension
  */
-export function getCoefficients(v0: number, v1:number, v2:number, v3:number, v:number = 0, tension:number = 0.5) : [number, number, number, number] {
+export function getCoefficients(v0: number, v1:number, v2:number, v3:number, v = 0, tension = 0.5) : [number, number, number, number] {
   const c = (1 - tension) * (v2 - v0) * 0.5;
   const x = (1 - tension) * (v3 - v1) * 0.5;
   const a = (2 * v1 - 2 * v2 + c + x);
@@ -168,7 +168,7 @@ export function orthogonal(v:Vector) : Vector {
  * @param min min value
  * @param max max value
  */
-export function clamp(value:number, min:number = 0, max:number = 1) : number {
+export function clamp(value:number, min = 0, max = 1) : number {
   if (value < min) return min;
   if (value > max) return max;
   return value;
