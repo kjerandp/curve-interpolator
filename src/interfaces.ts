@@ -1,4 +1,9 @@
 /**
+ * Array of four number items
+ */
+export type NumArray4 = [number, number, number, number];
+
+/**
 * Plugs point values into the derivative of the spline equation and return the result
 * @param t interpolation time
 * @param tension curve tension
@@ -6,8 +11,9 @@
 * @param v1 value of second control point
 * @param v2 value of third control point
 * @param v3 value of fourth control point
+* @param timeDeltas time deltas to use for curve velocity vectors
 */
-export type PointFunction = (t: number, tension: number, v0: number, v1: number, v2: number, v3: number, idx?: number) => number;
+export type PointFunction = (t: number, tension: number, timeDeltas: NumArray4, v0: number, v1: number, v2: number, v3: number, idx?: number) => number;
 
 /**
  * Any objects that supports indexing values by number may be used as input or return types.
@@ -36,6 +42,8 @@ export type Vector = (number[] | VectorType);
 export interface CurveOptions {
   /* curve tension (0 = Catmull-Rom curve, 1 = linear curve) */
   tension?: number,
+  /* curve velocity vector modifier (0 = uniform, 0.5 = centrepetal, 1 = chordal */
+  alpha?: number,
   /* flag to set if the curve should be closed or not */
   closed?: boolean,
 }

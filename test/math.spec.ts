@@ -15,10 +15,12 @@ import {
   compareNumArrays,
   compareNumArraysUnordered,
 } from './test-utils';
+import { NumArray4 } from '../src/interfaces';
 
 const EPS = 0.000001;
 
 describe('math.ts', () => {
+  const deltas: NumArray4 = [0, 1, 2, 3];
 
   it('should solve 2nd degree equation', () => {
 
@@ -73,54 +75,54 @@ describe('math.ts', () => {
   });
 
   it('should be able to calculate value of spline equation given a value for t', () => {
-    let result = solveForT(0, 0.5, 2, 3, 4, 5);
+    let result = solveForT(0, 0.5, deltas, 2, 3, 4, 5);
     expect(result).to.equal(3);
 
-    result = solveForT(0.25, 0.5, 2, 3, 4, 5);
+    result = solveForT(0.25, 0.5, deltas, 2, 3, 4, 5);
     expect(result).to.equal(3.203125);
 
-    result = solveForT(0.5, 0.5, 2, 3, 4, 5);
+    result = solveForT(0.5, 0.5, deltas, 2, 3, 4, 5);
     expect(result).to.equal(3.5);
 
-    result = solveForT(0.75, 0.5, 2, 3, 4, 5);
+    result = solveForT(0.75, 0.5, deltas, 2, 3, 4, 5);
     expect(result).to.equal(3.796875);
 
-    result = solveForT(0.25, 0, 2, 3, 4, 5);
+    result = solveForT(0.25, 0, deltas, 2, 3, 4, 5);
     expect(result).to.equal(3.25);
 
-    result = solveForT(0.5, 0, 2, 3, 4, 5);
+    result = solveForT(0.5, 0, deltas, 2, 3, 4, 5);
     expect(result).to.equal(3.5);
 
-    result = solveForT(0.75, 0, 2, 3, 4, 5);
+    result = solveForT(0.75, 0, deltas, 2, 3, 4, 5);
     expect(result).to.equal(3.75);
 
-    result = solveForT(1, 0.5, 2, 3, 4, 5);
+    result = solveForT(1, 0.5, deltas, 2, 3, 4, 5);
     expect(result).to.equal(4);
   });
 
   it('should be able to calculate value of the derivative of a spline equation given a value for t', () => {
-    let result = getDerivativeOfT(0, 0.5, 2, 3, 4, 5);
+    let result = getDerivativeOfT(0, 0.5, deltas, 2, 3, 4, 5);
     expect(result).to.equal(0.5);
 
-    result = getDerivativeOfT(0.25, 0.5, 2, 3, 4, 5);
+    result = getDerivativeOfT(0.25, 0.5, deltas, 2, 3, 4, 5);
     expect(result).to.equal(1.0625);
 
-    result = getDerivativeOfT(0.5, 0.5, 2, 3, 4, 5);
+    result = getDerivativeOfT(0.5, 0.5, deltas, 2, 3, 4, 5);
     expect(result).to.equal(1.25);
 
-    result = getDerivativeOfT(0.75, 0.5, 2, 3, 4, 5);
+    result = getDerivativeOfT(0.75, 0.5, deltas, 2, 3, 4, 5);
     expect(result).to.equal(1.0625);
 
-    result = getDerivativeOfT(0.25, 0, 2, 3, 4, 5);
+    result = getDerivativeOfT(0.25, 0, deltas, 2, 3, 4, 5);
     expect(result).to.equal(1);
 
-    result = getDerivativeOfT(0.5, 0, 2, 3, 4, 5);
+    result = getDerivativeOfT(0.5, 0, deltas, 2, 3, 4, 5);
     expect(result).to.equal(1);
 
-    result = getDerivativeOfT(0.75, 0, 2, 3, 4, 5);
+    result = getDerivativeOfT(0.75, 0, deltas, 2, 3, 4, 5);
     expect(result).to.equal(1);
 
-    result = getDerivativeOfT(1, 0.5, 2, 3, 4, 5);
+    result = getDerivativeOfT(1, 0.5, deltas, 2, 3, 4, 5);
     expect(result).to.equal(0.5);
   });
 

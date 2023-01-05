@@ -17,8 +17,8 @@ export interface BBoxLegacy extends BBox {
  * Legacy support for v1 interface (2d curves)
  */
 export default class CurveInterpolator2D extends CurveInterpolator {
-  constructor(points: Vector[], tension = 0.5, arcDivisions = 300, closed = false) {
-    super(points, { tension, arcDivisions, closed });
+  constructor(points: Vector[], tension = 0.5, arcDivisions = 300, closed = false, alpha = 0) {
+    super(points, { tension, alpha, arcDivisions, closed });
   }
 
   /**
@@ -62,7 +62,7 @@ export default class CurveInterpolator2D extends CurveInterpolator {
     const tan = getTangentAtT(
       this.getT(position),
       this.points,
-      { tension: this.tension, closed: this.closed },
+      { tension: this.tension, alpha: this.alpha, closed: this.closed },
       target,
     );
     const nrm = orthogonal(tan);
@@ -78,7 +78,7 @@ export default class CurveInterpolator2D extends CurveInterpolator {
     const tan = getTangentAtT(
       this.getT(position),
       this.points,
-      { tension: this.tension, closed: this.closed },
+      { tension: this.tension, alpha: this.alpha, closed: this.closed },
     );
     return Math.atan2(tan[1], tan[0]);
   }

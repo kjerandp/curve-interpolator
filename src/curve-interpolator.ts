@@ -32,6 +32,7 @@ export default class CurveInterpolator {
   _lmargin: number;
   _points: Vector[];
   _tension: number;
+  _alpha: number;
   _arcDivisions: number;
   _closed: boolean;
   _cache: { arcLengths?: number[], bbox?: BBox; };
@@ -44,6 +45,7 @@ export default class CurveInterpolator {
   constructor(points:Vector[], options: CurveInterpolatorOptions = {}) {
     options = {
       tension: 0.5,
+      alpha: 0,
       arcDivisions: 300,
       closed: false,
       ...options,
@@ -51,6 +53,7 @@ export default class CurveInterpolator {
 
     this._cache = {};
     this._tension = options.tension;
+    this._alpha = options.alpha;
     this._arcDivisions = options.arcDivisions;
     this._lmargin = options.lmargin || 1 - this._tension;
     this._closed = options.closed;
@@ -79,6 +82,7 @@ export default class CurveInterpolator {
   getPointAt(position:number, target?:VectorType) : Vector {
     const options = {
       tension: this.tension,
+      alpha: this.alpha,
       closed: this.closed,
     };
     return getPointAtT(this.getT(position), this.points, options, target);
@@ -95,7 +99,7 @@ export default class CurveInterpolator {
     const tan = getTangentAtT(
       this.getT(position),
       this.points,
-      { tension: this.tension, closed: this.closed },
+      { tension: this.tension, alpha: this.alpha, closed: this.closed },
       target,
     );
     return normalize(tan);
@@ -118,6 +122,7 @@ export default class CurveInterpolator {
         from,
         to,
         tension: this.tension,
+        alpha: this.alpha,
         closed: this.closed,
         arcLengths: this.arcLengths,
       },
@@ -167,6 +172,7 @@ export default class CurveInterpolator {
       {
         axis,
         tension: this.tension,
+        alpha: this.alpha,
         closed: this.closed,
         max,
         margin,
@@ -190,6 +196,7 @@ export default class CurveInterpolator {
         axis,
         arcLengths: this.arcLengths,
         tension: this.tension,
+        alpha: this.alpha,
         closed: this.closed,
         max,
         margin,
@@ -225,6 +232,15 @@ export default class CurveInterpolator {
     }
   }
 
+  get alpha() { return this._alpha; }
+
+  set alpha(a:number) {
+    if (a !== this._alpha) {
+      this._alpha = a;
+      this.invalidateCache();
+    }
+  }
+
   get closed() { return this._closed; }
 
   set closed(isClosed:boolean) {
@@ -250,7 +266,7 @@ export default class CurveInterpolator {
     const arcLengths = getArcLengths(
       this.points,
       this.arcDivisions,
-      { tension: this.tension, closed: this.closed },
+      { tension: this.tension, alpha: this.alpha, closed: this.closed },
     );
     this._cache.arcLengths = arcLengths;
     return arcLengths;
