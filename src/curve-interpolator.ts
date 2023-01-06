@@ -32,6 +32,7 @@ export default class CurveInterpolator {
   _lmargin: number;
   _points: Vector[];
   _tension: number;
+  _alpha: number;
   _arcDivisions: number;
   _closed: boolean;
   _cache: { arcLengths?: number[], bbox?: BBox; };
@@ -44,6 +45,7 @@ export default class CurveInterpolator {
   constructor(points:Vector[], options: CurveInterpolatorOptions = {}) {
     options = {
       tension: 0.5,
+      alpha: 0,
       arcDivisions: 300,
       closed: false,
       ...options,
@@ -51,6 +53,7 @@ export default class CurveInterpolator {
 
     this._cache = {};
     this._tension = options.tension;
+    this._alpha = options.alpha;
     this._arcDivisions = options.arcDivisions;
     this._lmargin = options.lmargin || 1 - this._tension;
     this._closed = options.closed;
@@ -79,6 +82,7 @@ export default class CurveInterpolator {
   getPointAt(position:number, target?:VectorType) : Vector {
     const options = {
       tension: this.tension,
+      alpha: this.alpha,
       closed: this.closed,
     };
     return getPointAtT(this.getT(position), this.points, options, target);
@@ -95,7 +99,7 @@ export default class CurveInterpolator {
     const tan = getTangentAtT(
       this.getT(position),
       this.points,
-      { tension: this.tension, closed: this.closed },
+      { tension: this.tension, alpha: this.alpha, closed: this.closed },
       target,
     );
     return normalize(tan);
@@ -107,7 +111,7 @@ export default class CurveInterpolator {
    * @param from position from
    * @param to position to
    */
-  getBoundingBox(from:number = 0, to:number = 1) : BBox {
+  getBoundingBox(from = 0, to = 1) : BBox {
     if (from === 0 && to === 1 && this._cache.bbox) {
       return this._cache.bbox;
     }
@@ -118,6 +122,7 @@ export default class CurveInterpolator {
         from,
         to,
         tension: this.tension,
+        alpha: this.alpha,
         closed: this.closed,
         arcLengths: this.arcLengths,
       },
@@ -140,7 +145,7 @@ export default class CurveInterpolator {
   getPoints()
   getPoints(samples:number)
   getPoints(samples:number, returnType: null, from:number, to:number) : Vector[]
-  getPoints(samples:number = 100, returnType?: { new() : VectorType }, from:number = 0, to:number = 1) : Vector[] {
+  getPoints(samples = 100, returnType?: { new() : VectorType }, from = 0, to = 1) : Vector[] {
     if (!samples || samples <= 0) throw Error('Invalid arguments passed to getPoints(). You must specify at least 1 sample/segment.')
     if (from < 0 || to > 1 || to < from) return undefined;
 
@@ -160,13 +165,14 @@ export default class CurveInterpolator {
    * @param axis index of axis [0=x, 1=y, 2=z ...]
    * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
    */
-  lookup(v:number, axis:number = 0, max:number = 0, margin:number = this._lmargin) : Vector[] | Vector {
+  lookup(v:number, axis = 0, max = 0, margin:number = this._lmargin) : Vector[] | Vector {
     const matches = valuesLookup(
       v,
       this.points,
       {
         axis,
         tension: this.tension,
+        alpha: this.alpha,
         closed: this.closed,
         max,
         margin,
@@ -182,7 +188,7 @@ export default class CurveInterpolator {
    * @param axis index of axis [0=x, 1=y, 2=z ...]
    * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
    */
-  lookupPositions(v:number, axis:number = 0, max:number = 0, margin:number = this._lmargin) : number[] {
+  lookupPositions(v:number, axis = 0, max = 0, margin:number = this._lmargin) : number[] {
     const matches = positionsLookup(
       v,
       this.points,
@@ -190,6 +196,7 @@ export default class CurveInterpolator {
         axis,
         arcLengths: this.arcLengths,
         tension: this.tension,
+        alpha: this.alpha,
         closed: this.closed,
         max,
         margin,
@@ -210,9 +217,47 @@ export default class CurveInterpolator {
   }
 
   get points() { return this._points; }
+
+  set points(pts:Vector[]) {
+    this._points = pts;
+    this.invalidateCache();
+  }
+
   get tension() { return this._tension; }
+
+  set tension(t:number) {
+    if (t !== this._tension) {
+      this._tension = t;
+      this.invalidateCache();
+    }
+  }
+
+  get alpha() { return this._alpha; }
+
+  set alpha(a:number) {
+    if (a !== this._alpha) {
+      this._alpha = a;
+      this.invalidateCache();
+    }
+  }
+
   get closed() { return this._closed; }
+
+  set closed(isClosed:boolean) {
+    if (isClosed !== this._closed) {
+      this._closed = isClosed;
+      this.invalidateCache();
+    }
+  }
+
   get arcDivisions() { return this._arcDivisions; }
+
+  set arcDivisions(n:number) {
+    if (n !== this._arcDivisions) {
+      this._arcDivisions = n;
+      this.invalidateCache();
+    }
+  }
 
   get arcLengths() {
     if (this._cache.arcLengths) {
@@ -221,7 +266,7 @@ export default class CurveInterpolator {
     const arcLengths = getArcLengths(
       this.points,
       this.arcDivisions,
-      { tension: this.tension, closed: this.closed },
+      { tension: this.tension, alpha: this.alpha, closed: this.closed },
     );
     this._cache.arcLengths = arcLengths;
     return arcLengths;
@@ -260,31 +305,5 @@ export default class CurveInterpolator {
   get maxZ() {
     const bbox = this.getBoundingBox();
     return bbox.max[2];
-  }
-
-  set points(pts:Vector[]) {
-    this._points = pts;
-    this.invalidateCache();
-  }
-
-  set tension(t:number) {
-    if (t !== this._tension) {
-      this._tension = t;
-      this.invalidateCache();
-    }
-  }
-
-  set arcDivisions(n:number) {
-    if (n !== this._arcDivisions) {
-      this._arcDivisions = n;
-      this.invalidateCache();
-    }
-  }
-
-  set closed(isClosed:boolean) {
-    if (isClosed !== this._closed) {
-      this._closed = isClosed;
-      this.invalidateCache();
-    }
   }
 }

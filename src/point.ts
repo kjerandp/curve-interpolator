@@ -9,7 +9,7 @@ export default class Point {
   z?: number;
   w?: number;
 
-  constructor(x:number = 0, y:number = 0, z:number = null, w:number = null) {
+  constructor(x = 0, y = 0, z:number = null, w:number = null) {
     this.x = x;
     this.y = y;
     this.z = z;

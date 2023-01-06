@@ -1,19 +1,19 @@
 {
-  "env": {
-      "es6": true,
-      "node": true
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "settings": {
+    "import/resolver": {
+      "typescript": {} // this loads <rootdir>/tsconfig.json to eslint
+    }
   },
-  "extends": [
-      "airbnb-base"
+  "plugins": [
+    "@typescript-eslint",
+    "import"
   ],
-  "globals": {
-      "Atomics": "readonly",
-      "SharedArrayBuffer": "readonly"
-  },
-  "parserOptions": {
-      "ecmaVersion": 2018,
-      "sourceType": "module"
-  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
   "rules": {
     "one-var": "off",
     "no-mixed-operators": "off",
@@ -22,6 +22,16 @@
     "no-plusplus": "off",
     "no-underscore-dangle": "off",
     "one-var-declaration-per-line": "off",
-    "import/prefer-default-export": "off"
+    "import/prefer-default-export": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ]
   }
 }

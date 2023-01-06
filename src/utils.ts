@@ -30,7 +30,7 @@ export function map(v:Vector, func: (c:number, i:number) => number) : Vector {
  * @param func reduce function
  * @param r initial value
  */
-export function reduce(v:Vector, func: (s: number, c:number, i:number) => number, r:number = 0) : number {
+export function reduce(v:Vector, func: (s: number, c:number, i:number) => number, r = 0) : number {
   for (let i = 0; i < v.length; i++) {
     r = func(r, v[i], i);
   }
@@ -45,7 +45,7 @@ export function reduce(v:Vector, func: (s: number, c:number, i:number) => number
  * @param maxOffset threshold to use for determining if a point is part of a linear line segment
  * @param maxDistance points will not be removed if the distance equals or is greater than the given maxDistance
  */
-export function simplify2d(inputArr:number[][], maxOffset:number = 0.001, maxDistance:number = 10) : number[][] {
+export function simplify2d(inputArr:number[][], maxOffset = 0.001, maxDistance = 10) : number[][] {
   if (inputArr.length <= 4) return inputArr;
   const [o0, o1] = inputArr[0];
   const arr = inputArr.map(d => [d[0] - o0, d[1] - o1]);

@@ -17,8 +17,8 @@ export interface BBoxLegacy extends BBox {
  * Legacy support for v1 interface (2d curves)
  */
 export default class CurveInterpolator2D extends CurveInterpolator {
-  constructor(points: Vector[], tension: number = 0.5, arcDivisions: number = 300, closed: boolean = false) {
-    super(points, { tension, arcDivisions, closed });
+  constructor(points: Vector[], tension = 0.5, arcDivisions = 300, closed = false, alpha = 0) {
+    super(points, { tension, alpha, arcDivisions, closed });
   }
 
   /**
@@ -27,7 +27,7 @@ export default class CurveInterpolator2D extends CurveInterpolator {
    * @param y value at y-axis
    * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
    */
-  x(y: number, max: number = 0, margin: number = this._lmargin) : number | number[] {
+  x(y: number, max = 0, margin: number = this._lmargin) : number | number[] {
     const res = this.lookup(y, 1, max, margin);
 
     if (Math.abs(max) === 1) {
@@ -42,7 +42,7 @@ export default class CurveInterpolator2D extends CurveInterpolator {
    * @param x value at x-axis
    * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
    */
-  y(x: number, max: number = 0, margin: number = this._lmargin) : number | number[] {
+  y(x: number, max = 0, margin: number = this._lmargin) : number | number[] {
     const res = this.lookup(x, 0, max, margin);
 
     if (Math.abs(max) === 1) {
@@ -62,7 +62,7 @@ export default class CurveInterpolator2D extends CurveInterpolator {
     const tan = getTangentAtT(
       this.getT(position),
       this.points,
-      { tension: this.tension, closed: this.closed },
+      { tension: this.tension, alpha: this.alpha, closed: this.closed },
       target,
     );
     const nrm = orthogonal(tan);
@@ -78,7 +78,7 @@ export default class CurveInterpolator2D extends CurveInterpolator {
     const tan = getTangentAtT(
       this.getT(position),
       this.points,
-      { tension: this.tension, closed: this.closed },
+      { tension: this.tension, alpha: this.alpha, closed: this.closed },
     );
     return Math.atan2(tan[1], tan[0]);
   }
@@ -89,7 +89,7 @@ export default class CurveInterpolator2D extends CurveInterpolator {
    * @param from position from
    * @param to position to
    */
-  getBoundingBox(from:number = 0, to:number = 1) : BBoxLegacy {
+  getBoundingBox(from = 0, to = 1) : BBoxLegacy {
     const bbox = super.getBoundingBox(from, to);
 
     return {
