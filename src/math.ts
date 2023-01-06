@@ -87,10 +87,10 @@ export function getCubicRoots(a: number, b: number, c: number, d: number) : numb
  * @param v3 value of fourth control point
  * @param v target value
  * @param tension curve tension
- * @param deltas time deltas to use for calculating curve velocity vectors
+ * @param knotSequence knot sequence to use for calculating curve velocity vectors
  */
-export function getCoefficients(v0: number, v1:number, v2:number, v3:number, v = 0, tension = 0.5, deltas = [0, 1, 2, 3]) : NumArray4 {
-  const [t0, t1, t2, t3] = deltas;
+export function getCoefficients(v0: number, v1:number, v2:number, v3:number, v = 0, tension = 0.5, knotSequence = [0, 1, 2, 3]) : NumArray4 {
+  const [t0, t1, t2, t3] = knotSequence;
 
   const c = (1 - tension) * (t2 - t1) * ((v0 - v1) / (t0 - t1) - (v0 - v2) / (t0 - t2) + (v1 - v2) / (t1 - t2));
   const x = (1 - tension) * (t2 - t1) * ((v1 - v2) / (t1 - t2) - (v1 - v3) / (t1 - t3) + (v2 - v3) / (t2 - t3));
@@ -106,18 +106,18 @@ export function getCoefficients(v0: number, v1:number, v2:number, v3:number, v =
  * Plugs point values into spline equation and return the result
  * @param t interpolation time
  * @param tension curve tension
- * @param deltas time deltas to use for calculating curve velocity vectors
+ * @param knotSequence knot sequence to use for calculating curve velocity vectors
  * @param v0 value of first control point
  * @param v1 value of second control point
  * @param v2 value of third control point
  * @param v3 value of fourth control point
  */
-export function solveForT (t:number, tension:number, deltas: NumArray4, v0:number, v1:number, v2:number, v3:number) : number {
+export function solveForT (t:number, tension:number, knotSequence: NumArray4, v0:number, v1:number, v2:number, v3:number) : number {
   if (Math.abs(t) < EPS) return v1;
   if (Math.abs(1 - t) < EPS) return v2;
   const t2 = t * t;
   const t3 = t * t2;
-  const [a, b, c, d] = getCoefficients(v0, v1, v2, v3, 0, tension, deltas);
+  const [a, b, c, d] = getCoefficients(v0, v1, v2, v3, 0, tension, knotSequence);
   return a * t3 + b * t2 + c * t + d;
 }
 
@@ -125,16 +125,29 @@ export function solveForT (t:number, tension:number, deltas: NumArray4, v0:numbe
  * Plugs point values into the derivative of the spline equation and return the result
  * @param t interpolation time
  * @param tension curve tension
- * @param deltas time deltas to use for calculating curve velocity vectors
+ * @param knotSequence knot sequence to use for calculating curve velocity vectors
  * @param v0 value of first control point
  * @param v1 value of second control point
  * @param v2 value of third control point
  * @param v3 value of fourth control point
  */
-export function getDerivativeOfT(t:number, tension:number, deltas: NumArray4, v0:number, v1:number, v2:number, v3:number) : number {
+export function getDerivativeOfT(t:number, tension:number, knotSequence: NumArray4, v0:number, v1:number, v2:number, v3:number) : number {
   const t2 = t * t;
-  const [a, b, c] = getCoefficients(v0, v1, v2, v3, 0, tension, deltas);
+  const [a, b, c] = getCoefficients(v0, v1, v2, v3, 0, tension, knotSequence);
   return (3 * a * t2 + 2 * b * t + c);
+}
+
+/**
+ * Calculate the sum of squares between two points
+ * @param u coordinates of point 1
+ * @param v coordinates of point 2
+ */
+export function sumOfSquares(u:Vector, v:Vector) : number {
+  let sumOfSquares = 0;
+  for (let i = 0; i < u.length; i++) {
+    sumOfSquares += (u[i] - v[i]) * (u[i] - v[i]);
+  }
+  return sumOfSquares;
 }
 
 /**
@@ -143,7 +156,7 @@ export function getDerivativeOfT(t:number, tension:number, deltas: NumArray4, v0
  * @param p2 coordinates of point 2
  */
 export function distance(p1:Vector, p2:Vector) : number {
-  return Math.sqrt(reduce(p2, (s, c, i) => s + (c - p1[i]) ** 2));
+  return Math.sqrt(sumOfSquares(p1, p2));
 }
 
 /**

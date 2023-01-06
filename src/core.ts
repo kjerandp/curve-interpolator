@@ -7,6 +7,7 @@ import {
   clamp,
   EPS,
   getQuadRoots,
+  sumOfSquares,
 } from './math';
 import {
   Vector,
@@ -62,7 +63,7 @@ function getControlPoints(idx: number, points: Vector[], closed: boolean) : Vect
 }
 
 /**
- * This function will calculate the time deltas, based on a given value for alpha, for a set of
+ * This function will calculate the knot sequence, based on a given value for alpha, for a set of
  * control points for a spline segment. It is used to calculate the velocity vectors, which
  * determines the curvature of the segment.
  * @param p0 First control point
@@ -70,25 +71,18 @@ function getControlPoints(idx: number, points: Vector[], closed: boolean) : Vect
  * @param p2 Third control point
  * @param p3 Fourth control point
  * @param alpha alpha value
- * @returns calculated time deltas to use for curve velocity vector calculations
+ * @returns calculated knot sequence to use for curve velocity vector calculations
  */
-export function calculateTsForAlpha(p0 : Vector, p1: Vector, p2: Vector, p3: Vector, alpha = 0) : NumArray4 {
+export function calcKnotSequence(p0 : Vector, p1: Vector, p2: Vector, p3: Vector, alpha = 0) : NumArray4 {
   if (alpha === 0) return [0, 1, 2, 3];
 
-  const deltaT = (u: Vector, v: Vector) : number => {
-    let sumOfSquares = 0;
-    for (let i = 0; i < u.length; i++) {
-      sumOfSquares += (u[i] - v[i]) * (u[i] - v[i]);
-    }
-    return Math.pow(sumOfSquares, 0.5 * alpha);
-  }
+  const deltaT = (u: Vector, v: Vector) : number => Math.pow(sumOfSquares(u, v), 0.5 * alpha);
 
-  const t0 = 0;
-  const t1 = deltaT(p1, p0) + t0;
+  const t1 = deltaT(p1, p0);
   const t2 = deltaT(p2, p1) + t1;
   const t3 = deltaT(p3, p2) + t2;
 
-  return [t0, t1, t2, t3];
+  return [0, t1, t2, t3];
 }
 
 /**
@@ -121,10 +115,10 @@ export function getPointAtT(t: number, points: Vector[], options: InterpolationO
 
   target = target || new Array(p0.length);
 
-  const deltas = calculateTsForAlpha(p0, p1, p2, p3, alpha);
+  const knotSequence = calcKnotSequence(p0, p1, p2, p3, alpha);
 
   for (let i = 0; i < p0.length; i++) {
-    target[i] = func(weight, tension, deltas, p0[i], p1[i], p2[i], p3[i]);
+    target[i] = func(weight, tension, knotSequence, p0[i], p1[i], p2[i], p3[i]);
   }
 
   return target;
@@ -262,14 +256,14 @@ export function getTtoUmapping(t: number, arcLengths: number[]): number {
  * Gets and solves the cubic spline equation for t
  * @param lookup target lookup value
  * @param tension curve tension
- * @param deltas time deltas to use for calculating curve velocity vectors
+ * @param knotSequence knot sequence to use for calculating curve velocity vectors
  * @param v0 axis value of control point 0
  * @param v1 axis value of control point 1
  * @param v2 axis value of control point 2
  * @param v3 axis value of control point 3
  */
-export function getTAtValue(lookup: number, tension: number, deltas: NumArray4, v0: number, v1: number, v2: number, v3: number): number[] {
-  const [a, b, c, d] = getCoefficients(v0, v1, v2, v3, lookup, tension, deltas);
+export function getTAtValue(lookup: number, tension: number, knotSequence: NumArray4, v0: number, v1: number, v2: number, v3: number): number[] {
+  const [a, b, c, d] = getCoefficients(v0, v1, v2, v3, lookup, tension, knotSequence);
   if (a === 0 && b === 0 && c === 0 && d === 0) {
     return [0]; // whole segment matches - how to deal with this?
   }
@@ -317,8 +311,8 @@ export function valuesLookup(lookup: number, points: Vector[], options?: LookupO
     }
 
     if (lookup - margin <= vmax && lookup + margin >= vmin) {
-      const deltas = calculateTsForAlpha(p0, p1, p2, p3, alpha);
-      const ts = getTAtValue(lookup, tension, deltas, p0[k], p1[k], p2[k], p3[k]);
+      const knotSequence = calcKnotSequence(p0, p1, p2, p3, alpha);
+      const ts = getTAtValue(lookup, tension, knotSequence, p0[k], p1[k], p2[k], p3[k]);
 
       // sort on t to solve in order of curve length if max != 0
       if (max < 0) ts.sort((a, b) => b - a);
@@ -330,7 +324,7 @@ export function valuesLookup(lookup: number, points: Vector[], options?: LookupO
         for (let c = 0; c < p0.length; c++) {
           let v: number;
           if (c !== k || processRefAxis) {
-            v = func(ts[j], tension, deltas, p0[c], p1[c], p2[c], p3[c], idx - 1);
+            v = func(ts[j], tension, knotSequence, p0[c], p1[c], p2[c], p3[c], idx - 1);
           } else {
             v = lookup;
           }
@@ -383,10 +377,10 @@ export function positionsLookup(lookup: number, points: Vector[], options?: Posi
       vmax = p1[k];
     }
 
-    const deltas = calculateTsForAlpha(p0, p1, p2, p3, alpha);
+    const knotSequence = calcKnotSequence(p0, p1, p2, p3, alpha);
 
     if (lookup - margin <= vmax && lookup + margin >= vmin) {
-      const ts = getTAtValue(lookup, tension, deltas, p0[k], p1[k], p2[k], p3[k]);
+      const ts = getTAtValue(lookup, tension, knotSequence, p0[k], p1[k], p2[k], p3[k]);
 
       // sort on t to solve in order of curve length if max != 0
       if (max < 0) ts.sort((a, b) => b - a);
@@ -466,20 +460,20 @@ export function getBoundingBox(points: Vector[], options: BBoxOptions = {}): BBo
       }
     }
 
-    if (tension < 1) { //TODO: consider alpha
+    if (tension < 1) {
       const w0 = nPoints * t0 - (i - 1);
       const w1 = nPoints * t1 - (i - 1);
 
       const valid = (t: number) => t > -EPS && t <= 1 + EPS && (i - 1 !== i0 || t > w0) && (i !== i1 || t < w1);
-      const deltas = calculateTsForAlpha(p0, p1, p2, p3, alpha);
+      const knotSequence = calcKnotSequence(p0, p1, p2, p3, alpha);
 
       for (let c = 0; c < p0.length; c++) {
-        const [k, l, m] = getCoefficients(p0[c], p1[c], p2[c], p3[c], 0, tension, deltas);
+        const [k, l, m] = getCoefficients(p0[c], p1[c], p2[c], p3[c], 0, tension, knotSequence);
 
         const roots = getQuadRoots(3 * k, 2 * l, m);
 
         roots.filter(valid).forEach(t => {
-          const v = solveForT(t, tension, deltas, p0[c], p1[c], p2[c], p3[c]);
+          const v = solveForT(t, tension, knotSequence, p0[c], p1[c], p2[c], p3[c]);
           if (v < min[c]) min[c] = v;
           if (v > max[c]) max[c] = v;
         });

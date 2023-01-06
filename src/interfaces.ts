@@ -11,9 +11,9 @@ export type NumArray4 = [number, number, number, number];
 * @param v1 value of second control point
 * @param v2 value of third control point
 * @param v3 value of fourth control point
-* @param timeDeltas time deltas to use for curve velocity vectors
+* @param knotSequence knot sequence for curve velocity vectors
 */
-export type PointFunction = (t: number, tension: number, timeDeltas: NumArray4, v0: number, v1: number, v2: number, v3: number, idx?: number) => number;
+export type PointFunction = (t: number, tension: number, knotSequence: NumArray4, v0: number, v1: number, v2: number, v3: number, idx?: number) => number;
 
 /**
  * Any objects that supports indexing values by number may be used as input or return types.
