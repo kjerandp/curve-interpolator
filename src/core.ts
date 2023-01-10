@@ -178,8 +178,9 @@ export function getArcLengths(points: Vector[], divisions: number, options: Curv
 }
 
 /**
- * This maps a value of normalized t (time along curve) to a value of u, where u is an uniformly
- * distributed index along the curve between 0 and 1
+ * This maps a value of normalized u (global time along curve) to a value of t,
+ * where t is a value between 0 and 1 which can be used to calculate the spline
+ * segment index and local spline time along curve.
  * @param u point on curve between 0 and 1.
  * @param arcLengths aggregated curve segment lengths
  */

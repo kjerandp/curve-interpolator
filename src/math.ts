@@ -92,8 +92,17 @@ export function getCubicRoots(a: number, b: number, c: number, d: number) : numb
 export function getCoefficients(v0: number, v1:number, v2:number, v3:number, v = 0, tension = 0.5, knotSequence = [0, 1, 2, 3]) : NumArray4 {
   const [t0, t1, t2, t3] = knotSequence;
 
-  const c = (1 - tension) * (t2 - t1) * ((v0 - v1) / (t0 - t1) - (v0 - v2) / (t0 - t2) + (v1 - v2) / (t1 - t2));
-  const x = (1 - tension) * (t2 - t1) * ((v1 - v2) / (t1 - t2) - (v1 - v3) / (t1 - t3) + (v2 - v3) / (t2 - t3));
+  let c = 0, x = 0;
+
+  if (t1 - t2 !== 0) {
+    if (t0 - t1 !== 0 && t0 - t2 !== 0) {
+      c = (1 - tension) * (t2 - t1) * ((v0 - v1) / (t0 - t1) - (v0 - v2) / (t0 - t2) + (v1 - v2) / (t1 - t2));
+    }
+    if (t1 - t3 !== 0 && t2 - t3 !== 0) {
+      x = (1 - tension) * (t2 - t1) * ((v1 - v2) / (t1 - t2) - (v1 - v3) / (t1 - t3) + (v2 - v3) / (t2 - t3));
+    }
+  }
+
 
   const a = (2 * v1 - 2 * v2 + c + x);
   const b = (-3 * v1 + 3 * v2 - 2 * c - x);
@@ -156,7 +165,8 @@ export function sumOfSquares(u:Vector, v:Vector) : number {
  * @param p2 coordinates of point 2
  */
 export function distance(p1:Vector, p2:Vector) : number {
-  return Math.sqrt(sumOfSquares(p1, p2));
+  const sqrs = sumOfSquares(p1, p2);
+  return sqrs === 0 ? 0 : Math.sqrt(sqrs);
 }
 
 /**
