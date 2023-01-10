@@ -2,3 +2,5 @@ node_modules
 test
 testfiles
 dist
+**.spec.ts
+

@@ -1,3 +1,4 @@
 {
-  "excludePrivate": false
+  "excludePrivate": false,
+  "exclude": ["**/legacy/*"]
 }

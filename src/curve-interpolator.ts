@@ -1,27 +1,28 @@
 import {
-  getPointAtT,
-  getTangentAtT,
-  getBoundingBox,
-  valuesLookup,
-  getArcLengths,
-  getUtoTmapping,
-  positionsLookup,
-} from './core';
+  getControlPoints,
+} from './core/spline-curve';
 
 import {
+  EPS,
+  getQuadRoots,
   normalize,
-} from './math';
+} from './core/math';
 
 import {
   BBox,
   Vector,
   VectorType,
-  CurveOptions,
-} from './interfaces';
+  SplineCurveOptions,
+  CurveMapper,
+} from './core/interfaces';
+import { LinearCurveMapper } from './curve-mappers/linear-curve-mapper';
+import { findRootsOfT, valueAtT } from './core/spline-segment';
+import { NumericalCurveMapper } from './curve-mappers/numerical-curve-mapper';
 
-
-export interface CurveInterpolatorOptions extends CurveOptions {
+export interface CurveInterpolatorOptions extends SplineCurveOptions {
   arcDivisions?: number,
+  numericalApproximationOrder?: number,
+  numericalInverseSamples?: number,
   lmargin?: number,
 }
 
@@ -30,12 +31,8 @@ export interface CurveInterpolatorOptions extends CurveOptions {
  */
 export default class CurveInterpolator {
   _lmargin: number;
-  _points: Vector[];
-  _tension: number;
-  _alpha: number;
-  _arcDivisions: number;
-  _closed: boolean;
-  _cache: { arcLengths?: number[], bbox?: BBox; };
+  _curveMapper: CurveMapper;
+  _bbox?: BBox;
 
   /**
    * Create a new interpolator instance
@@ -46,46 +43,48 @@ export default class CurveInterpolator {
     options = {
       tension: 0.5,
       alpha: 0,
-      arcDivisions: 300,
       closed: false,
       ...options,
     };
 
-    this._cache = {};
-    this._tension = options.tension;
-    this._alpha = options.alpha;
-    this._arcDivisions = options.arcDivisions;
-    this._lmargin = options.lmargin || 1 - this._tension;
-    this._closed = options.closed;
+    const curveMapper = options.arcDivisions
+      ? new LinearCurveMapper(options.arcDivisions, () => this.invalidateCache())
+      : new NumericalCurveMapper(() => this.invalidateCache(), options.numericalApproximationOrder, options.numericalInverseSamples);
+    curveMapper.setAlpha(options.alpha);
+    curveMapper.setTension(options.tension);
+    curveMapper.setClosed(options.closed);
+    curveMapper.setPoints(points);
 
-    this.points = points;
+    this._lmargin = options.lmargin || 1 - curveMapper.tension;
+    this._curveMapper = curveMapper;
   }
 
   /**
    * Returns the time on curve at a position, given as a value between 0 and 1
-   * @param position position on curve
+   * @param position position on curve (0..1)
    */
   getT(position:number) : number {
-    return getUtoTmapping(
-      position,
-      this.arcLengths,
-    );
+    return this._curveMapper.getT(position);
+  }
+
+  /**
+   *
+   * @param position position on curve (0..1)
+   * @returns length from start to position
+   */
+  getLengthAt(position = 1) : number {
+    return this._curveMapper.lengthAt(position);
   }
 
   /**
    * Interpolate a point at the given position.
-   * @param position position on curve (0 - 1)
+   * @param position position on curve (0..1)
    * @param target optional target
    */
   getPointAt<T extends VectorType>(position:number, target: T) : T
   getPointAt(position:number) : Vector
   getPointAt(position:number, target?:VectorType) : Vector {
-    const options = {
-      tension: this.tension,
-      alpha: this.alpha,
-      closed: this.closed,
-    };
-    return getPointAtT(this.getT(position), this.points, options, target);
+    return this._curveMapper.getPointAtT(this.getT(position), target);
   }
 
   /**
@@ -95,13 +94,8 @@ export default class CurveInterpolator {
    */
   getTangentAt<T extends VectorType>(position:number, target: T) : T
   getTangentAt(position: number) : Vector
-  getTangentAt(position: number, target:Vector = null) : Vector {
-    const tan = getTangentAtT(
-      this.getT(position),
-      this.points,
-      { tension: this.tension, alpha: this.alpha, closed: this.closed },
-      target,
-    );
+  getTangentAt(position: number, target?: VectorType) : Vector {
+    const tan = this._curveMapper.getTangentAtT(this.getT(position), target);
     return normalize(tan);
   }
 
@@ -112,22 +106,59 @@ export default class CurveInterpolator {
    * @param to position to
    */
   getBoundingBox(from = 0, to = 1) : BBox {
-    if (from === 0 && to === 1 && this._cache.bbox) {
-      return this._cache.bbox;
+    if (from === 0 && to === 1 && this._bbox) {
+      return this._bbox;
     }
 
-    const bbox = getBoundingBox(
-      this.points,
-      {
-        from,
-        to,
-        tension: this.tension,
-        alpha: this.alpha,
-        closed: this.closed,
-        arcLengths: this.arcLengths,
-      },
-    );
-    if (from === 0 && to === 1) this._cache.bbox = bbox;
+    const min = [];
+    const max = [];
+
+    const t0 = this.getT(from), t1 = this.getT(to);
+
+    const start = this._curveMapper.getPointAtT(t0);
+    const end = this._curveMapper.getPointAtT(t1);
+
+    const nPoints = this.closed ? this.points.length : this.points.length - 1;
+
+    const i0 = Math.floor(nPoints * t0);
+    const i1 = Math.ceil(nPoints * t1);
+
+    for (let c = 0; c < start.length; c++) {
+      min[c] = Math.min(start[c], end[c]);
+      max[c] = Math.max(start[c], end[c]);
+    }
+
+    for (let i = i0 + 1; i <= i1; i++) {
+      const [,, p2] = getControlPoints(i - 1, this.points, this.closed);
+
+      if (i < i1) {
+        for (let c = 0; c < p2.length; c++) {
+          if (p2[c] < min[c]) min[c] = p2[c];
+          if (p2[c] > max[c]) max[c] = p2[c];
+        }
+      }
+
+      if (this.tension < 1) {
+        const w0 = nPoints * t0 - (i - 1);
+        const w1 = nPoints * t1 - (i - 1);
+
+        const valid = (t: number) => t > -EPS && t <= 1 + EPS && (i - 1 !== i0 || t > w0) && (i !== i1 || t < w1);
+        const coefficients = this._curveMapper.getCoefficients(i - 1);
+        for (let c = 0; c < coefficients.length; c++) {
+          const [k, l, m] = coefficients[c];
+
+          const roots = getQuadRoots(3 * k, 2 * l, m);
+
+          roots.filter(valid).forEach(t => {
+            const v = valueAtT(t, coefficients[c]);
+            if (v < min[c]) min[c] = v;
+            if (v > max[c]) max[c] = v;
+          });
+        }
+      }
+    }
+    const bbox = { min, max };
+    if (from === 0 && to === 1) this._bbox = bbox;
 
     return bbox;
   }
@@ -166,20 +197,52 @@ export default class CurveInterpolator {
    * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
    */
   lookup(v:number, axis = 0, max = 0, margin:number = this._lmargin) : Vector[] | Vector {
-    const matches = valuesLookup(
-      v,
-      this.points,
-      {
-        axis,
-        tension: this.tension,
-        alpha: this.alpha,
-        closed: this.closed,
-        max,
-        margin,
-      },
-    );
+    const k = axis;
+    const solutions = [];
+    const nPoints = this.closed ? this.points.length : this.points.length - 1;
 
-    return Math.abs(max) === 1 && matches.length === 1 ? matches[0] : matches;
+    for (let i = 0; i < nPoints && (max === 0 || solutions.length < Math.abs(max)); i += 1) {
+      const idx = (max < 0 ? nPoints - (i + 1) : i);
+
+      const [, p1, p2] = getControlPoints(idx, this.points, this.closed);
+      const coefficients = this._curveMapper.getCoefficients(idx);
+
+      let vmin: number, vmax: number;
+      if (p1[k] < p2[k]) {
+        vmin = p1[k];
+        vmax = p2[k];
+      } else {
+        vmin = p2[k];
+        vmax = p1[k];
+      }
+
+      if (v - margin <= vmax && v + margin >= vmin) {
+        const ts = findRootsOfT(v, coefficients[k]);
+
+        // sort on t to solve in order of curve length if max != 0
+        if (max < 0) ts.sort((a, b) => b - a);
+        else if (max >= 0) ts.sort((a, b) => a - b);
+
+        for (let j = 0; j < ts.length; j++) {
+          if (ts[j] === 0 && i > 0) continue; // avoid duplicate (0 would be found as 1 in previous iteration)
+          const coord = [];
+          for (let c = 0; c < coefficients.length; c++) {
+            let val: number;
+            if (c !== k) {
+              val = valueAtT(ts[j], coefficients[c]);
+            } else {
+              val = v;
+            }
+            coord[c] = val;
+          }
+          solutions.push(coord);
+
+          if (max !== 0 && solutions.length === Math.abs(max)) break;
+        }
+      }
+    }
+
+    return Math.abs(max) === 1 && solutions.length === 1 ? solutions[0] : solutions;
   }
 
   /**
@@ -189,92 +252,69 @@ export default class CurveInterpolator {
    * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
    */
   lookupPositions(v:number, axis = 0, max = 0, margin:number = this._lmargin) : number[] {
-    const matches = positionsLookup(
-      v,
-      this.points,
-      {
-        axis,
-        arcLengths: this.arcLengths,
-        tension: this.tension,
-        alpha: this.alpha,
-        closed: this.closed,
-        max,
-        margin,
-      },
-    );
+    const k = axis;
+    const solutions = new Set<number>();
+    const nPoints = this.closed ? this.points.length : this.points.length - 1;
 
-    return matches;
+    for (let i = 0; i < nPoints && (max === 0 || solutions.size < Math.abs(max)); i += 1) {
+      const idx = (max < 0 ? this.points.length - i : i);
+
+      const [, p1, p2] = getControlPoints(i, this.points, this.closed);
+      const coefficients = this._curveMapper.getCoefficients(i);
+
+      let vmin: number, vmax: number;
+      if (p1[k] < p2[k]) {
+        vmin = p1[k];
+        vmax = p2[k];
+      } else {
+        vmin = p2[k];
+        vmax = p1[k];
+      }
+
+      if (v - margin <= vmax && v + margin >= vmin) {
+        const ts = findRootsOfT(v, coefficients[k]);
+        // sort on t to solve in order of curve length if max != 0
+        if (max < 0) ts.sort((a, b) => b - a);
+        else if (max >= 0) ts.sort((a, b) => a - b);
+
+        for (let j = 0; j < ts.length; j++) {
+          if (ts[j] === 0 && i > 0) continue; // avoid duplicate (0 would be found as 1 in previous iteration)
+          const nt = (ts[j] + idx) / nPoints; // normalize t
+          solutions.add(nt);
+
+          if (max !== 0 && solutions.size === Math.abs(max)) break;
+        }
+      }
+    }
+    return Array.from(solutions).map(t => this._curveMapper.getU(t));
   }
 
   /**
    * Invalidates/clears cache
    */
   invalidateCache() {
-    Object.keys(this._cache).forEach(key => {
-      delete this._cache[key];
-    });
+    this._bbox = null;
     return this;
   }
 
-  get points() { return this._points; }
+  get points() { return this._curveMapper.points; }
 
-  set points(pts:Vector[]) {
-    this._points = pts;
-    this.invalidateCache();
-  }
+  set points(pts:Vector[]) { this._curveMapper.setPoints(pts); }
 
-  get tension() { return this._tension; }
+  get tension() { return this._curveMapper.tension; }
 
-  set tension(t:number) {
-    if (t !== this._tension) {
-      this._tension = t;
-      this.invalidateCache();
-    }
-  }
+  set tension(t:number) { this._curveMapper.setTension(t); }
 
-  get alpha() { return this._alpha; }
+  get alpha() { return this._curveMapper.alpha; }
 
-  set alpha(a:number) {
-    if (a !== this._alpha) {
-      this._alpha = a;
-      this.invalidateCache();
-    }
-  }
+  set alpha(a:number) { this._curveMapper.setAlpha(a); }
 
-  get closed() { return this._closed; }
+  get closed() { return this._curveMapper.closed; }
 
-  set closed(isClosed:boolean) {
-    if (isClosed !== this._closed) {
-      this._closed = isClosed;
-      this.invalidateCache();
-    }
-  }
-
-  get arcDivisions() { return this._arcDivisions; }
-
-  set arcDivisions(n:number) {
-    if (n !== this._arcDivisions) {
-      this._arcDivisions = n;
-      this.invalidateCache();
-    }
-  }
-
-  get arcLengths() {
-    if (this._cache.arcLengths) {
-      return this._cache.arcLengths;
-    }
-    const arcLengths = getArcLengths(
-      this.points,
-      this.arcDivisions,
-      { tension: this.tension, alpha: this.alpha, closed: this.closed },
-    );
-    this._cache.arcLengths = arcLengths;
-    return arcLengths;
-  }
+  set closed(isClosed:boolean) { this._curveMapper.setClosed(isClosed); }
 
   get length() {
-    const lengths = this.arcLengths;
-    return lengths[lengths.length - 1];
+    return this._curveMapper.lengthAt(1);
   }
 
   get minX() {
