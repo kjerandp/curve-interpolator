@@ -17,8 +17,8 @@ describe('linear-curve-mapper.ts', () => {
     const divisions = 200;
     const mapper = new LinearCurveMapper(divisions);
 
-    mapper.setTension(0.5);
-    mapper.setPoints(points);
+    mapper.tension = 0.5;
+    mapper.points = points;
 
     expect(mapper.arcLengths.length).to.eq(divisions + 1);
 
@@ -32,14 +32,14 @@ describe('linear-curve-mapper.ts', () => {
     expect(mapper.lengthAt(0.75)).to.be.closeTo(totalLength * 0.75, 0.1);
 
     // setting tension to 0 should result in a longer curve, invalidating the existing cached arcLengths
-    mapper.setTension(0);
+    mapper.tension = 0;
     expect(mapper.arcLengths[mapper.arcLengths.length - 1]).to.be.greaterThan(totalLength);
   });
 
   it('should be able to convert between t and u - 2d', () => {
     const mapper = new LinearCurveMapper(300);
-    mapper.setTension(0.5);
-    mapper.setPoints(points);
+    mapper.tension = 0.5;
+    mapper.points = points;
 
     expect(mapper.getT(0)).to.eq(0);
     expect(mapper.getT(1)).to.eq(1);
@@ -56,8 +56,8 @@ describe('linear-curve-mapper.ts', () => {
 
   it('should be able to convert between t and u - 3d', () => {
     const mapper = new LinearCurveMapper(300);
-    mapper.setTension(0.5);
-    mapper.setPoints(points3d);
+    mapper.tension = 0.5;
+    mapper.points = points3d;
 
     expect(mapper.getT(0)).to.eq(0);
     expect(mapper.getT(1)).to.eq(1);
@@ -74,8 +74,8 @@ describe('linear-curve-mapper.ts', () => {
 
   it('should be able to divide a curve into segments and estimate each segments length', () => {
     const mapper = new LinearCurveMapper(300);
-    mapper.setTension(0);
-    mapper.setPoints(points);
+    mapper.tension = 0;
+    mapper.points = points;
 
     const arcLengths = mapper.computeArcLengths();
 
@@ -86,8 +86,8 @@ describe('linear-curve-mapper.ts', () => {
 
   it('should be able to divide a 3d curve into segments and estimate each segments length', () => {
     const mapper = new LinearCurveMapper(300);
-    mapper.setTension(0);
-    mapper.setPoints(points3d);
+    mapper.tension = 0;
+    mapper.points = points3d;
 
     const arcLengths = mapper.computeArcLengths();
 
@@ -98,8 +98,8 @@ describe('linear-curve-mapper.ts', () => {
 
   it('should be able to map between t and u indexes', () => {
     const mapper = new LinearCurveMapper(300);
-    mapper.setTension(0);
-    mapper.setPoints(points);
+    mapper.tension = 0;
+    mapper.points = points;
 
     expect(mapper.getT(0)).to.equal(0);
     expect(mapper.getT(1)).to.equal(1);
@@ -116,8 +116,8 @@ describe('linear-curve-mapper.ts', () => {
 
   it('should be able to map between u and t indexes', () => {
     const mapper = new LinearCurveMapper(300);
-    mapper.setTension(0);
-    mapper.setPoints(points);
+    mapper.tension = 0;
+    mapper.points = points;
 
     expect(mapper.getU(0)).to.equal(0);
     expect(mapper.getU(1)).to.equal(1);

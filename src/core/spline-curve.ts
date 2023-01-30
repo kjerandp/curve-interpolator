@@ -8,7 +8,7 @@ import {
  * @param v Point bias 2
  * @returns extrapolated point
  */
-function extrapolateControlPoint(u: Vector, v: Vector) : Vector {
+export function extrapolateControlPoint(u: Vector, v: Vector) : Vector {
   const e = new Array(u.length);
   for (let i = 0; i < u.length; i++) {
     e[i] = 2 * u[i] - v[i];

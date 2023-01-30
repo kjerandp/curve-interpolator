@@ -5,6 +5,8 @@ import {
   distance,
   normalize,
   orthogonal,
+  sumOfSquares,
+  magnitude,
 } from './math';
 import { expect } from 'chai';
 import {
@@ -107,5 +109,18 @@ describe('math.ts', () => {
     expect(result).to.eql([-2, 2]);
 
     expect(() => orthogonal([1, 2, 3])).to.throw('Only supported for 2d vectors');
+  });
+
+  it('should compute sum of squares (distance squared) between two vectors', () => {
+    const a = [2, 4];
+    const b = [-3, 7];
+    const sumSq = sumOfSquares(a, b);
+
+    expect(sumSq).to.eq(34);
+  });
+
+  it('should compute the magnitude (absolute value) of a vector', () => {
+    const a = [2, 4];
+    expect(magnitude(a)).to.eq(Math.sqrt(20));
   });
 });

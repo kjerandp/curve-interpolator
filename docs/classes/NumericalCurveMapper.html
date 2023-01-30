@@ -15,6 +15,13 @@
 <li><a href="../modules.html">curve-interpolator</a></li>
 <li><a href="NumericalCurveMapper.html">NumericalCurveMapper</a></li></ul>
 <h1>Class NumericalCurveMapper</h1></div>
+<section class="tsd-panel tsd-comment">
+<div class="tsd-comment tsd-typography"><p>This curve mapper implementation uses a numerical integration method (Gauss Legendre)
+in order to approximate curve segment lengths. For re-parameterization of the curve
+function in terms of arc length, a number of precalculated lengths (samples) is used
+to fit a monotone piecewise cubic function using the approach suggested here:
+<a href="https://stackoverflow.com/questions/35275073/uniform-discretization-of-bezier-curve">https://stackoverflow.com/questions/35275073/uniform-discretization-of-bezier-curve</a></p>
+</div></section>
 <section class="tsd-panel tsd-hierarchy">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
@@ -22,7 +29,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">NumericalCurveMapper</span></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/numerical-curve-mapper.ts#L17">curve-mappers/numerical-curve-mapper.ts:17</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/numerical-curve-mapper.ts#L24">curve-mappers/numerical-curve-mapper.ts:24</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -65,37 +72,39 @@
 <a href="NumericalCurveMapper.html#getU" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>getU</span></a>
 <a href="NumericalCurveMapper.html#inverse" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>inverse</span></a>
 <a href="NumericalCurveMapper.html#lengthAt" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>length<wbr/>At</span></a>
-<a href="NumericalCurveMapper.html#setAlpha" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>set<wbr/>Alpha</span></a>
-<a href="NumericalCurveMapper.html#setClosed" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>set<wbr/>Closed</span></a>
-<a href="NumericalCurveMapper.html#setPoints" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>set<wbr/>Points</span></a>
-<a href="NumericalCurveMapper.html#setTension" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>set<wbr/>Tension</span></a>
 </div></section></div></details></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Constructors</h2>
 <section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class"><a id="constructor" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>constructor</span><a href="#constructor" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="constructor.new_NumericalCurveMapper">new <wbr/>Numerical<wbr/>Curve<wbr/>Mapper<span class="tsd-signature-symbol">(</span>onInvalidateCache<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span>, order<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, nSamples<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="NumericalCurveMapper.html" class="tsd-signature-type" data-tsd-kind="Class">NumericalCurveMapper</a><a href="#constructor.new_NumericalCurveMapper" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="constructor.new_NumericalCurveMapper">new <wbr/>Numerical<wbr/>Curve<wbr/>Mapper<span class="tsd-signature-symbol">(</span>nQuadraturePoints<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, nInverseSamples<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, onInvalidateCache<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="NumericalCurveMapper.html" class="tsd-signature-type" data-tsd-kind="Class">NumericalCurveMapper</a><a href="#constructor.new_NumericalCurveMapper" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
+<h5>nQuadraturePoints: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 24</span></h5>
+<div class="tsd-comment tsd-typography"><p>the number of Gauss-Legendre Quadrature points to use for arc length approximation</p>
+</div></li>
+<li>
+<h5>nInverseSamples: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 21</span></h5>
+<div class="tsd-comment tsd-typography"><p>the number of arc length samples to use to fit an inverse function for calculating t from arc length</p>
+</div></li>
+<li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> onInvalidateCache: <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span></h5>
+<div class="tsd-comment tsd-typography"><p>callback function to be invoked when cache is invalidated</p>
+</div>
 <ul class="tsd-parameters">
 <li class="tsd-parameter-signature">
 <ul class="tsd-signatures tsd-kind-type-literal">
 <li class="tsd-signature"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 <li class="tsd-description">
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></li>
-<li>
-<h5>order: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 24</span></h5></li>
-<li>
-<h5>nSamples: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 21</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="NumericalCurveMapper.html" class="tsd-signature-type" data-tsd-kind="Class">NumericalCurveMapper</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#constructor">constructor</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/numerical-curve-mapper.ts#L21">curve-mappers/numerical-curve-mapper.ts:21</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/numerical-curve-mapper.ts#L34">curve-mappers/numerical-curve-mapper.ts:34</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a id="_alpha" class="tsd-anchor"></a>
@@ -103,29 +112,29 @@
 <div class="tsd-signature">_alpha<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0.0</span></div><aside class="tsd-sources">
 <p>Inherited from <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#_alpha">_alpha</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/abstract-curve-mapper.ts#L11">curve-mappers/abstract-curve-mapper.ts:11</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/abstract-curve-mapper.ts#L20">curve-mappers/abstract-curve-mapper.ts:20</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a id="_cache" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>_cache</span><a href="#_cache" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">_cache<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div><aside class="tsd-sources">
 <p>Inherited from <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#_cache">_cache</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/abstract-curve-mapper.ts#L9">curve-mappers/abstract-curve-mapper.ts:9</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/abstract-curve-mapper.ts#L18">curve-mappers/abstract-curve-mapper.ts:18</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a id="_closed" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>_closed</span><a href="#_closed" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">_closed<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div><aside class="tsd-sources">
 <p>Inherited from <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#_closed">_closed</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/abstract-curve-mapper.ts#L13">curve-mappers/abstract-curve-mapper.ts:13</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/abstract-curve-mapper.ts#L22">curve-mappers/abstract-curve-mapper.ts:22</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="_gauss" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>_gauss</span><a href="#_gauss" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">_gauss<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">[]</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/numerical-curve-mapper.ts#L19">curve-mappers/numerical-curve-mapper.ts:19</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/numerical-curve-mapper.ts#L26">curve-mappers/numerical-curve-mapper.ts:26</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="_nSamples" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>_n<wbr/>Samples</span><a href="#_nSamples" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">_n<wbr/>Samples<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 21</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/numerical-curve-mapper.ts#L18">curve-mappers/numerical-curve-mapper.ts:18</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/numerical-curve-mapper.ts#L25">curve-mappers/numerical-curve-mapper.ts:25</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a id="_onInvalidateCache" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>_on<wbr/>Invalidate<wbr/>Cache</span><a href="#_onInvalidateCache" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">_on<wbr/>Invalidate<wbr/>Cache<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = null</span></div>
@@ -139,25 +148,25 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Inherited from <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#_onInvalidateCache">_onInvalidateCache</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/abstract-curve-mapper.ts#L14">curve-mappers/abstract-curve-mapper.ts:14</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/abstract-curve-mapper.ts#L23">curve-mappers/abstract-curve-mapper.ts:23</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a id="_points" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>_points</span><a href="#_points" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">_points<span class="tsd-signature-symbol">:</span> <a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a><span class="tsd-signature-symbol">[]</span></div><aside class="tsd-sources">
 <p>Inherited from <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#_points">_points</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/abstract-curve-mapper.ts#L10">curve-mappers/abstract-curve-mapper.ts:10</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/abstract-curve-mapper.ts#L19">curve-mappers/abstract-curve-mapper.ts:19</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a id="_subDivisions" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>_sub<wbr/>Divisions</span><a href="#_subDivisions" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">_sub<wbr/>Divisions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
 <p>Inherited from <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#_subDivisions">_subDivisions</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/abstract-curve-mapper.ts#L8">curve-mappers/abstract-curve-mapper.ts:8</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/abstract-curve-mapper.ts#L17">curve-mappers/abstract-curve-mapper.ts:17</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a id="_tension" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>_tension</span><a href="#_tension" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">_tension<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0.5</span></div><aside class="tsd-sources">
 <p>Inherited from <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#_tension">_tension</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/abstract-curve-mapper.ts#L12">curve-mappers/abstract-curve-mapper.ts:12</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/abstract-curve-mapper.ts#L21">curve-mappers/abstract-curve-mapper.ts:21</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Accessors</h2>
 <section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><a id="alpha" class="tsd-anchor"></a>
@@ -165,201 +174,13 @@
 <ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited">
 <li class="tsd-signature" id="alpha.alpha-1"><span class="tsd-signature-symbol">get</span> alpha<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Curve alpha parameter (0=uniform, 0.5=centripetal, 1=chordal)</p>
+</div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <p>Inherited from AbstractCurveMapper.alpha</p>
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/abstract-curve-mapper.ts#L37">curve-mappers/abstract-curve-mapper.ts:37</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class"><a id="arcLengths" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>arc<wbr/>Lengths</span><a href="#arcLengths" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
-<li class="tsd-signature" id="arcLengths.arcLengths-1"><span class="tsd-signature-symbol">get</span> arcLengths<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-<li class="tsd-description">
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4><aside class="tsd-sources">
-<ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/numerical-curve-mapper.ts#L33">curve-mappers/numerical-curve-mapper.ts:33</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><a id="closed" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>closed</span><a href="#closed" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited">
-<li class="tsd-signature" id="closed.closed-1"><span class="tsd-signature-symbol">get</span> closed<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-<li class="tsd-description">
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
-<p>Inherited from AbstractCurveMapper.closed</p>
-<ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/abstract-curve-mapper.ts#L40">curve-mappers/abstract-curve-mapper.ts:40</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><a id="points" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>points</span><a href="#points" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited">
-<li class="tsd-signature" id="points.points-1"><span class="tsd-signature-symbol">get</span> points<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a><span class="tsd-signature-symbol">[]</span></li>
-<li class="tsd-description">
-<h4 class="tsd-returns-title">Returns <a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
-<p>Inherited from AbstractCurveMapper.points</p>
-<ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/abstract-curve-mapper.ts#L39">curve-mappers/abstract-curve-mapper.ts:39</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><a id="tension" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>tension</span><a href="#tension" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited">
-<li class="tsd-signature" id="tension.tension-1"><span class="tsd-signature-symbol">get</span> tension<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-<li class="tsd-description">
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
-<p>Inherited from AbstractCurveMapper.tension</p>
-<ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/abstract-curve-mapper.ts#L38">curve-mappers/abstract-curve-mapper.ts:38</a></li></ul></aside></li></ul></section></section>
-<section class="tsd-panel-group tsd-member-group">
-<h2>Methods</h2>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="_invalidateCache" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>_invalidate<wbr/>Cache</span><a href="#_invalidateCache" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="_invalidateCache._invalidateCache-1">_invalidate<wbr/>Cache<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#_invalidateCache._invalidateCache-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
-<p>Overrides <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#_invalidateCache">_invalidateCache</a></p>
-<ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/numerical-curve-mapper.ts#L27">curve-mappers/numerical-curve-mapper.ts:27</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="computeArcLength" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>compute<wbr/>Arc<wbr/>Length</span><a href="#computeArcLength" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="computeArcLength.computeArcLength-1">compute<wbr/>Arc<wbr/>Length<span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, t0<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, t1<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#computeArcLength.computeArcLength-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5>index: <span class="tsd-signature-type">number</span></h5></li>
-<li>
-<h5>t0: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0.0</span></h5></li>
-<li>
-<h5>t1: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 1.0</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
-<ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/numerical-curve-mapper.ts#L83">curve-mappers/numerical-curve-mapper.ts:83</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="computeArcLengths" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>compute<wbr/>Arc<wbr/>Lengths</span><a href="#computeArcLengths" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="computeArcLengths.computeArcLengths-1">compute<wbr/>Arc<wbr/>Lengths<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><a href="#computeArcLengths.computeArcLengths-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
-<ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/numerical-curve-mapper.ts#L97">curve-mappers/numerical-curve-mapper.ts:97</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="getCoefficients" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>get<wbr/>Coefficients</span><a href="#getCoefficients" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="getCoefficients.getCoefficients-1">get<wbr/>Coefficients<span class="tsd-signature-symbol">(</span>idx<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><a href="#getCoefficients.getCoefficients-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5>idx: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#getCoefficients">getCoefficients</a></p>
-<ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/abstract-curve-mapper.ts#L61">curve-mappers/abstract-curve-mapper.ts:61</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="getPointAtT" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>get<wbr/>Point<wbr/>AtT</span><a href="#getPointAtT" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="getPointAtT.getPointAtT-1">get<wbr/>Point<wbr/>AtT<span class="tsd-signature-symbol">(</span>t<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, target<span class="tsd-signature-symbol">?: </span><a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a><a href="#getPointAtT.getPointAtT-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5>t: <span class="tsd-signature-type">number</span></h5></li>
-<li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> target: <a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a></h4><aside class="tsd-sources">
-<p>Inherited from <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#getPointAtT">getPointAtT</a></p>
-<ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/abstract-curve-mapper.ts#L42">curve-mappers/abstract-curve-mapper.ts:42</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getSamples" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>get<wbr/>Samples</span><a href="#getSamples" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="getSamples.getSamples-1">get<wbr/>Samples<span class="tsd-signature-symbol">(</span>idx<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span><a href="#getSamples.getSamples-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5>idx: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span></h4><aside class="tsd-sources">
-<ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/numerical-curve-mapper.ts#L40">curve-mappers/numerical-curve-mapper.ts:40</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getT" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>getT</span><a href="#getT" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="getT.getT-1">getT<span class="tsd-signature-symbol">(</span>u<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#getT.getT-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5>u: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
-<p>Overrides <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#getT">getT</a></p>
-<ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/numerical-curve-mapper.ts#L144">curve-mappers/numerical-curve-mapper.ts:144</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="getTangentAtT" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>get<wbr/>Tangent<wbr/>AtT</span><a href="#getTangentAtT" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="getTangentAtT.getTangentAtT-1">get<wbr/>Tangent<wbr/>AtT<span class="tsd-signature-symbol">(</span>t<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, target<span class="tsd-signature-symbol">?: </span><a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a><a href="#getTangentAtT.getTangentAtT-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5>t: <span class="tsd-signature-type">number</span></h5></li>
-<li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> target: <a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a></h4><aside class="tsd-sources">
-<p>Inherited from <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#getTangentAtT">getTangentAtT</a></p>
-<ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/abstract-curve-mapper.ts#L54">curve-mappers/abstract-curve-mapper.ts:54</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getU" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>getU</span><a href="#getU" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="getU.getU-1">getU<span class="tsd-signature-symbol">(</span>t<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#getU.getU-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5>t: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
-<p>Overrides <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#getU">getU</a></p>
-<ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/numerical-curve-mapper.ts#L160">curve-mappers/numerical-curve-mapper.ts:160</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="inverse" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>inverse</span><a href="#inverse" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="inverse.inverse-1">inverse<span class="tsd-signature-symbol">(</span>idx<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, len<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#inverse.inverse-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5>idx: <span class="tsd-signature-type">number</span></h5></li>
-<li>
-<h5>len: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
-<ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/numerical-curve-mapper.ts#L112">curve-mappers/numerical-curve-mapper.ts:112</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="lengthAt" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>length<wbr/>At</span><a href="#lengthAt" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="lengthAt.lengthAt-1">length<wbr/>At<span class="tsd-signature-symbol">(</span>u<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#lengthAt.lengthAt-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5>u: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
-<p>Overrides <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#lengthAt">lengthAt</a></p>
-<ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/numerical-curve-mapper.ts#L140">curve-mappers/numerical-curve-mapper.ts:140</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="setAlpha" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>set<wbr/>Alpha</span><a href="#setAlpha" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="setAlpha.setAlpha-1">set<wbr/>Alpha<span class="tsd-signature-symbol">(</span>alpha<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#setAlpha.setAlpha-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/abstract-curve-mapper.ts#L62">curve-mappers/abstract-curve-mapper.ts:62</a></li></ul></aside></li>
+<li class="tsd-signature" id="alpha.alpha-2"><span class="tsd-signature-symbol">set</span> alpha<span class="tsd-signature-symbol">(</span>alpha<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -367,13 +188,29 @@
 <li>
 <h5>alpha: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#setAlpha">setAlpha</a></p>
+<p>Inherited from AbstractCurveMapper.alpha</p>
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/abstract-curve-mapper.ts#L80">curve-mappers/abstract-curve-mapper.ts:80</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="setClosed" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>set<wbr/>Closed</span><a href="#setClosed" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="setClosed.setClosed-1">set<wbr/>Closed<span class="tsd-signature-symbol">(</span>closed<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#setClosed.setClosed-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/abstract-curve-mapper.ts#L63">curve-mappers/abstract-curve-mapper.ts:63</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class"><a id="arcLengths" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>arc<wbr/>Lengths</span><a href="#arcLengths" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+<li class="tsd-signature" id="arcLengths.arcLengths-1"><span class="tsd-signature-symbol">get</span> arcLengths<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+<li class="tsd-description">
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/numerical-curve-mapper.ts#L49">curve-mappers/numerical-curve-mapper.ts:49</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><a id="closed" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>closed</span><a href="#closed" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited">
+<li class="tsd-signature" id="closed.closed-1"><span class="tsd-signature-symbol">get</span> closed<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Determines whether the curve should be a closed curve or not</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
+<p>Inherited from AbstractCurveMapper.closed</p>
+<ul>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/abstract-curve-mapper.ts#L94">curve-mappers/abstract-curve-mapper.ts:94</a></li></ul></aside></li>
+<li class="tsd-signature" id="closed.closed-2"><span class="tsd-signature-symbol">set</span> closed<span class="tsd-signature-symbol">(</span>closed<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -381,13 +218,21 @@
 <li>
 <h5>closed: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#setClosed">setClosed</a></p>
+<p>Inherited from AbstractCurveMapper.closed</p>
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/abstract-curve-mapper.ts#L94">curve-mappers/abstract-curve-mapper.ts:94</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="setPoints" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>set<wbr/>Points</span><a href="#setPoints" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="setPoints.setPoints-1">set<wbr/>Points<span class="tsd-signature-symbol">(</span>points<span class="tsd-signature-symbol">: </span><a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#setPoints.setPoints-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/abstract-curve-mapper.ts#L95">curve-mappers/abstract-curve-mapper.ts:95</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><a id="points" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>points</span><a href="#points" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited">
+<li class="tsd-signature" id="points.points-1"><span class="tsd-signature-symbol">get</span> points<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a><span class="tsd-signature-symbol">[]</span></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Control points for curve</p>
+</div>
+<h4 class="tsd-returns-title">Returns <a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
+<p>Inherited from AbstractCurveMapper.points</p>
+<ul>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/abstract-curve-mapper.ts#L84">curve-mappers/abstract-curve-mapper.ts:84</a></li></ul></aside></li>
+<li class="tsd-signature" id="points.points-2"><span class="tsd-signature-symbol">set</span> points<span class="tsd-signature-symbol">(</span>points<span class="tsd-signature-symbol">: </span><a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -395,13 +240,21 @@
 <li>
 <h5>points: <a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#setPoints">setPoints</a></p>
+<p>Inherited from AbstractCurveMapper.points</p>
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/abstract-curve-mapper.ts#L74">curve-mappers/abstract-curve-mapper.ts:74</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="setTension" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>set<wbr/>Tension</span><a href="#setTension" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="setTension.setTension-1">set<wbr/>Tension<span class="tsd-signature-symbol">(</span>tension<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#setTension.setTension-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/abstract-curve-mapper.ts#L85">curve-mappers/abstract-curve-mapper.ts:85</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><a id="tension" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>tension</span><a href="#tension" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited">
+<li class="tsd-signature" id="tension.tension-1"><span class="tsd-signature-symbol">get</span> tension<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Curve tension (0=Catmull-rom, 1=linear)</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
+<p>Inherited from AbstractCurveMapper.tension</p>
+<ul>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/abstract-curve-mapper.ts#L73">curve-mappers/abstract-curve-mapper.ts:73</a></li></ul></aside></li>
+<li class="tsd-signature" id="tension.tension-2"><span class="tsd-signature-symbol">set</span> tension<span class="tsd-signature-symbol">(</span>tension<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -409,9 +262,235 @@
 <li>
 <h5>tension: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#setTension">setTension</a></p>
+<p>Inherited from AbstractCurveMapper.tension</p>
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/da95e00/src/curve-mappers/abstract-curve-mapper.ts#L87">curve-mappers/abstract-curve-mapper.ts:87</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/abstract-curve-mapper.ts#L74">curve-mappers/abstract-curve-mapper.ts:74</a></li></ul></aside></li></ul></section></section>
+<section class="tsd-panel-group tsd-member-group">
+<h2>Methods</h2>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="_invalidateCache" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>_invalidate<wbr/>Cache</span><a href="#_invalidateCache" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="_invalidateCache._invalidateCache-1">_invalidate<wbr/>Cache<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#_invalidateCache._invalidateCache-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Clear cache</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<p>Overrides <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#_invalidateCache">_invalidateCache</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/numerical-curve-mapper.ts#L43">curve-mappers/numerical-curve-mapper.ts:43</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="computeArcLength" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>compute<wbr/>Arc<wbr/>Length</span><a href="#computeArcLength" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="computeArcLength.computeArcLength-1">compute<wbr/>Arc<wbr/>Length<span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, t0<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, t1<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#computeArcLength.computeArcLength-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Computes the arc length of a curve segment</p>
+
+<h3>Returns</h3><p>arc length between t0 and t1</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>index: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>index of curve segment</p>
+</div></li>
+<li>
+<h5>t0: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0.0</span></h5>
+<div class="tsd-comment tsd-typography"><p>calculate length from t</p>
+</div></li>
+<li>
+<h5>t1: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 1.0</span></h5>
+<div class="tsd-comment tsd-typography"><p>calculate length to t</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/numerical-curve-mapper.ts#L112">curve-mappers/numerical-curve-mapper.ts:112</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="computeArcLengths" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>compute<wbr/>Arc<wbr/>Lengths</span><a href="#computeArcLengths" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="computeArcLengths.computeArcLengths-1">compute<wbr/>Arc<wbr/>Lengths<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><a href="#computeArcLengths.computeArcLengths-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Calculate a running sum of arc length for mapping a position on the curve (u)
+to the position at the corresponding curve segment (t).</p>
+
+<h3>Returns</h3><p>array with accumulated curve segment arc lengths</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/numerical-curve-mapper.ts#L131">curve-mappers/numerical-curve-mapper.ts:131</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="getCoefficients" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>get<wbr/>Coefficients</span><a href="#getCoefficients" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="getCoefficients.getCoefficients-1">get<wbr/>Coefficients<span class="tsd-signature-symbol">(</span>idx<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><a href="#getCoefficients.getCoefficients-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get the curve function coefficients at the given segment index. The coefficients
+are calculated once per segment and put in cache until it is invalidated.</p>
+
+<h3>Returns</h3><p>coefficients for the curve function at the given segment index</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>idx: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>segment index</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4><aside class="tsd-sources">
+<p>Inherited from <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#getCoefficients">getCoefficients</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/abstract-curve-mapper.ts#L141">curve-mappers/abstract-curve-mapper.ts:141</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="getPointAtT" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>get<wbr/>Point<wbr/>AtT</span><a href="#getPointAtT" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="getPointAtT.getPointAtT-1">get<wbr/>Point<wbr/>AtT<span class="tsd-signature-symbol">(</span>t<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, target<span class="tsd-signature-symbol">?: </span><a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a><a href="#getPointAtT.getPointAtT-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get the point along the curve corresponding to the value of t</p>
+
+<h3>Returns</h3><p>position as vector</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>t: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>time along full curve (encodes segment index and segment t)</p>
+</div></li>
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> target: <a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a></h5>
+<div class="tsd-comment tsd-typography"><p>optional target vector</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a></h4><aside class="tsd-sources">
+<p>Inherited from <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#getPointAtT">getPointAtT</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/abstract-curve-mapper.ts#L109">curve-mappers/abstract-curve-mapper.ts:109</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getSamples" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>get<wbr/>Samples</span><a href="#getSamples" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="getSamples.getSamples-1">get<wbr/>Samples<span class="tsd-signature-symbol">(</span>idx<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span><a href="#getSamples.getSamples-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get samples for inverse function from cache if present, otherwise calculate and put
+in cache for re-use.</p>
+
+<h3>Returns</h3><p>Lengths, slopes and coefficients for inverse function</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>idx: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>curve segment index</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/numerical-curve-mapper.ts#L62">curve-mappers/numerical-curve-mapper.ts:62</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getT" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>getT</span><a href="#getT" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="getT.getT-1">getT<span class="tsd-signature-symbol">(</span>u<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#getT.getT-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Maps a uniform time along the curve to non-uniform time (t)</p>
+
+<h3>Returns</h3><p>t encoding segment index and local time along curve</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>u: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>normalized uniform position along the spline curve</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
+<p>Overrides <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#getT">getT</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/numerical-curve-mapper.ts#L194">curve-mappers/numerical-curve-mapper.ts:194</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="getTangentAtT" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>get<wbr/>Tangent<wbr/>AtT</span><a href="#getTangentAtT" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="getTangentAtT.getTangentAtT-1">get<wbr/>Tangent<wbr/>AtT<span class="tsd-signature-symbol">(</span>t<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, target<span class="tsd-signature-symbol">?: </span><a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a><a href="#getTangentAtT.getTangentAtT-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get the tangent along the curve corresponding to the value of t. Note
+that this function does not return a normalized tangent vector!</p>
+
+<h3>Returns</h3><p>tangent as vector</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>t: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>time along full curve (encodes segment index and segment t)</p>
+</div></li>
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> target: <a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a></h5>
+<div class="tsd-comment tsd-typography"><p>optional target vector</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="../types/_internal_.Vector.html" class="tsd-signature-type" data-tsd-kind="Type alias">Vector</a></h4><aside class="tsd-sources">
+<p>Inherited from <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#getTangentAtT">getTangentAtT</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/abstract-curve-mapper.ts#L128">curve-mappers/abstract-curve-mapper.ts:128</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getU" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>getU</span><a href="#getU" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="getU.getU-1">getU<span class="tsd-signature-symbol">(</span>t<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#getU.getU-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Maps a non-uniform time along the curve to uniform time (u)</p>
+
+<h3>Returns</h3><p>uniform time along curve</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>t: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>non-uniform time along curve</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
+<p>Overrides <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#getU">getU</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/numerical-curve-mapper.ts#L215">curve-mappers/numerical-curve-mapper.ts:215</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="inverse" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>inverse</span><a href="#inverse" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="inverse.inverse-1">inverse<span class="tsd-signature-symbol">(</span>idx<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, len<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#inverse.inverse-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Calculate t from arc length for a curve segment</p>
+
+<h3>Returns</h3><p>time (t) along curve segment matching the input length</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>idx: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>segment index</p>
+</div></li>
+<li>
+<h5>len: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>length</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/numerical-curve-mapper.ts#L152">curve-mappers/numerical-curve-mapper.ts:152</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="lengthAt" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>length<wbr/>At</span><a href="#lengthAt" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="lengthAt.lengthAt-1">length<wbr/>At<span class="tsd-signature-symbol">(</span>u<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#lengthAt.lengthAt-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get curve length at u</p>
+
+<h3>Returns</h3><p>length in point coordinates</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>u: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>normalized uniform position along the spline curve</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
+<p>Overrides <a href="_internal_.AbstractCurveMapper.html">AbstractCurveMapper</a>.<a href="_internal_.AbstractCurveMapper.html#lengthAt">lengthAt</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/b07c039/src/curve-mappers/numerical-curve-mapper.ts#L185">curve-mappers/numerical-curve-mapper.ts:185</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -463,11 +542,7 @@
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="NumericalCurveMapper.html#getTangentAtT" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>get<wbr/>Tangent<wbr/>AtT</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="NumericalCurveMapper.html#getU" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>getU</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="NumericalCurveMapper.html#inverse" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>inverse</a></li>
-<li class="tsd-kind-method tsd-parent-kind-class"><a href="NumericalCurveMapper.html#lengthAt" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>length<wbr/>At</a></li>
-<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="NumericalCurveMapper.html#setAlpha" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>set<wbr/>Alpha</a></li>
-<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="NumericalCurveMapper.html#setClosed" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>set<wbr/>Closed</a></li>
-<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="NumericalCurveMapper.html#setPoints" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>set<wbr/>Points</a></li>
-<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="NumericalCurveMapper.html#setTension" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>set<wbr/>Tension</a></li></ul></li></ul></nav></div></div>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="NumericalCurveMapper.html#lengthAt" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>length<wbr/>At</a></li></ul></li></ul></nav></div></div>
 <div class="container tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
 <div class="overlay"></div><script src="../assets/main.js"></script></body></html>

@@ -9,10 +9,10 @@ export type NumArray4 = [number, number, number, number];
 export type Vector = (number[] | VectorType);
 
 export interface CurveMapper {
-  readonly alpha: number,
-  readonly tension: number,
-  readonly points: Vector[],
-  readonly closed: boolean,
+  alpha: number,
+  tension: number,
+  points: Vector[],
+  closed: boolean,
 
   getPointAtT: (t:number, target?:VectorType) => Vector,
   getTangentAtT: (t:number, target?:VectorType) => Vector,
@@ -20,10 +20,6 @@ export interface CurveMapper {
   getT: (u: number) => number,
   getU: (t: number) => number,
   getCoefficients: (idx: number) => NumArray4[],
-  setPoints: (points: Vector[]) => void,
-  setAlpha: (alpha: number) => void,
-  setTension: (tension: number) => void,
-  setClosed: (closed: boolean) => void,
 }
 
 /**

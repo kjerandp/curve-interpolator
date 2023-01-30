@@ -2,7 +2,7 @@ import { AbstractCurveMapper } from "./abstract-curve-mapper";
 import { SplineSegmentOptions } from "../core/interfaces";
 import { getGaussianQuadraturePointsAndWeights } from "./gauss";
 import { derivativeAtT, evaluateForT } from "../core/spline-segment";
-import { length } from "../core/math";
+import { magnitude } from "../core/math";
 import { binarySearch } from "../core/utils";
 
 export interface CurveLengthCalculationOptions extends SplineSegmentOptions {
@@ -14,16 +14,32 @@ export interface CurveLengthCalculationOptions extends SplineSegmentOptions {
   t1?: number,
 }
 
+/**
+ * This curve mapper implementation uses a numerical integration method (Gauss Legendre)
+ * in order to approximate curve segment lengths. For re-parameterization of the curve
+ * function in terms of arc length, a number of precalculated lengths (samples) is used
+ * to fit a monotone piecewise cubic function using the approach suggested here:
+ * https://stackoverflow.com/questions/35275073/uniform-discretization-of-bezier-curve
+ */
 export class NumericalCurveMapper extends AbstractCurveMapper {
   _nSamples = 21;
   _gauss: number[][];
 
-  constructor(onInvalidateCache?: () => void, order = 24, nSamples = 21) {
+  /**
+   *
+   * @param onInvalidateCache callback function to be invoked when cache is invalidated
+   * @param nQuadraturePoints the number of Gauss-Legendre Quadrature points to use for arc length approximation
+   * @param nInverseSamples the number of arc length samples to use to fit an inverse function for calculating t from arc length
+   */
+  constructor(nQuadraturePoints = 24, nInverseSamples = 21, onInvalidateCache?: () => void) {
     super(onInvalidateCache);
-    this._gauss = getGaussianQuadraturePointsAndWeights(order);
-    this._nSamples = nSamples;
+    this._gauss = getGaussianQuadraturePointsAndWeights(nQuadraturePoints);
+    this._nSamples = nInverseSamples;
   }
 
+  /**
+   * Clear cache
+   */
   override _invalidateCache() {
     super._invalidateCache();
     this._cache['arcLengths'] = null;
@@ -37,6 +53,12 @@ export class NumericalCurveMapper extends AbstractCurveMapper {
     return this._cache['arcLengths'];
   }
 
+  /**
+   * Get samples for inverse function from cache if present, otherwise calculate and put
+   * in cache for re-use.
+   * @param idx curve segment index
+   * @returns Lengths, slopes and coefficients for inverse function
+   */
   getSamples(idx: number) : [number[], number[], number[], number[]] {
     if (!this.points) return undefined;
     if (!this._cache['samples']) {
@@ -49,14 +71,14 @@ export class NumericalCurveMapper extends AbstractCurveMapper {
       for (let i = 0; i < samples; ++i) {
         const ti = i / (samples - 1);
         lengths.push(this.computeArcLength(idx, 0.0, ti));
-        const dtln = length(evaluateForT(derivativeAtT, ti, coefficients));
+        const dtln = magnitude(evaluateForT(derivativeAtT, ti, coefficients));
         slopes.push(dtln === 0 ? 0 : 1 / dtln);
       }
 
       // Precalculate the cubic interpolant coefficients
       const nCoeff = samples - 1;
-      const dis = [];  // degree 3 coeffiecients
-      const cis = [];  // degree 2 coeffiecients
+      const dis = [];  // degree 3 coefficients
+      const cis = [];  // degree 2 coefficients
       let li_prev = lengths[0];
       let tdi_prev = slopes[0];
       const step = 1.0 / nCoeff;
@@ -80,6 +102,13 @@ export class NumericalCurveMapper extends AbstractCurveMapper {
     return this._cache['samples'].get(idx);
   }
 
+  /**
+   * Computes the arc length of a curve segment
+   * @param index index of curve segment
+   * @param t0 calculate length from t
+   * @param t1 calculate length to t
+   * @returns arc length between t0 and t1
+   */
   computeArcLength(index: number, t0 = 0.0, t1 = 1.0) : number {
     const coefficients = this.getCoefficients(index);
     const z = (t1 - t0) * 0.5;
@@ -88,12 +117,17 @@ export class NumericalCurveMapper extends AbstractCurveMapper {
     for (let i = 0; i < this._gauss.length; i++ ) {
       const [T, C] = this._gauss[i];
       const t = z * T + z + t0;
-      const dtln = length(evaluateForT(derivativeAtT, t, coefficients));
+      const dtln = magnitude(evaluateForT(derivativeAtT, t, coefficients));
       sum += C * dtln;
     }
     return z * sum;
   }
 
+  /**
+   * Calculate a running sum of arc length for mapping a position on the curve (u)
+   * to the position at the corresponding curve segment (t).
+   * @returns array with accumulated curve segment arc lengths
+   */
   computeArcLengths() : number[] {
     if (!this.points) return undefined;
     const lengths = [];
@@ -109,6 +143,12 @@ export class NumericalCurveMapper extends AbstractCurveMapper {
     return lengths;
   }
 
+  /**
+   * Calculate t from arc length for a curve segment
+   * @param idx segment index
+   * @param len length
+   * @returns time (t) along curve segment matching the input length
+   */
   inverse(idx: number, len: number) : number {
     const nCoeff = this._nSamples - 1;
     const step = 1.0 / nCoeff;
@@ -137,10 +177,20 @@ export class NumericalCurveMapper extends AbstractCurveMapper {
     return ((di * ld + ci) * ld + tdi) * ld + ti;
   }
 
+  /**
+   * Get curve length at u
+   * @param u normalized uniform position along the spline curve
+   * @returns length in point coordinates
+   */
   lengthAt(u: number) : number {
     return u * this.arcLengths[this.arcLengths.length - 1];
   }
 
+  /**
+   * Maps a uniform time along the curve to non-uniform time (t)
+   * @param u normalized uniform position along the spline curve
+   * @returns t encoding segment index and local time along curve
+   */
   getT(u: number) : number {
     const arcLengths = this.arcLengths;
     const il = arcLengths.length;
@@ -157,6 +207,11 @@ export class NumericalCurveMapper extends AbstractCurveMapper {
     return (i + fraction) / (il - 1);
   }
 
+  /**
+   * Maps a non-uniform time along the curve to uniform time (u)
+   * @param t non-uniform time along curve
+   * @returns uniform time along curve
+   */
   getU(t: number) : number {
     if (t === 0) return 0;
     if (t === 1) return 1;

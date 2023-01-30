@@ -13,10 +13,16 @@ describe('numerical-curve-mapper.ts', () => {
     expect(mapper).to.be.instanceOf(AbstractCurveMapper);
   });
 
+  it('should be able to instantiate class with parameters', () => {
+    const mapper = new NumericalCurveMapper(5, 18);
+    expect(mapper._gauss).to.deep.eq([[-0.906179845938664,0.23692688505618908],[-0.5384693101056831,0.47862867049936647],[0,0.5688888888888889],[0.5384693101056831,0.47862867049936647],[0.906179845938664,0.23692688505618908]]);
+    expect(mapper._nSamples).to.eq(18);
+  });
+
   it('should be able to compute arc lengths', () => {
     const mapper = new NumericalCurveMapper();
-    mapper.setTension(0.5);
-    mapper.setPoints(points);
+    mapper.tension = 0.5;
+    mapper.points = points;
 
     const totalLength = mapper.arcLengths[mapper.arcLengths.length - 1];
     expect(totalLength).to.be.closeTo(56.6333, EPS);
@@ -26,15 +32,15 @@ describe('numerical-curve-mapper.ts', () => {
     expect(mapper.lengthAt(0.75)).to.be.closeTo(totalLength * 0.75, EPS);
 
     // setting tension to 0 should result in a longer curve, invalidating the existing cached arcLengths
-    mapper.setTension(0);
+    mapper.tension = 0;
     expect(mapper.arcLengths[mapper.arcLengths.length - 1]).to.be.greaterThan(totalLength);
   });
 
   it('should be able to compute samples for inverse function', () => {
     const mapper = new NumericalCurveMapper();
-    mapper.setTension(0.0);
-    mapper.setAlpha(0.5);
-    mapper.setPoints(points);
+    mapper.tension = 0.0;
+    mapper.alpha = 0.5;
+    mapper.points = points;
 
     const [lengths, slopes, cis, dis] = mapper.getSamples(1);
     expect(lengths.length).to.eq(mapper._nSamples);
@@ -45,8 +51,8 @@ describe('numerical-curve-mapper.ts', () => {
 
   it('should be able to convert between t and u - 2d', () => {
     const mapper = new NumericalCurveMapper();
-    mapper.setTension(0.5);
-    mapper.setPoints(points);
+    mapper.tension = 0.5;
+    mapper.points = points;
 
     expect(mapper.getT(0)).to.eq(0);
     expect(mapper.getT(1)).to.eq(1);
@@ -64,8 +70,8 @@ describe('numerical-curve-mapper.ts', () => {
 
   it('should be able to convert between t and u - 3d', () => {
     const mapper = new NumericalCurveMapper();
-    mapper.setTension(0.5);
-    mapper.setPoints(points3d);
+    mapper.tension = 0.5;
+    mapper.points = points3d;
 
     expect(mapper.getT(0)).to.eq(0);
     expect(mapper.getT(1)).to.eq(1);
@@ -82,8 +88,8 @@ describe('numerical-curve-mapper.ts', () => {
 
   it('should be able to divide a curve into segments and estimate each segments length', () => {
     const mapper = new NumericalCurveMapper();
-    mapper.setTension(0);
-    mapper.setPoints(points);
+    mapper.tension = 0;
+    mapper.points = points;
 
     const arcLengths = mapper.computeArcLengths();
 
@@ -94,8 +100,8 @@ describe('numerical-curve-mapper.ts', () => {
 
   it('should be able to divide a 3d curve into segments and estimate each segments length', () => {
     const mapper = new NumericalCurveMapper();
-    mapper.setTension(0);
-    mapper.setPoints(points3d);
+    mapper.tension = 0;
+    mapper.points = points3d;
 
     const arcLengths = mapper.computeArcLengths();
 
@@ -106,8 +112,8 @@ describe('numerical-curve-mapper.ts', () => {
 
   it('should be able to map between t and u indexes', () => {
     const mapper =new NumericalCurveMapper();
-    mapper.setTension(0);
-    mapper.setPoints(points);
+    mapper.tension = 0;
+    mapper.points = points;
 
     expect(mapper.getT(0)).to.equal(0);
     expect(mapper.getT(1)).to.equal(1);
@@ -124,8 +130,8 @@ describe('numerical-curve-mapper.ts', () => {
 
   it('should be able to map between u and t indexes', () => {
     const mapper =new NumericalCurveMapper();
-    mapper.setTension(0);
-    mapper.setPoints(points);
+    mapper.tension = 0;
+    mapper.points = points;
 
     expect(mapper.getU(0)).to.equal(0);
     expect(mapper.getU(1)).to.equal(1);
@@ -138,14 +144,5 @@ describe('numerical-curve-mapper.ts', () => {
     expect(mapper.getU(0.7)).to.approximately(0.609148, EPS);
     expect(mapper.getU(0.8)).to.approximately(0.771937, EPS);
     expect(mapper.getU(0.9)).to.approximately(0.934866, EPS);
-  });
-
-  it('should work with tension = 1', () => {
-    const mapper = new NumericalCurveMapper();
-    mapper.setTension(1.0);
-    mapper.setPoints(points);
-
-    const p = mapper.getPointAtT(mapper.getT(1));
-
   });
 });

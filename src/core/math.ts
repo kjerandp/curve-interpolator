@@ -91,10 +91,10 @@ export function sumOfSquares(u:Vector, v:Vector) : number {
 }
 
 /**
- * Calculate the length of a vector
+ * Calculate the magnitude/length of a vector
  * @param v coordinates of the vector
  */
-export function length(v:Vector) : number {
+export function magnitude(v:Vector) : number {
   let sumOfSquares = 0;
   for (let i = 0; i < v.length; i++) {
     sumOfSquares += (v[i]) * v[i];

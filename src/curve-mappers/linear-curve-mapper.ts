@@ -3,10 +3,20 @@ import { Vector } from "../core/interfaces";
 import { distance } from "../core/math";
 import { binarySearch } from "../core/utils";
 
+/**
+ * Approximate spline curve by subdividing it into smaller linear
+ * line segments. Used to approximate length and mapping between
+ * uniform (u) and non-uniform (t) time along curve.
+ */
 export class LinearCurveMapper extends AbstractCurveMapper {
 
   _subDivisions: number;
 
+  /**
+   *
+   * @param subDivisions number of sub divisions to use
+   * @param onInvalidateCache callback function to be invoked when cache is invalidated
+   */
   constructor(subDivisions = 300, onInvalidateCache: () => void = null) {
     super(onInvalidateCache);
     this._subDivisions = subDivisions;
@@ -19,6 +29,9 @@ export class LinearCurveMapper extends AbstractCurveMapper {
     return this._cache['arcLengths'];
   }
 
+  /**
+   * Clear cache
+   */
   override _invalidateCache() {
     super._invalidateCache();
     this._cache['arcLengths'] = null;
@@ -44,11 +57,21 @@ export class LinearCurveMapper extends AbstractCurveMapper {
     return lengths;
   }
 
+  /**
+   * Get curve length at u
+   * @param u normalized uniform position along the spline curve
+   * @returns length in point coordinates
+   */
   lengthAt(u: number) {
     const arcLengths = this.arcLengths;
     return u * arcLengths[arcLengths.length - 1];
   }
 
+  /**
+   * Maps a uniform time along the curve to non-uniform time (t)
+   * @param u normalized uniform position along the spline curve
+   * @returns t encoding segment index and local time along curve
+   */
   getT(u: number) {
     const arcLengths = this.arcLengths;
     const il = arcLengths.length;
@@ -71,6 +94,11 @@ export class LinearCurveMapper extends AbstractCurveMapper {
     return (i + segmentFraction) / (il - 1);
   }
 
+  /**
+   * Maps a non-uniform time along the curve to uniform time (u)
+   * @param t non-uniform time along curve
+   * @returns uniform time along curve
+   */
   getU(t: number) {
     if (t === 0) return 0;
     if (t === 1) return 1;

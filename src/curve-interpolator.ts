@@ -49,11 +49,11 @@ export default class CurveInterpolator {
 
     const curveMapper = options.arcDivisions
       ? new LinearCurveMapper(options.arcDivisions, () => this.invalidateCache())
-      : new NumericalCurveMapper(() => this.invalidateCache(), options.numericalApproximationOrder, options.numericalInverseSamples);
-    curveMapper.setAlpha(options.alpha);
-    curveMapper.setTension(options.tension);
-    curveMapper.setClosed(options.closed);
-    curveMapper.setPoints(points);
+      : new NumericalCurveMapper(options.numericalApproximationOrder, options.numericalInverseSamples, () => this.invalidateCache());
+    curveMapper.alpha = options.alpha;
+    curveMapper.tension = options.tension;
+    curveMapper.closed = options.closed;
+    curveMapper.points = points;
 
     this._lmargin = options.lmargin || 1 - curveMapper.tension;
     this._curveMapper = curveMapper;
@@ -299,19 +299,19 @@ export default class CurveInterpolator {
 
   get points() { return this._curveMapper.points; }
 
-  set points(pts:Vector[]) { this._curveMapper.setPoints(pts); }
+  set points(pts:Vector[]) { this._curveMapper.points = pts; }
 
   get tension() { return this._curveMapper.tension; }
 
-  set tension(t:number) { this._curveMapper.setTension(t); }
+  set tension(t:number) { this._curveMapper.tension = t; }
 
   get alpha() { return this._curveMapper.alpha; }
 
-  set alpha(a:number) { this._curveMapper.setAlpha(a); }
+  set alpha(a:number) { this._curveMapper.alpha = a; }
 
   get closed() { return this._curveMapper.closed; }
 
-  set closed(isClosed:boolean) { this._curveMapper.setClosed(isClosed); }
+  set closed(isClosed:boolean) { this._curveMapper.closed = isClosed; }
 
   get length() {
     return this._curveMapper.lengthAt(1);
