@@ -1,8 +1,9 @@
 import { CurveMapper, NumArray4, Vector } from "../core/interfaces";
 import { copyValues } from "../core/utils";
 import { getControlPoints, getSegmentIndexAndT } from "../core/spline-curve";
-import { calculateCoefficients, derivativeAtT, evaluateForT, valueAtT } from "../core/spline-segment";
+import { calculateCoefficients, derivativeAtT, evaluateForT, secondDerivativeAtT, valueAtT } from "../core/spline-segment";
 import { clamp } from "../core/utils";
+import { dot, magnitude } from "../core/math";
 
 /**
  * The curve mapper's main responsibility is to map between normalized
@@ -130,6 +131,34 @@ export abstract class AbstractCurveMapper implements CurveMapper {
     const { index, weight } = getSegmentIndexAndT(t, this.points, this.closed);
     const coefficients = this.getCoefficients(index);
     return evaluateForT(derivativeAtT, weight, coefficients, target);
+  }
+
+  /**
+   * Finds the curvature and radius at position t
+   * @param t time along full curve (encodes segment index and segment t)
+   * @returns curvature (k) and
+   */
+  getCurvatureAtT(t: number) : { curvature:number, radius:number } {
+    t = clamp(t, 0.0, 1.0);
+    const { index, weight } = getSegmentIndexAndT(t, this.points, this.closed);
+    const coefficients = this.getCoefficients(index);
+
+    const dt = evaluateForT(derivativeAtT, weight, coefficients);
+    const ddt = evaluateForT(secondDerivativeAtT, weight, coefficients);
+
+    const a = magnitude(dt);
+    const b = magnitude(ddt);
+
+    const denominator = Math.pow(a, 3);
+    let curvature = 0;
+
+    if (denominator !== 0) {
+      curvature = Math.sqrt(Math.pow(a, 2) * Math.pow(b, 2) - Math.pow(dot(dt, ddt), 2)) / denominator;
+    }
+
+    const radius = curvature !== 0 ? Math.abs(1 / curvature) : 0;
+
+    return { curvature, radius };
   }
 
   /**

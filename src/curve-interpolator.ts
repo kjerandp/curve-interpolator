@@ -100,6 +100,15 @@ export default class CurveInterpolator {
   }
 
   /**
+   * Get the curvature and radius at the given position
+   * @param position position on curve (0 - 1)
+   * @returns curvature and radius
+   */
+  getCurvatureAt(position: number) {
+    return this._curveMapper.getCurvatureAtT(this.getT(position));
+  }
+
+  /**
    * Get a bounding box for the curve or the segment given by the
    * from and to parameters
    * @param from position from

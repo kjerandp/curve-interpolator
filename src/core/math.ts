@@ -78,6 +78,21 @@ export function getCubicRoots(a: number, b: number, c: number, d: number) : numb
 }
 
 /**
+ * Get the dot product of two vectors
+ * @param p1 Vector
+ * @param p2 Vector
+ * @returns Dot product
+ */
+export function dot(p1:Vector, p2:Vector) : number {
+  if (p1.length !== p2.length) throw Error('Vectors must be of equal length!');
+  let p = 0;
+  for (let k = 0; k < p1.length; k++) {
+    p += p1[k] * p2[k];
+  }
+  return p;
+}
+
+/**
  * Calculate the sum of squares between two points
  * @param u coordinates of point 1
  * @param v coordinates of point 2

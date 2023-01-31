@@ -16,6 +16,7 @@ export interface CurveMapper {
 
   getPointAtT: (t:number, target?:VectorType) => Vector,
   getTangentAtT: (t:number, target?:VectorType) => Vector,
+  getCurvatureAtT: (t:number) => { curvature: number, radius: number },
   lengthAt: (u: number) => number,
   getT: (u: number) => number,
   getU: (t: number) => number,

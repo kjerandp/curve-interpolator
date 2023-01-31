@@ -7,6 +7,7 @@ import {
   orthogonal,
   sumOfSquares,
   magnitude,
+  dot,
 } from './math';
 import { expect } from 'chai';
 import {
@@ -122,5 +123,12 @@ describe('math.ts', () => {
   it('should compute the magnitude (absolute value) of a vector', () => {
     const a = [2, 4];
     expect(magnitude(a)).to.eq(Math.sqrt(20));
+  });
+
+  it('should compute the dot product between two vectors', () => {
+    expect(dot([], [])).to.eq(0);
+    expect(dot([2, -2], [4, 1])).to.eq(6);
+    expect(dot([0, 0], [2, 1])).to.eq(0);
+    expect(dot([-1, 3, 6], [2, 6, -3])).to.eq(-2);
   });
 });
