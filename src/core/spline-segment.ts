@@ -1,13 +1,14 @@
-import { NumArray4, Vector, CurveParameters } from "./interfaces";
+import { NumArray4, Vector, CurveParameters, SegmentFunction } from "./interfaces";
 import { EPS, getCubicRoots, sumOfSquares } from "./math";
 import { clamp } from "./utils";
 
-export type SegmentFunction = (t: number, coefficients: NumArray4) => number;
+
 
 /**
  * This function will calculate the knot sequence, based on a given value for alpha, for a set of
  * control points for a curve segment. It is used to calculate the velocity vectors, which
- * determines the curvature of the segment.
+ * determines the curvature of the segment. Alpha=0.5 produces a centripetal curve, while
+ * alpha=1 produces a chordal curve.
  * @param p0 First control point
  * @param p1 Second control point
  * @param p2 Third control point
@@ -43,27 +44,27 @@ export function calculateCoefficients(p0: Vector, p1:Vector, p2:Vector, p3:Vecto
   const coefficientsList = new Array(p0.length);
 
   for (let k = 0; k < p0.length; k++) {
-    let c = 0, x = 0;
+    let u = 0, v = 0;
     const v0 = p0[k], v1 = p1[k], v2 = p2[k], v3 = p3[k];
     if (!knotSequence) {
-      c = (1 - tension) * (v2 - v0) * 0.5;
-      x = (1 - tension) * (v3 - v1) * 0.5;
+      u = (1 - tension) * (v2 - v0) * 0.5;
+      v = (1 - tension) * (v3 - v1) * 0.5;
     } else {
       const [t0, t1, t2, t3] = knotSequence;
       if (t1 - t2 !== 0) {
         if (t0 - t1 !== 0 && t0 - t2 !== 0) {
-          c = (1 - tension) * (t2 - t1) * ((v0 - v1) / (t0 - t1) - (v0 - v2) / (t0 - t2) + (v1 - v2) / (t1 - t2));
+          u = (1 - tension) * (t2 - t1) * ((v0 - v1) / (t0 - t1) - (v0 - v2) / (t0 - t2) + (v1 - v2) / (t1 - t2));
         }
         if (t1 - t3 !== 0 && t2 - t3 !== 0) {
-          x = (1 - tension) * (t2 - t1) * ((v1 - v2) / (t1 - t2) - (v1 - v3) / (t1 - t3) + (v2 - v3) / (t2 - t3));
+          v = (1 - tension) * (t2 - t1) * ((v1 - v2) / (t1 - t2) - (v1 - v3) / (t1 - t3) + (v2 - v3) / (t2 - t3));
         }
       }
     }
 
-    const a = (2 * v1 - 2 * v2 + c + x);
-    const b = (-3 * v1 + 3 * v2 - 2 * c - x);
+    const a = (2 * v1 - 2 * v2 + u + v);
+    const b = (-3 * v1 + 3 * v2 - 2 * u - v);
     const d = v1;
-    coefficientsList[k] = [a, b, c, d];
+    coefficientsList[k] = [a, b, u, d];
   }
   return coefficientsList;
 }

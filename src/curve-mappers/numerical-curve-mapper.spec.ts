@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { points, points3d } from '../../test/test-data';
 import { NumericalCurveMapper } from './numerical-curve-mapper';
 import { AbstractCurveMapper } from './abstract-curve-mapper';
+import { valueAtT } from '../core/spline-segment';
 
 const EPS = 0.001;
 
@@ -144,5 +145,41 @@ describe('numerical-curve-mapper.ts', () => {
     expect(mapper.getU(0.7)).to.approximately(0.609148, EPS);
     expect(mapper.getU(0.8)).to.approximately(0.771937, EPS);
     expect(mapper.getU(0.9)).to.approximately(0.934866, EPS);
+  });
+
+  it('should not fail with tension = 1 for dataset 1 (generating sharp slopes at endpoints)', () => {
+    const points = [[1,6],[2,2],[3.6,2],[4,7],[5.8,7],[6,1],[10,9]];
+    const mapper = new NumericalCurveMapper();
+    mapper.points = points;
+    mapper.tension = 1;
+
+    for (let u = 0.01; u < 0.99; u+=0.01) {
+      const t = mapper.getT(u);
+      expect(t).to.be.greaterThan(0);
+      expect(t).to.be.lessThan(1);
+    }
+
+    for (let i = 0; i < mapper.points.length; i++) {
+      const t = i / (mapper.points.length - 1);
+      expect(mapper.evaluateForT(valueAtT, t)).to.deep.eq(mapper.points[i]);
+    }
+  });
+
+  it('should not fail with tension = 1 for dataset 2 (generating sharp slopes at endpoints)', () => {
+    const points = [[0,10],[2,10],[3,10],[5,10],[6,10],[8,10],[9,10.5],[14.653776978417266,34.25],[12.35161870503597,57.61538461538461],[14,60],[15,85]];
+    const mapper = new NumericalCurveMapper();
+    mapper.points = points;
+    mapper.tension = 0.99;
+
+    for (let u = 0.01; u < 0.99; u+=0.01) {
+      const t = mapper.getT(u);
+      expect(t).to.be.greaterThan(0);
+      expect(t).to.be.lessThan(1);
+    }
+
+    for (let i = 0; i < mapper.points.length; i++) {
+      const t = i / (mapper.points.length - 1);
+      expect(mapper.evaluateForT(valueAtT, t)).to.deep.eq(mapper.points[i]);
+    }
   });
 });

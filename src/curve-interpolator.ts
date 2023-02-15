@@ -3,8 +3,11 @@ import {
 } from './core/spline-curve';
 
 import {
+  cross,
+  dot,
   EPS,
   getQuadRoots,
+  magnitude,
   normalize,
 } from './core/math';
 
@@ -15,9 +18,10 @@ import {
   SplineCurveOptions,
   CurveMapper,
 } from './core/interfaces';
-import { LinearCurveMapper } from './curve-mappers/linear-curve-mapper';
-import { findRootsOfT, valueAtT } from './core/spline-segment';
+import { SegmentedCurveMapper } from './curve-mappers/segmented-curve-mapper';
+import { derivativeAtT, findRootsOfT, secondDerivativeAtT, valueAtT } from './core/spline-segment';
 import { NumericalCurveMapper } from './curve-mappers/numerical-curve-mapper';
+import { clamp, copyValues, map } from './core/utils';
 
 export interface CurveInterpolatorOptions extends SplineCurveOptions {
   arcDivisions?: number,
@@ -48,8 +52,8 @@ export default class CurveInterpolator {
     };
 
     const curveMapper = options.arcDivisions
-      ? new LinearCurveMapper(options.arcDivisions, () => this.invalidateCache())
-      : new NumericalCurveMapper(options.numericalApproximationOrder, options.numericalInverseSamples, () => this.invalidateCache());
+      ? new SegmentedCurveMapper(options.arcDivisions, () => this._invalidateCache())
+      : new NumericalCurveMapper(options.numericalApproximationOrder, options.numericalInverseSamples, () => this._invalidateCache());
     curveMapper.alpha = options.alpha;
     curveMapper.tension = options.tension;
     curveMapper.closed = options.closed;
@@ -57,6 +61,23 @@ export default class CurveInterpolator {
 
     this._lmargin = options.lmargin || 1 - curveMapper.tension;
     this._curveMapper = curveMapper;
+  }
+
+  /**
+   * Get the point along the curve corresponding to the value of t
+   * Used internally by the getPointAt function.
+   * @param t time along full curve (encodes segment index and segment t)
+   * @param target optional target vector
+   * @returns position as vector
+   */
+  _getPointAtT(t: number, target?: VectorType) : Vector {
+    t = clamp(t, 0.0, 1.0);
+    if (t === 0) {
+      return copyValues(this.points[0], target);
+    } else if (t === 1) {
+      return copyValues(this.closed ? this.points[0] : this.points[this.points.length - 1], target);
+    }
+    return this._curveMapper.evaluateForT(valueAtT, t, target);
   }
 
   /**
@@ -84,7 +105,7 @@ export default class CurveInterpolator {
   getPointAt<T extends VectorType>(position:number, target: T) : T
   getPointAt(position:number) : Vector
   getPointAt(position:number, target?:VectorType) : Vector {
-    return this._curveMapper.getPointAtT(this.getT(position), target);
+    return this._getPointAtT(this.getT(position), target);
   }
 
   /**
@@ -95,17 +116,80 @@ export default class CurveInterpolator {
   getTangentAt<T extends VectorType>(position:number, target: T) : T
   getTangentAt(position: number) : Vector
   getTangentAt(position: number, target?: VectorType) : Vector {
-    const tan = this._curveMapper.getTangentAtT(this.getT(position), target);
+    const t = clamp(this.getT(position), 0, 1);
+    const tan = this._curveMapper.evaluateForT(derivativeAtT, t, target);
     return normalize(tan);
   }
 
   /**
-   * Get the curvature and radius at the given position
+   * Get the normal for 2D or 3D curve at the given position. In 3D the normal
+   * points towards the center of the curvature.
    * @param position position on curve (0 - 1)
-   * @returns curvature and radius
+   * @param target optional target
+   */
+  getNormalAt<T extends VectorType>(position:number, target: T) : T
+  getNormalAt(position: number) : Vector
+  getNormalAt(position: number, target?: VectorType) : Vector {
+    const t = clamp(this.getT(position), 0, 1);
+    const dt = normalize(this._curveMapper.evaluateForT(derivativeAtT, t));
+
+    if (dt.length < 2 || dt.length > 3) return undefined;
+
+    const normal = target ? target : new Array(dt.length);
+    if (dt.length === 2) {
+      normal[0] = -dt[1];
+      normal[1] = dt[0];
+      return normal;
+    }
+    const ddt = normalize(this._curveMapper.evaluateForT(secondDerivativeAtT, t));
+
+    return normalize(cross(cross(dt, ddt), dt), normal);
+  }
+
+  /**
+   * Finds the curvature and radius at the specified position (0..1) on the curve. The unsigned curvature
+   * is returned along with radius, tangent vector and, for 2D and 3D curves, a direction vector is included
+   * (which points toward the center of the curvature).
+   * @param position position on curve (0 - 1)
+   * @returns object containing the unsigned curvature, radius + tangent and direction vectors
    */
   getCurvatureAt(position: number) {
-    return this._curveMapper.getCurvatureAtT(this.getT(position));
+    const t = clamp(this.getT(position), 0.0, 1.0);
+
+    const dt = this._curveMapper.evaluateForT(derivativeAtT, t);
+    const ddt = this._curveMapper.evaluateForT(secondDerivativeAtT, t);
+
+    const tangent = normalize(dt, []);
+
+    let curvature = 0, direction: Vector = undefined;
+
+    if (dt.length === 2) {
+      const denominator = Math.pow(dt[0] * dt[0] + dt[1] * dt[1], 3 / 2);
+      if (denominator !== 0) {
+        const signedCurvature = (dt[0] * ddt[1] - dt[1] * ddt[0]) / denominator;
+        direction = signedCurvature < 0 ? [tangent[1], -tangent[0]] : [-tangent[1], tangent[0]]
+        curvature = Math.abs(signedCurvature);
+      }
+    } else if (dt.length === 3) {
+      const a = magnitude(dt);
+      const cp = cross(dt, ddt);
+      direction = normalize(cross(cp, dt))
+      if (a !== 0) {
+        curvature = magnitude(cp) / Math.pow(a, 3);
+      }
+    } else {
+      const a = magnitude(dt);
+      const b = magnitude(ddt);
+
+      const denominator = Math.pow(a, 3);
+      const dotProduct = dot(dt, ddt);
+      if (denominator !== 0) {
+        curvature = Math.sqrt(Math.pow(a, 2) * Math.pow(b, 2) - Math.pow(dotProduct, 2)) / denominator;
+      }
+    }
+    const radius = curvature !== 0 ? 1 / curvature : 0;
+
+    return { curvature, radius, tangent, direction };
   }
 
   /**
@@ -124,8 +208,8 @@ export default class CurveInterpolator {
 
     const t0 = this.getT(from), t1 = this.getT(to);
 
-    const start = this._curveMapper.getPointAtT(t0);
-    const end = this._curveMapper.getPointAtT(t1);
+    const start = this._getPointAtT(t0);
+    const end = this._getPointAtT(t1);
 
     const nPoints = this.closed ? this.points.length : this.points.length - 1;
 
@@ -298,12 +382,20 @@ export default class CurveInterpolator {
     return Array.from(solutions).map(t => this._curveMapper.getU(t));
   }
 
+
   /**
    * Invalidates/clears cache
    */
-  invalidateCache() {
+  private _invalidateCache() {
     this._bbox = null;
     return this;
+  }
+
+  /**
+   * Reset any pre-calculated/cached data
+   */
+  reset() {
+    this._curveMapper.reset();
   }
 
   get points() { return this._curveMapper.points; }

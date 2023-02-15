@@ -46,7 +46,7 @@ export function getControlPoints(idx: number, points: Vector[], closed: boolean)
 }
 
 /**
- * Find the spline segment index and the corresponsing segment weight/fraction at the provided curve time (ct)
+ * Find the spline segment index and the corresponding segment weight/fraction at the provided curve time (ct)
  * @param ct non-uniform time along curve (0 - 1)
  * @param points set of coordinates/control points making out the curve
  * @param options

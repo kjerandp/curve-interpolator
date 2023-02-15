@@ -3,7 +3,7 @@ import { SplineSegmentOptions } from "../core/interfaces";
 import { getGaussianQuadraturePointsAndWeights } from "./gauss";
 import { derivativeAtT, evaluateForT } from "../core/spline-segment";
 import { magnitude } from "../core/math";
-import { binarySearch } from "../core/utils";
+import { binarySearch, clamp } from "../core/utils";
 
 export interface CurveLengthCalculationOptions extends SplineSegmentOptions {
   /* Gaussian quadrature weights and abscissae */
@@ -72,7 +72,12 @@ export class NumericalCurveMapper extends AbstractCurveMapper {
         const ti = i / (samples - 1);
         lengths.push(this.computeArcLength(idx, 0.0, ti));
         const dtln = magnitude(evaluateForT(derivativeAtT, ti, coefficients));
-        slopes.push(dtln === 0 ? 0 : 1 / dtln);
+        let slope = dtln === 0 ? 0 : 1 / dtln;
+        // avoid extreme slopes for near linear curve at the segment endpoints (high tension parameter value)
+        if (this.tension > 0.95) {
+          slope = clamp(slope, -1, 1);
+        }
+        slopes.push(slope);
       }
 
       // Precalculate the cubic interpolant coefficients
@@ -110,6 +115,8 @@ export class NumericalCurveMapper extends AbstractCurveMapper {
    * @returns arc length between t0 and t1
    */
   computeArcLength(index: number, t0 = 0.0, t1 = 1.0) : number {
+    if (t0 === t1) return 0;
+
     const coefficients = this.getCoefficients(index);
     const z = (t1 - t0) * 0.5;
 

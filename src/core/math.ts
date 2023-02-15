@@ -1,7 +1,7 @@
 import {
   Vector,
 } from './interfaces';
-import { reduce, fill, map } from './utils';
+import { reduce, fill, map, copyValues } from './utils';
 
 export const EPS = Math.pow(2, -42);
 
@@ -79,28 +79,50 @@ export function getCubicRoots(a: number, b: number, c: number, d: number) : numb
 
 /**
  * Get the dot product of two vectors
- * @param p1 Vector
- * @param p2 Vector
+ * @param v1 Vector
+ * @param v2 Vector
  * @returns Dot product
  */
-export function dot(p1:Vector, p2:Vector) : number {
-  if (p1.length !== p2.length) throw Error('Vectors must be of equal length!');
+export function dot(v1:Vector, v2:Vector) : number {
+  if (v1.length !== v2.length) throw Error('Vectors must be of equal length!');
   let p = 0;
-  for (let k = 0; k < p1.length; k++) {
-    p += p1[k] * p2[k];
+  for (let k = 0; k < v1.length; k++) {
+    p += v1[k] * v2[k];
   }
   return p;
 }
 
 /**
- * Calculate the sum of squares between two points
- * @param u coordinates of point 1
- * @param v coordinates of point 2
+ * Get the cross product of two 3d vectors. For 2d vectors, we imply the z-component
+ * is zero and return a 3d vector. The function returns undefined for dimensions > 3.
+ * @param v1 Vector
+ * @param v2 Vector
+ * @param target optional target
+ * @returns Vector perpendicular to p1 and p2
  */
-export function sumOfSquares(u:Vector, v:Vector) : number {
+export function cross(v1:Vector, v2:Vector, target? : Vector) : Vector {
+  if (v1.length > 3) return undefined;
+  target = target || new Array(3);
+
+  const ax = v1[0], ay = v1[1], az = v1[2] || 0;
+  const bx = v2[0], by = v2[1], bz = v2[2] || 0;
+
+  target[0] = ay * bz - az * by;
+  target[1] = az * bx - ax * bz;
+  target[2] = ax * by - ay * bx;
+
+  return target;
+}
+
+/**
+ * Calculate the sum of squares between two points
+ * @param v1 coordinates of point 1
+ * @param v2 coordinates of point 2
+ */
+export function sumOfSquares(v1:Vector, v2:Vector) : number {
   let sumOfSquares = 0;
-  for (let i = 0; i < u.length; i++) {
-    sumOfSquares += (u[i] - v[i]) * (u[i] - v[i]);
+  for (let i = 0; i < v1.length; i++) {
+    sumOfSquares += (v1[i] - v2[i]) * (v1[i] - v2[i]);
   }
   return sumOfSquares;
 }
@@ -121,6 +143,7 @@ export function magnitude(v:Vector) : number {
  * Calculate the distance between two points
  * @param p1 coordinates of point 1
  * @param p2 coordinates of point 2
+ * @returns the distance between p1 and p2
  */
 export function distance(p1:Vector, p2:Vector) : number {
   const sqrs = sumOfSquares(p1, p2);
@@ -130,23 +153,28 @@ export function distance(p1:Vector, p2:Vector) : number {
 /**
  * Normalizes a vector (mutate input)
  * @param v input array/vector to normalize
+ * @param target optional target
+ * @return normalized vector v
  */
-export function normalize(v:Vector) : Vector {
-  const squared = reduce(v, (s, c) => s + c ** 2);
+export function normalize(v:Vector, target?: Vector) : Vector {
+  const u = target ? copyValues(v, target) : v;
+  const squared = reduce(u, (s, c) => s + c ** 2);
   const l = Math.sqrt(squared);
-  if (l === 0) return fill(v, 0);
+  if (l === 0) return fill(u, 0);
 
-  return map(v, c => c / l);
+  return map(u, c => c / l);
 }
 
 /**
  * Rotates a vector 90 degrees to make it orthogonal (mutates input vector)
  * @param v vector to rotate
+ * @param target optional target
  */
-export function orthogonal(v:Vector) : Vector {
+export function orthogonal(v:Vector, target?: Vector) : Vector {
   if (v.length > 2) throw Error('Only supported for 2d vectors');
-  const x = -v[1];
-  v[1] = v[0];
-  v[0] = x;
-  return v;
+  const u = target ? copyValues(v, target) : v;
+  const x = -u[1];
+  u[1] = u[0];
+  u[0] = x;
+  return u;
 }

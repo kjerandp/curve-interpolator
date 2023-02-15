@@ -2,13 +2,14 @@ import { AbstractCurveMapper } from "./abstract-curve-mapper";
 import { Vector } from "../core/interfaces";
 import { distance } from "../core/math";
 import { binarySearch } from "../core/utils";
+import { valueAtT } from "../core/spline-segment";
 
 /**
  * Approximate spline curve by subdividing it into smaller linear
  * line segments. Used to approximate length and mapping between
  * uniform (u) and non-uniform (t) time along curve.
  */
-export class LinearCurveMapper extends AbstractCurveMapper {
+export class SegmentedCurveMapper extends AbstractCurveMapper {
 
   _subDivisions: number;
 
@@ -43,13 +44,13 @@ export class LinearCurveMapper extends AbstractCurveMapper {
    */
   computeArcLengths() {
     const lengths = [];
-    let current: Vector, last = this.getPointAtT(0);
+    let current: Vector, last = this.evaluateForT(valueAtT, 0);
     let sum = 0;
 
     lengths.push(0);
 
     for (let p = 1; p <= this._subDivisions; p++) {
-      current = this.getPointAtT(p / this._subDivisions);
+      current = this.evaluateForT(valueAtT, p / this._subDivisions);
       sum += distance(current, last);
       lengths.push(sum);
       last = current;
@@ -117,8 +118,8 @@ export class LinearCurveMapper extends AbstractCurveMapper {
 
     // measure the length between t0 at subIdx and t
     const t0 = subIdx / al;
-    const p0 = this.getPointAtT(t0);
-    const p1 = this.getPointAtT(t);
+    const p0 = this.evaluateForT(valueAtT, t0);
+    const p1 = this.evaluateForT(valueAtT, t);
     const l = l1 + distance(p0, p1);
 
     //const l2 = arcLengths[subIdx + 1];

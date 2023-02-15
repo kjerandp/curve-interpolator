@@ -1,21 +1,21 @@
 import 'mocha';
 import { expect } from 'chai';
 import { points, points3d } from '../../test/test-data';
-import { LinearCurveMapper } from './linear-curve-mapper';
+import { SegmentedCurveMapper } from './segmented-curve-mapper';
 import { AbstractCurveMapper } from './abstract-curve-mapper';
 
 const EPS = 0.000001;
 
-describe('linear-curve-mapper.ts', () => {
+describe('segmented-curve-mapper.ts', () => {
   it('should be able to instantiate class', () => {
-    const mapper = new LinearCurveMapper();
+    const mapper = new SegmentedCurveMapper();
     expect(mapper).to.not.be.null;
     expect(mapper).to.be.instanceOf(AbstractCurveMapper);
   });
 
   it('should be able to compute arc lengths', () => {
     const divisions = 200;
-    const mapper = new LinearCurveMapper(divisions);
+    const mapper = new SegmentedCurveMapper(divisions);
 
     mapper.tension = 0.5;
     mapper.points = points;
@@ -37,7 +37,7 @@ describe('linear-curve-mapper.ts', () => {
   });
 
   it('should be able to convert between t and u - 2d', () => {
-    const mapper = new LinearCurveMapper(300);
+    const mapper = new SegmentedCurveMapper(300);
     mapper.tension = 0.5;
     mapper.points = points;
 
@@ -55,7 +55,7 @@ describe('linear-curve-mapper.ts', () => {
   });
 
   it('should be able to convert between t and u - 3d', () => {
-    const mapper = new LinearCurveMapper(300);
+    const mapper = new SegmentedCurveMapper(300);
     mapper.tension = 0.5;
     mapper.points = points3d;
 
@@ -73,7 +73,7 @@ describe('linear-curve-mapper.ts', () => {
   });
 
   it('should be able to divide a curve into segments and estimate each segments length', () => {
-    const mapper = new LinearCurveMapper(300);
+    const mapper = new SegmentedCurveMapper(300);
     mapper.tension = 0;
     mapper.points = points;
 
@@ -85,7 +85,7 @@ describe('linear-curve-mapper.ts', () => {
   });
 
   it('should be able to divide a 3d curve into segments and estimate each segments length', () => {
-    const mapper = new LinearCurveMapper(300);
+    const mapper = new SegmentedCurveMapper(300);
     mapper.tension = 0;
     mapper.points = points3d;
 
@@ -97,7 +97,7 @@ describe('linear-curve-mapper.ts', () => {
   });
 
   it('should be able to map between t and u indexes', () => {
-    const mapper = new LinearCurveMapper(300);
+    const mapper = new SegmentedCurveMapper(300);
     mapper.tension = 0;
     mapper.points = points;
 
@@ -115,7 +115,7 @@ describe('linear-curve-mapper.ts', () => {
   });
 
   it('should be able to map between u and t indexes', () => {
-    const mapper = new LinearCurveMapper(300);
+    const mapper = new SegmentedCurveMapper(300);
     mapper.tension = 0;
     mapper.points = points;
 

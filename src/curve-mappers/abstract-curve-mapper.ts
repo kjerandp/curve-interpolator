@@ -1,9 +1,7 @@
-import { CurveMapper, NumArray4, Vector } from "../core/interfaces";
-import { copyValues } from "../core/utils";
+import { CurveMapper, NumArray4, SegmentFunction, Vector } from "../core/interfaces";
 import { getControlPoints, getSegmentIndexAndT } from "../core/spline-curve";
-import { calculateCoefficients, derivativeAtT, evaluateForT, secondDerivativeAtT, valueAtT } from "../core/spline-segment";
-import { clamp } from "../core/utils";
-import { dot, magnitude } from "../core/math";
+import { calculateCoefficients, evaluateForT } from "../core/spline-segment";
+
 
 /**
  * The curve mapper's main responsibility is to map between normalized
@@ -101,64 +99,20 @@ export abstract class AbstractCurveMapper implements CurveMapper {
     }
   }
 
-  /**
-   * Get the point along the curve corresponding to the value of t
-   * @param t time along full curve (encodes segment index and segment t)
-   * @param target optional target vector
-   * @returns position as vector
-   */
-  getPointAtT(t: number, target?: Vector) : Vector {
-    t = clamp(t, 0.0, 1.0);
-    if (t === 0) {
-      return copyValues(this.points[0], target);
-    } else if (t === 1) {
-      return copyValues(this.closed ? this.points[0] : this.points[this.points.length - 1], target);
-    }
-    const { index, weight } = getSegmentIndexAndT(t, this.points, this.closed);
-    const coefficients = this.getCoefficients(index);
-    return evaluateForT(valueAtT, weight, coefficients, target);
+  reset() {
+    this._invalidateCache();
   }
 
   /**
-   * Get the tangent along the curve corresponding to the value of t. Note
-   * that this function does not return a normalized tangent vector!
+   * Evaluate curve segment function at t
    * @param t time along full curve (encodes segment index and segment t)
    * @param target optional target vector
-   * @returns tangent as vector
+   * @returns vector
    */
-  getTangentAtT(t: number, target?: Vector) : Vector {
-    t = clamp(t, 0.0, 1.0);
+  evaluateForT(func: SegmentFunction, t:number, target?: Vector) : Vector {
     const { index, weight } = getSegmentIndexAndT(t, this.points, this.closed);
     const coefficients = this.getCoefficients(index);
-    return evaluateForT(derivativeAtT, weight, coefficients, target);
-  }
-
-  /**
-   * Finds the curvature and radius at position t
-   * @param t time along full curve (encodes segment index and segment t)
-   * @returns curvature (k) and
-   */
-  getCurvatureAtT(t: number) : { curvature:number, radius:number } {
-    t = clamp(t, 0.0, 1.0);
-    const { index, weight } = getSegmentIndexAndT(t, this.points, this.closed);
-    const coefficients = this.getCoefficients(index);
-
-    const dt = evaluateForT(derivativeAtT, weight, coefficients);
-    const ddt = evaluateForT(secondDerivativeAtT, weight, coefficients);
-
-    const a = magnitude(dt);
-    const b = magnitude(ddt);
-
-    const denominator = Math.pow(a, 3);
-    let curvature = 0;
-
-    if (denominator !== 0) {
-      curvature = Math.sqrt(Math.pow(a, 2) * Math.pow(b, 2) - Math.pow(dot(dt, ddt), 2)) / denominator;
-    }
-
-    const radius = curvature !== 0 ? Math.abs(1 / curvature) : 0;
-
-    return { curvature, radius };
+    return evaluateForT(func, weight, coefficients, target);
   }
 
   /**

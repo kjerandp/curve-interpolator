@@ -2,7 +2,7 @@ import 'mocha';
 import { expect } from 'chai';
 import Point from './core/point';
 import CurveInterpolator from './curve-interpolator';
-import { points } from '../test/test-data';
+import { points, points3d } from '../test/test-data';
 import { compareNumArrays } from '../test/test-utils';
 
 const EPS = 0.001;
@@ -154,6 +154,28 @@ describe('curve-interpolator.ts', () => {
     const lerp = new CurveInterpolator(p, { tension: 0.999993, alpha: 0.0, closed: false, arcDivisions: 0 });
     lerp.getPointAt(0.14435536318988135);
 
+  });
+
+  it('should be able to get the expected point at a start/end', () => {
+    const lerp = new CurveInterpolator(points3d, { tension: 0, alpha: 1, arcDivisions: 0 });
+
+    expect(lerp.getPointAt(0)).to.deep.eq(points3d[0]);
+    expect(lerp.getPointAt(1)).to.deep.eq(points3d[points3d.length - 1]);
+  });
+
+  it('should be able to get the curvature at a position on the curve', () => {
+    const lerp = new CurveInterpolator(points, { tension: 0, alpha: 1, arcDivisions: 0 });
+
+    let result = lerp.getCurvatureAt(0);
+    expect(result.curvature).to.be.closeTo(0.00792, 0.00001);
+    result = lerp.getCurvatureAt(0.2);
+    expect(result.curvature).to.be.closeTo(0.49643, 0.00001);
+    result = lerp.getCurvatureAt(0.5);
+    expect(result.curvature).to.be.closeTo(0.25687, 0.00001);
+    result = lerp.getCurvatureAt(0.75);
+    expect(result.curvature).to.be.closeTo(0.18788, 0.00001);
+    result = lerp.getCurvatureAt(1);
+    expect(result.curvature).to.be.closeTo(0.53561, 0.00001);
   });
 });
 

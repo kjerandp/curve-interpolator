@@ -60,34 +60,6 @@ describe('abstract-curve-mapper.ts', () => {
     expect(mapper._cache['coefficients']).to.be.null;
   });
 
-  it('should be able to get point at t', () => {
-    const mapper = new TestMapper();
-    mapper.alpha = 1;
-    mapper.tension = 0;
-    mapper.points = points3d;
-
-    expect(mapper.getPointAtT(0)).to.deep.eq(points3d[0]);
-    expect(mapper.getPointAtT(1)).to.deep.eq(points3d[points3d.length - 1]);
-  });
-
-  it('should be able to get the curvature at t', () => {
-    const mapper = new TestMapper();
-    mapper.alpha = 1;
-    mapper.tension = 0;
-    mapper.points = points;
-
-    let result = mapper.getCurvatureAtT(0);
-    expect(result.curvature).to.be.closeTo(0.00792, 0.00001);
-    result = mapper.getCurvatureAtT(0.2);
-    expect(result.curvature).to.be.closeTo(0.11598, 0.00001);
-    result = mapper.getCurvatureAtT(0.5);
-    expect(result.curvature).to.be.closeTo(0.24671, 0.00001);
-    result = mapper.getCurvatureAtT(0.75);
-    expect(result.curvature).to.be.closeTo(0.11179, 0.00001);
-    result = mapper.getCurvatureAtT(1);
-    expect(result.curvature).to.be.closeTo(0.53561, 0.00001);
-  });
-
   it('should invoke callback when cache is invalidated', () => {
     const callback = sinon.spy();
     const mapper = new TestMapper(callback);
@@ -95,5 +67,6 @@ describe('abstract-curve-mapper.ts', () => {
     mapper.alpha = 0.5;
     expect(callback.called).to.be.true;
   });
+
 
 });

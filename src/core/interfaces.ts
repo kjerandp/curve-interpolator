@@ -8,19 +8,19 @@ export type NumArray4 = [number, number, number, number];
  */
 export type Vector = (number[] | VectorType);
 
+export type SegmentFunction = (t: number, coefficients: NumArray4) => number;
 export interface CurveMapper {
   alpha: number,
   tension: number,
   points: Vector[],
   closed: boolean,
 
-  getPointAtT: (t:number, target?:VectorType) => Vector,
-  getTangentAtT: (t:number, target?:VectorType) => Vector,
-  getCurvatureAtT: (t:number) => { curvature: number, radius: number },
+  evaluateForT: (func:SegmentFunction, t:number, target?:VectorType) => Vector,
   lengthAt: (u: number) => number,
   getT: (u: number) => number,
   getU: (t: number) => number,
   getCoefficients: (idx: number) => NumArray4[],
+  reset: () => void,
 }
 
 /**
