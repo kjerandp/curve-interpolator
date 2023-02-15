@@ -21,7 +21,7 @@ import {
 import { SegmentedCurveMapper } from './curve-mappers/segmented-curve-mapper';
 import { derivativeAtT, findRootsOfT, secondDerivativeAtT, valueAtT } from './core/spline-segment';
 import { NumericalCurveMapper } from './curve-mappers/numerical-curve-mapper';
-import { clamp, copyValues, map } from './core/utils';
+import { clamp, copyValues } from './core/utils';
 
 export interface CurveInterpolatorOptions extends SplineCurveOptions {
   arcDivisions?: number,
