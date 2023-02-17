@@ -107,15 +107,38 @@ describe('curve-interpolator.ts', () => {
   it('should clear cache if new points, tension or arcDivisions are set', () => {
     const interp = new CurveInterpolator(points, { tension: 0, alpha: 0 });
 
-    expect(interp._bbox).to.be.null;
+    expect(interp._cache.keys.length).to.eq(0);
     interp.getPoints(100, Point);
-    expect(interp._bbox).to.be.null;
+    expect(interp._cache.keys.length).to.eq(0);
     interp.maxX;
-    expect(interp._bbox).to.not.be.null;
+    expect(interp._cache.has('bbox')).to.be.true;
     interp.tension = 0; // value not changed
-    expect(interp._bbox).to.not.be.null;
+    expect(interp._cache.has('bbox')).to.be.true;
     interp.tension = 0.5;
-    expect(interp._bbox).to.be.null;
+    expect(interp._cache.has('bbox')).to.be.false;
+  });
+
+  it('should be able to create and cache lookup table', () => {
+    const interp = new CurveInterpolator(points, { tension: 0, alpha: 0 });
+
+    expect(interp._cache.keys.length).to.eq(0);
+    const lut1 = interp.createLookupTable(20);
+    expect(lut1.size).to.eq(20);
+    expect(interp._cache.has('lut_20_0_1')).to.be.true;
+
+    expect(lut1.has(0)).to.be.true;
+    expect(lut1.has(1)).to.be.true;
+
+    const lut2 = interp.createLookupTable(20, 0.3, 0.7);
+    expect(lut2.size).to.eq(20);
+    expect(interp._cache.has('lut_20_0.3_0.7')).to.be.true;
+    expect(interp._cache.has('lut_20_0_1')).to.be.true;
+
+    expect(lut2.has(0.3)).to.be.true;
+    expect(lut2.has(0.7)).to.be.true;
+    interp.alpha = 0.5;
+    expect(interp._cache.has('lut_20_0.3_0.7')).to.be.false;
+    expect(interp._cache.has('lut_20_0_1')).to.be.false;
   });
 
   it('should work with less than 4 control points', () => {
@@ -176,6 +199,17 @@ describe('curve-interpolator.ts', () => {
     expect(result.curvature).to.be.closeTo(0.18788, 0.00001);
     result = lerp.getCurvatureAt(1);
     expect(result.curvature).to.be.closeTo(0.53561, 0.00001);
+  });
+
+  it('should be able to find the nearest position on the curve from a point', () => {
+    const lerp = new CurveInterpolator(points, { tension: 0, alpha: 1, arcDivisions: 0 });
+
+    const point1 = [6, 8];
+    const point2 = [8, 1];
+    let result = lerp.getNearestPosition(point1);
+    expect(result.u).to.be.closeTo(0.23138, 0.00001);
+    result = lerp.getNearestPosition(point2);
+    expect(result.u).to.be.closeTo(0.72169, 0.00001);
   });
 });
 

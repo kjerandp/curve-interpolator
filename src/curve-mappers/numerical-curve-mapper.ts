@@ -227,7 +227,7 @@ export class NumericalCurveMapper extends AbstractCurveMapper {
     const al = arcLengths.length - 1;
     const totalLength = arcLengths[al];
 
-    // need to denormalize t to find the matching length
+    // need to de-normalize t to find the matching length
     const tIdx = t * al;
 
     const subIdx = Math.floor(tIdx);

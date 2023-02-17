@@ -4,6 +4,7 @@ import {
 
 import {
   cross,
+  distance,
   dot,
   EPS,
   getQuadRoots,
@@ -36,7 +37,7 @@ export interface CurveInterpolatorOptions extends SplineCurveOptions {
 export default class CurveInterpolator {
   _lmargin: number;
   _curveMapper: CurveMapper;
-  _bbox?: BBox;
+  _cache = new Map<string, object>();
 
   /**
    * Create a new interpolator instance
@@ -64,28 +65,20 @@ export default class CurveInterpolator {
   }
 
   /**
-   * Get the point along the curve corresponding to the value of t
-   * Used internally by the getPointAt function.
-   * @param t time along full curve (encodes segment index and segment t)
-   * @param target optional target vector
-   * @returns position as vector
-   */
-  _getPointAtT(t: number, target?: VectorType) : Vector {
-    t = clamp(t, 0.0, 1.0);
-    if (t === 0) {
-      return copyValues(this.points[0], target);
-    } else if (t === 1) {
-      return copyValues(this.closed ? this.points[0] : this.points[this.points.length - 1], target);
-    }
-    return this._curveMapper.evaluateForT(valueAtT, t, target);
-  }
-
-  /**
    * Returns the time on curve at a position, given as a value between 0 and 1
    * @param position position on curve (0..1)
    */
-  getT(position:number) : number {
+  getTime(position:number) : number {
     return this._curveMapper.getT(position);
+  }
+
+  /**
+   * Returns the normalized position u for a time value t
+   * @param t time on curve (0..1)
+   * @returns position (u)
+   */
+  getPosition(t:number) : number {
+    return this._curveMapper.getU(t);
   }
 
   /**
@@ -98,6 +91,23 @@ export default class CurveInterpolator {
   }
 
   /**
+   * Get the point along the curve corresponding to the value of t (time along curve)
+   * Used internally by the getPointAt function.
+   * @param t time along full curve (encodes segment index and segment t)
+   * @param target optional target vector
+   * @returns position as vector
+   */
+  getPointAtTime(t: number, target?: VectorType) : Vector {
+    t = clamp(t, 0.0, 1.0);
+    if (t === 0) {
+      return copyValues(this.points[0], target);
+    } else if (t === 1) {
+      return copyValues(this.closed ? this.points[0] : this.points[this.points.length - 1], target);
+    }
+    return this._curveMapper.evaluateForT(valueAtT, t, target);
+  }
+
+  /**
    * Interpolate a point at the given position.
    * @param position position on curve (0..1)
    * @param target optional target
@@ -105,7 +115,7 @@ export default class CurveInterpolator {
   getPointAt<T extends VectorType>(position:number, target: T) : T
   getPointAt(position:number) : Vector
   getPointAt(position:number, target?:VectorType) : Vector {
-    return this._getPointAtT(this.getT(position), target);
+    return this.getPointAtTime(this.getTime(position), target);
   }
 
   /**
@@ -116,9 +126,34 @@ export default class CurveInterpolator {
   getTangentAt<T extends VectorType>(position:number, target: T) : T
   getTangentAt(position: number) : Vector
   getTangentAt(position: number, target?: VectorType) : Vector {
-    const t = clamp(this.getT(position), 0, 1);
-    const tan = this._curveMapper.evaluateForT(derivativeAtT, t, target);
-    return normalize(tan);
+    const dt = this.getDerivativeAt(position, target);
+    return normalize(dt);
+  }
+
+  /**
+   * Get the derivative at the given position.
+   * @param position position on curve (0 - 1)
+   * @param target optional target
+   */
+  getDerivativeAt<T extends VectorType>(position:number, target: T) : T
+  getDerivativeAt(position: number) : Vector
+  getDerivativeAt(position: number, target?: VectorType) : Vector {
+    const t = clamp(this.getTime(position), 0, 1);
+    const dt = this._curveMapper.evaluateForT(derivativeAtT, t, target);
+    return dt;
+  }
+
+  /**
+   * Get the second derivative at the given position.
+   * @param position position on curve (0 - 1)
+   * @param target optional target
+   */
+  getSecondDerivativeAt<T extends VectorType>(position:number, target: T) : T
+  getSecondDerivativeAt(position: number) : Vector
+  getSecondDerivativeAt(position: number, target?: VectorType) : Vector {
+    const t = clamp(this.getTime(position), 0, 1);
+    const ddt = this._curveMapper.evaluateForT(secondDerivativeAtT, t, target);
+    return ddt;
   }
 
   /**
@@ -130,7 +165,7 @@ export default class CurveInterpolator {
   getNormalAt<T extends VectorType>(position:number, target: T) : T
   getNormalAt(position: number) : Vector
   getNormalAt(position: number, target?: VectorType) : Vector {
-    const t = clamp(this.getT(position), 0, 1);
+    const t = clamp(this.getTime(position), 0, 1);
     const dt = normalize(this._curveMapper.evaluateForT(derivativeAtT, t));
 
     if (dt.length < 2 || dt.length > 3) return undefined;
@@ -154,7 +189,7 @@ export default class CurveInterpolator {
    * @returns object containing the unsigned curvature, radius + tangent and direction vectors
    */
   getCurvatureAt(position: number) {
-    const t = clamp(this.getT(position), 0.0, 1.0);
+    const t = clamp(this.getTime(position), 0.0, 1.0);
 
     const dt = this._curveMapper.evaluateForT(derivativeAtT, t);
     const ddt = this._curveMapper.evaluateForT(secondDerivativeAtT, t);
@@ -192,6 +227,7 @@ export default class CurveInterpolator {
     return { curvature, radius, tangent, direction };
   }
 
+
   /**
    * Get a bounding box for the curve or the segment given by the
    * from and to parameters
@@ -199,17 +235,17 @@ export default class CurveInterpolator {
    * @param to position to
    */
   getBoundingBox(from = 0, to = 1) : BBox {
-    if (from === 0 && to === 1 && this._bbox) {
-      return this._bbox;
+    if (from === 0 && to === 1 && this._cache.has('bbox')) {
+      return this._cache.get('bbox') as BBox;
     }
 
     const min = [];
     const max = [];
 
-    const t0 = this.getT(from), t1 = this.getT(to);
+    const t0 = this.getTime(from), t1 = this.getTime(to);
 
-    const start = this._getPointAtT(t0);
-    const end = this._getPointAtT(t1);
+    const start = this.getPointAtTime(t0);
+    const end = this.getPointAtTime(t1);
 
     const nPoints = this.closed ? this.points.length : this.points.length - 1;
 
@@ -251,36 +287,119 @@ export default class CurveInterpolator {
       }
     }
     const bbox = { min, max };
-    if (from === 0 && to === 1) this._bbox = bbox;
+    if (from === 0 && to === 1) this._cache.set('bbox', bbox);
 
     return bbox;
   }
 
   /**
-   * Get uniformaly sampled points along the curve. Returns samples + 1 points.
-   * @param samples number of samples (segments)
+   * Get uniformly sampled points along the curve. Returns samples + 1 points.
+   * @param segments number of samples (segments)
    * @param returnType optional return type
    * @param from start at position
    * @param to end at position
    */
-  getPoints<T extends VectorType>(samples:number, returnType: { new() : T }) : T[]
-  getPoints<T extends VectorType>(samples:number, returnType: { new() : T }, from:number) : T[]
-  getPoints<T extends VectorType>(samples:number, returnType: { new() : T }, from:number, to:number) : T[]
+  getPoints<T extends VectorType>(segments:number, returnType: { new() : T }) : T[]
+  getPoints<T extends VectorType>(segments:number, returnType: { new() : T }, from:number) : T[]
+  getPoints<T extends VectorType>(segments:number, returnType: { new() : T }, from:number, to:number) : T[]
   getPoints()
-  getPoints(samples:number)
-  getPoints(samples:number, returnType: null, from:number, to:number) : Vector[]
-  getPoints(samples = 100, returnType?: { new() : VectorType }, from = 0, to = 1) : Vector[] {
-    if (!samples || samples <= 0) throw Error('Invalid arguments passed to getPoints(). You must specify at least 1 sample/segment.')
+  getPoints(segments:number)
+  getPoints(segments:number, returnType: null, from:number, to:number) : Vector[]
+  getPoints(segments = 100, returnType?: { new() : VectorType }, from = 0, to = 1) : Vector[] {
+    if (!segments || segments <= 0) throw Error('Invalid arguments passed to getPoints(). You must specify at least 1 sample/segment.')
     if (from < 0 || to > 1 || to < from) return undefined;
 
     const pts = [];
 
-    for (let d = 0; d <= samples; d++) {
+    for (let d = 0; d <= segments; d++) {
       const u = from === 0 && to === 1 ?
-        d / samples : from + ((d / samples) * (to - from));
+        d / segments : from + ((d / segments) * (to - from));
       pts.push(this.getPointAt(u, returnType && new returnType()));
     }
     return pts;
+  }
+
+  /**
+   * Create and cache a lookup table of n=samples points, indexed by position (u)
+   * @param samples number of samples (segments)
+   * @param from start at position
+   * @param to end at position
+   * @returns Map of positions -> points
+   */
+  createLookupTable(samples: number, from = 0, to = 1) : Map<number, Vector> {
+    if (!samples || samples <= 1) throw Error('Invalid arguments passed to createLookupTable(). You must specify at least 2 samples.')
+    if (from < 0 || to > 1 || to < from) return undefined;
+
+    const cacheKey = `lut_${samples}_${from}_${to}`;
+
+    if (!this._cache.has(cacheKey)) {
+      const lut = new Map();
+
+      for (let d = 0; d < samples; d++) {
+        const u = from === 0 && to === 1 ?
+          d / (samples - 1) : from + ((d / (samples - 1)) * (to - from));
+        const point = this.getPointAt(u);
+        lut.set(u, point);
+      }
+      this._cache.set(cacheKey, lut);
+    }
+
+    return this._cache.get(cacheKey) as Map<number, Vector>;
+  }
+
+  /**
+   * Get the nearest position on the curve from a point. This is an approximation and its
+   * accuracy is determined by the threshold value (smaller number requires more passes but is more precise)
+   * @param point Vector
+   * @param threshold Precision
+   * @returns Object with position (u), distance and the point at u/t
+   */
+  getNearestPosition(point: Vector, threshold = 0.001) : { u: number, point: Vector, distance: number } {
+    if (threshold <= 0 || !Number.isFinite(threshold)) throw Error('Invalid threshold. Must be a number greater than zero!');
+
+    const samples = 10 * this.points.length - 1;
+    const pu:VectorType = new Array(point.length) as unknown as VectorType;
+    let minDist = Infinity;
+    let minU = 0;
+
+    const lut = this.createLookupTable(samples);
+
+    // first pass: find the closest point out of uniform samples along the curve
+    Array.from(lut.keys()).forEach(key => {
+      const c = lut.get(key);
+      const dist = distance(point, c);
+      if (dist < minDist) {
+        minDist = dist;
+        minU = key;
+        return true;
+      }
+    });
+
+    let minT = this.getTime(minU);
+
+    const bisect = (t:number) => {
+      if (t >= 0 && t <= 1) {
+        this.getPointAtTime(t, pu);
+        const dist = distance(point, pu);
+        if (dist < minDist) {
+          minDist = dist;
+          minT = t;
+          return true;
+        }
+      }
+    }
+
+    const count = 100;
+    // second pass: iteratively refine solution until we reach desired precision.
+    let step = 1 / (count * 2);
+    while (step > threshold) {
+      if (!bisect(minT - step) && !bisect(minT + step))
+        step /= 2;
+    }
+
+    minU = this._curveMapper.getU(minT);
+
+    return { u: minU, distance: minDist, point: pu };
   }
 
   /**
@@ -387,7 +506,7 @@ export default class CurveInterpolator {
    * Invalidates/clears cache
    */
   private _invalidateCache() {
-    this._bbox = null;
+    this._cache = new Map<string, object>();
     return this;
   }
 
