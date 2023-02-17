@@ -50,6 +50,16 @@ describe('curve-interpolator.ts', () => {
     expect(result.y).to.approximately(2.0071484, EPS);
   });
 
+  it('should be able to pass points as VectorType', () => {
+    const input = points3d.map(d => new Point(d[0], d[1], d[2]));
+    const interp = new CurveInterpolator(input, { tension: 0, alpha: 1, arcDivisions: 0 });
+
+    const result = interp.getPointAt(0.7, new Point());
+    expect(result.x).to.approximately(9.7800085, EPS);
+    expect(result.y).to.approximately(-5.003032, EPS);
+    expect(result.z).to.approximately(4.353826, EPS);
+  });
+
   it('should be able to get multiple, evenly distributed points, on curve', () => {
     const interp = new CurveInterpolator(points, { tension: 0, alpha: 0 });
 
