@@ -78,16 +78,16 @@ describe('curve-interpolator.ts', () => {
   it('should be able to lookup values on curve', () => {
     const interp = new CurveInterpolator(points, { tension: 0, alpha: 0 });
 
-    let actual = interp.lookup(2.2, 1, 0) as number[];
+    let actual = interp.getIntersects(2.2, 1, 0) as number[];
     compareNumArrays(actual.map(d => d[0]), [19.1250098, 10.682604]);
-    expect(interp.lookup(2.2, 1, 1)[0]).to.be.approximately(19.125, EPS);
-    expect(interp.lookup(2.2, 1, -1)[0]).to.be.approximately(10.682, EPS);
+    expect(interp.getIntersects(2.2, 1, 1)[0]).to.be.approximately(19.125, EPS);
+    expect(interp.getIntersects(2.2, 1, -1)[0]).to.be.approximately(10.682, EPS);
 
-    actual = interp.lookup(1.1, 0, 0) as number[];
+    actual = interp.getIntersects(1.1, 0, 0) as number[];
 
     compareNumArrays(actual.map(d => d[1]), [17.502159]);
-    expect(interp.lookup(1.1, 0, 1)[1]).to.be.approximately(17.502, EPS);
-    const result = interp.lookup(1.1, 0, -1);
+    expect(interp.getIntersects(1.1, 0, 1)[1]).to.be.approximately(17.502, EPS);
+    const result = interp.getIntersects(1.1, 0, -1);
     expect(result[1]).to.be.approximately(17.502, EPS);
 
   });
@@ -108,10 +108,10 @@ describe('curve-interpolator.ts', () => {
     expect(interp.minY).to.be.eq(bbox.min[1]);
     expect(interp.maxY).to.be.eq(bbox.max[1]);
 
-    expect(interp.lookup(interp.maxY, 1, 1)[0]).to.be.approximately(1, EPS);
-    expect(interp.lookup(interp.minY, 1, 1)[0]).to.be.approximately(16.054653, EPS);
-    expect(interp.lookup(interp.maxX, 0, 1)[1]).to.be.approximately(2.8918343, EPS);
-    expect(interp.lookup(interp.minX, 0, 1)[1]).to.be.approximately(18, EPS);
+    expect(interp.getIntersects(interp.maxY, 1, 1)[0]).to.be.approximately(1, EPS);
+    expect(interp.getIntersects(interp.minY, 1, 1)[0]).to.be.approximately(16.054653, EPS);
+    expect(interp.getIntersects(interp.maxX, 0, 1)[1]).to.be.approximately(2.8918343, EPS);
+    expect(interp.getIntersects(interp.minX, 0, 1)[1]).to.be.approximately(18, EPS);
   });
 
   it('should clear cache if new points, tension or arcDivisions are set', () => {
@@ -217,9 +217,9 @@ describe('curve-interpolator.ts', () => {
     const point1 = [6, 8];
     const point2 = [8, 1];
     let result = lerp.getNearestPosition(point1);
-    expect(result.u).to.be.closeTo(0.23138, 0.00001);
+    expect(result.u).to.be.closeTo(0.231202, 0.00001);
     result = lerp.getNearestPosition(point2);
-    expect(result.u).to.be.closeTo(0.72169, 0.00001);
+    expect(result.u).to.be.closeTo(0.722301, 0.00001);
   });
 });
 

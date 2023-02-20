@@ -28,7 +28,7 @@ export default class CurveInterpolator2D extends CurveInterpolator {
    * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
    */
   x(y: number, max = 0, margin: number = this._lmargin) : number | number[] {
-    const res = this.lookup(y, 1, max, margin);
+    const res = this.getIntersects(y, 1, max, margin);
 
     if (Math.abs(max) === 1) {
       return res[0] as number;
@@ -43,7 +43,7 @@ export default class CurveInterpolator2D extends CurveInterpolator {
    * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
    */
   y(x: number, max = 0, margin: number = this._lmargin) : number | number[] {
-    const res = this.lookup(x, 0, max, margin);
+    const res = this.getIntersects(x, 0, max, margin);
 
     if (Math.abs(max) === 1) {
       return res[1] as number;

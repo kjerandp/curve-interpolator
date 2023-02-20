@@ -67,18 +67,31 @@ export default class CurveInterpolator {
   /**
    * Returns the time on curve at a position, given as a value between 0 and 1
    * @param position position on curve (0..1)
+   * @param clampInput whether the input value should be clamped to a valid range or not
    */
-  getTime(position:number) : number {
-    return this._curveMapper.getT(position);
+  getTimeFromPosition(position:number, clampInput = false) : number {
+    return this._curveMapper.getT(clampInput ? clamp(position, 0, 1) : position);
   }
 
   /**
-   * Returns the normalized position u for a time value t
+   * Returns the normalized position u for a normalized time value t
    * @param t time on curve (0..1)
+   * @param clampInput whether the input value should be clamped to a valid range or not
    * @returns position (u)
    */
-  getPosition(t:number) : number {
-    return this._curveMapper.getU(t);
+  getPositionFromTime(t:number, clampInput = false) : number {
+    return this._curveMapper.getU(clampInput ? clamp(t, 0, 1) : t);
+  }
+
+  /**
+   * Returns the normalized position u for the specified length
+   * @param t time on curve (0..1)
+   * @param clampInput whether the input value should be clamped to a valid range or not
+   * @returns position (u)
+   */
+  getPositionFromLength(length:number, clampInput = false) : number {
+    const l = clampInput ? clamp(length, 0, this.length) : length;
+    return this._curveMapper.getU(l / this.length);
   }
 
   /**
@@ -86,13 +99,39 @@ export default class CurveInterpolator {
    * @param position position on curve (0..1)
    * @returns length from start to position
    */
-  getLengthAt(position = 1) : number {
-    return this._curveMapper.lengthAt(position);
+  getLengthAt(position = 1, clampInput = false) : number {
+    return this._curveMapper.lengthAt(clampInput ? clamp(position, 0, 1) : position);
+  }
+
+  /**
+   * Returns the time (t) of the knot at the specified index
+   * @param index index of knot (control/input point)
+   * @returns time (t)
+   */
+  getTimeAtKnot(index: number) : number {
+    if (index < 0 || index > this.points.length - 1) throw Error('Invalid index!');
+    if (index === 0) return 0; // first knot
+    if (!this.closed && index === this.points.length - 1) return 1; // last knot
+
+    const nCount = this.closed ? this.points.length : this.points.length - 1;
+
+    return index / nCount;
+  }
+
+  /**
+   * Returns the position (u) of the knot at the specified index
+   * @param index index of knot (control/input point)
+   * @returns position (u)
+   */
+  getPositionAtKnot(index: number) : number {
+    return this.getPositionFromTime(this.getTimeAtKnot(index));
   }
 
   /**
    * Get the point along the curve corresponding to the value of t (time along curve)
-   * Used internally by the getPointAt function.
+   * This function is only useful when you need to address the curve by time, where time
+   * will vary depending on segment length and curvature. To address the curve normalized
+   * for length (constant speed and uniform spacing), use the getPointAt function instead.
    * @param t time along full curve (encodes segment index and segment t)
    * @param target optional target vector
    * @returns position as vector
@@ -115,7 +154,7 @@ export default class CurveInterpolator {
   getPointAt<T extends VectorType>(position:number, target: T) : T
   getPointAt(position:number) : Vector
   getPointAt(position:number, target?:VectorType) : Vector {
-    return this.getPointAtTime(this.getTime(position), target);
+    return this.getPointAtTime(this.getTimeFromPosition(position), target);
   }
 
   /**
@@ -138,7 +177,7 @@ export default class CurveInterpolator {
   getDerivativeAt<T extends VectorType>(position:number, target: T) : T
   getDerivativeAt(position: number) : Vector
   getDerivativeAt(position: number, target?: VectorType) : Vector {
-    const t = clamp(this.getTime(position), 0, 1);
+    const t = clamp(this.getTimeFromPosition(position), 0, 1);
     const dt = this._curveMapper.evaluateForT(derivativeAtT, t, target);
     return dt;
   }
@@ -151,7 +190,7 @@ export default class CurveInterpolator {
   getSecondDerivativeAt<T extends VectorType>(position:number, target: T) : T
   getSecondDerivativeAt(position: number) : Vector
   getSecondDerivativeAt(position: number, target?: VectorType) : Vector {
-    const t = clamp(this.getTime(position), 0, 1);
+    const t = clamp(this.getTimeFromPosition(position), 0, 1);
     const ddt = this._curveMapper.evaluateForT(secondDerivativeAtT, t, target);
     return ddt;
   }
@@ -165,7 +204,7 @@ export default class CurveInterpolator {
   getNormalAt<T extends VectorType>(position:number, target: T) : T
   getNormalAt(position: number) : Vector
   getNormalAt(position: number, target?: VectorType) : Vector {
-    const t = clamp(this.getTime(position), 0, 1);
+    const t = clamp(this.getTimeFromPosition(position), 0, 1);
     const dt = normalize(this._curveMapper.evaluateForT(derivativeAtT, t));
 
     if (dt.length < 2 || dt.length > 3) return undefined;
@@ -189,7 +228,7 @@ export default class CurveInterpolator {
    * @returns object containing the unsigned curvature, radius + tangent and direction vectors
    */
   getCurvatureAt(position: number) {
-    const t = clamp(this.getTime(position), 0.0, 1.0);
+    const t = clamp(this.getTimeFromPosition(position), 0.0, 1.0);
 
     const dt = this._curveMapper.evaluateForT(derivativeAtT, t);
     const ddt = this._curveMapper.evaluateForT(secondDerivativeAtT, t);
@@ -242,7 +281,7 @@ export default class CurveInterpolator {
     const min = [];
     const max = [];
 
-    const t0 = this.getTime(from), t1 = this.getTime(to);
+    const t0 = this.getTimeFromPosition(from), t1 = this.getTimeFromPosition(to);
 
     const start = this.getPointAtTime(t0);
     const end = this.getPointAtTime(t1);
@@ -354,7 +393,7 @@ export default class CurveInterpolator {
    * @param threshold Precision
    * @returns Object with position (u), distance and the point at u/t
    */
-  getNearestPosition(point: Vector, threshold = 0.001) : { u: number, point: Vector, distance: number } {
+  getNearestPosition(point: Vector, threshold = 0.00001) : { u: number, point: Vector, distance: number } {
     if (threshold <= 0 || !Number.isFinite(threshold)) throw Error('Invalid threshold. Must be a number greater than zero!');
 
     const samples = 10 * this.points.length - 1;
@@ -375,7 +414,7 @@ export default class CurveInterpolator {
       }
     });
 
-    let minT = this.getTime(minU);
+    let minT = this.getTimeFromPosition(minU);
 
     const bisect = (t:number) => {
       if (t >= 0 && t <= 1) {
@@ -403,58 +442,21 @@ export default class CurveInterpolator {
   }
 
   /**
-   * Find point(s) on the curve intersected by the given value along a given axis
-   * @param v lookup value
-   * @param axis index of axis [0=x, 1=y, 2=z ...]
-   * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
-   */
-  lookup(v:number, axis = 0, max = 0, margin:number = this._lmargin) : Vector[] | Vector {
-    const k = axis;
-    const solutions = [];
-    const nPoints = this.closed ? this.points.length : this.points.length - 1;
-
-    for (let i = 0; i < nPoints && (max === 0 || solutions.length < Math.abs(max)); i += 1) {
-      const idx = (max < 0 ? nPoints - (i + 1) : i);
-
-      const [, p1, p2] = getControlPoints(idx, this.points, this.closed);
-      const coefficients = this._curveMapper.getCoefficients(idx);
-
-      let vmin: number, vmax: number;
-      if (p1[k] < p2[k]) {
-        vmin = p1[k];
-        vmax = p2[k];
-      } else {
-        vmin = p2[k];
-        vmax = p1[k];
-      }
-
-      if (v - margin <= vmax && v + margin >= vmin) {
-        const ts = findRootsOfT(v, coefficients[k]);
-
-        // sort on t to solve in order of curve length if max != 0
-        if (max < 0) ts.sort((a, b) => b - a);
-        else if (max >= 0) ts.sort((a, b) => a - b);
-
-        for (let j = 0; j < ts.length; j++) {
-          if (ts[j] === 0 && i > 0) continue; // avoid duplicate (0 would be found as 1 in previous iteration)
-          const coord = [];
-          for (let c = 0; c < coefficients.length; c++) {
-            let val: number;
-            if (c !== k) {
-              val = valueAtT(ts[j], coefficients[c]);
-            } else {
-              val = v;
-            }
-            coord[c] = val;
-          }
-          solutions.push(coord);
-
-          if (max !== 0 && solutions.length === Math.abs(max)) break;
-        }
-      }
-    }
-
-    return Math.abs(max) === 1 && solutions.length === 1 ? solutions[0] : solutions;
+  * Find points on the curve intersecting a specific value along a given axis. The axis is given as
+  * an index from 0 - n, i.e. 0 = x-axis, 1 = y-axis, 2 = z-axis etc.
+  *
+  * The max parameter is used to specify the maximum number of solutions you want returned, where max=0
+  * returns all solutions and a negative number will return the max number of solutions starting from
+  * the end of the curve and a positive number starting from the beginning of the curve. Note that If
+  * max = 1 or -1, this function returns the point (unwrapped) or null if no intersects exist. In any
+  * other case an array will be returned, regardless of there's multiple, a single or no solutions.
+  * @param v lookup value
+  * @param axis index of axis [0=x, 1=y, 2=z ...]
+  * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
+  */
+  getIntersects(v:number, axis = 0, max = 0, margin:number = this._lmargin) : Vector[] | Vector {
+    const solutions = this.getIntersectsAsTime(v, axis, max, margin).map(t => this.getPointAtTime(t));
+    return Math.abs(max) === 1 ? (solutions.length === 1 ? solutions[0] : null) : solutions;
   }
 
   /**
@@ -463,16 +465,26 @@ export default class CurveInterpolator {
    * @param axis index of axis [0=x, 1=y, 2=z ...]
    * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
    */
-  lookupPositions(v:number, axis = 0, max = 0, margin:number = this._lmargin) : number[] {
+  getIntersectsAsPositions(v:number, axis = 0, max = 0, margin:number = this._lmargin) : number[] {
+    return this.getIntersectsAsTime(v, axis, max, margin).map(t => this.getPositionFromTime(t));
+  }
+
+  /**
+   * Find intersects as time (0-1) on the curve intersected by the given value along a given axis
+   * @param v lookup value
+   * @param axis index of axis [0=x, 1=y, 2=z ...]
+   * @param max max solutions (i.e. 0=all, 1=first along curve, -1=last along curve)
+   */
+  getIntersectsAsTime(v:number, axis = 0, max = 0, margin:number = this._lmargin) : number[] {
     const k = axis;
     const solutions = new Set<number>();
     const nPoints = this.closed ? this.points.length : this.points.length - 1;
 
     for (let i = 0; i < nPoints && (max === 0 || solutions.size < Math.abs(max)); i += 1) {
-      const idx = (max < 0 ? this.points.length - i : i);
+      const idx = (max < 0 ? nPoints - (i + 1) : i);
 
-      const [, p1, p2] = getControlPoints(i, this.points, this.closed);
-      const coefficients = this._curveMapper.getCoefficients(i);
+      const [, p1, p2] = getControlPoints(idx, this.points, this.closed);
+      const coefficients = this._curveMapper.getCoefficients(idx);
 
       let vmin: number, vmax: number;
       if (p1[k] < p2[k]) {
@@ -498,7 +510,7 @@ export default class CurveInterpolator {
         }
       }
     }
-    return Array.from(solutions).map(t => this._curveMapper.getU(t));
+    return Array.from(solutions);
   }
 
 
