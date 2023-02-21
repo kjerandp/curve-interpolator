@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "curve-interpolator",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "Interpolate values on a Cardinal/Catmull-Rom spline curve",
   "repository": "https://github.com/kjerandp/curve-interpolator",
   "bugs": {
@@ -11,7 +11,7 @@
   "license": "MIT",
   "keywords": [
     "cubic",
-    "cardnial",
+    "cardinial",
     "catmull-rom",
     "curve",
     "interpolate",
@@ -41,6 +41,7 @@
     "@rollup/plugin-typescript": "^10.0.1",
     "@types/chai": "^4.2.14",
     "@types/mocha": "^5.2.7",
+    "@types/sinon": "^10.0.13",
     "@typescript-eslint/eslint-plugin": "^5.48.0",
     "@typescript-eslint/parser": "^5.48.0",
     "chai": "^4.3.7",
@@ -50,6 +51,7 @@
     "mocha": "^10.2.0",
     "rimraf": "^3.0.2",
     "rollup": "^3.9.1",
+    "sinon": "^15.0.1",
     "ts-node": "^10.9.1",
     "typedoc": "^0.23.23",
     "typedoc-plugin-missing-exports": "^1.0.0",

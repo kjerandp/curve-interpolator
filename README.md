@@ -33,7 +33,7 @@ const points = [
   ...
 ];
 
-const interp = new CurveInterpolator(points, { tension: 0.2 });
+const interp = new CurveInterpolator(points, { tension: 0.2, alpha: 0.5 });
 
 // get single point
 const position = 0.3 // [0 - 1]
@@ -45,7 +45,7 @@ const pts = interp.getPoints(segments);
 
 // lookup values along x and y axises
 const axis = 1;
-const yintersects = interp.lookup(7, axis);
+const yintersects = interp.getIntersects(7, axis);
 
 /*
 max number of solutions (0 = all (default), 1 = first, -1 = last)
@@ -53,15 +53,14 @@ A negative max value counts solutions from end of curve
 */
 const axis = 0;
 const max = -1;
-const xintersects = interp.lookup(3.2, axis, max);
+const xintersects = interp.getIntersects(3.2, axis, max);
 
 // get bounding box
 const bbox = interp.getBoundingBox();
 ```
 
 Online example on ObservableHQ:
-- https://observablehq.com/@kjerandp/curveinterpolator-v2
-- https://observablehq.com/@kjerandp/curve-interpolator-v1
+- https://observablehq.com/@kjerandp/curve-interpolator-demo
 
 ## Docs
 Docs are generated using typedoc in `./docs`. To create:

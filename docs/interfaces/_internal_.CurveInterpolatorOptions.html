@@ -17,16 +17,16 @@
 <li><a href="_internal_.CurveInterpolatorOptions.html">CurveInterpolatorOptions</a></li></ul>
 <h1>Interface CurveInterpolatorOptions</h1></div>
 <section class="tsd-panel tsd-comment">
-<div class="tsd-comment tsd-typography"><p>Curve characteristics</p>
+<div class="tsd-comment tsd-typography"><p>Spline Curve characteristics</p>
 </div></section>
 <section class="tsd-panel tsd-hierarchy">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
-<li><a href="_internal_.CurveOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">CurveOptions</a>
+<li><a href="_internal_.SplineCurveOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">SplineCurveOptions</a>
 <ul class="tsd-hierarchy">
 <li><span class="target">CurveInterpolatorOptions</span></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/6ce0bfa/src/curve-interpolator.ts#L23">curve-interpolator.ts:23</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/9dcc271/src/curve-interpolator.ts#L27">curve-interpolator.ts:27</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -38,6 +38,8 @@
 <a href="_internal_.CurveInterpolatorOptions.html#arcDivisions" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>arc<wbr/>Divisions?</span></a>
 <a href="_internal_.CurveInterpolatorOptions.html#closed" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>closed?</span></a>
 <a href="_internal_.CurveInterpolatorOptions.html#lmargin" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>lmargin?</span></a>
+<a href="_internal_.CurveInterpolatorOptions.html#numericalApproximationOrder" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>numerical<wbr/>Approximation<wbr/>Order?</span></a>
+<a href="_internal_.CurveInterpolatorOptions.html#numericalInverseSamples" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>numerical<wbr/>Inverse<wbr/>Samples?</span></a>
 <a href="_internal_.CurveInterpolatorOptions.html#tension" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>tension?</span></a>
 </div></section></div></details></section></section>
 <section class="tsd-panel-group tsd-member-group">
@@ -45,31 +47,41 @@
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a id="alpha" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>alpha</span><a href="#alpha" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
 <div class="tsd-signature">alpha<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
-<p>Inherited from <a href="_internal_.CurveOptions.html">CurveOptions</a>.<a href="_internal_.CurveOptions.html#alpha">alpha</a></p>
+<p>Inherited from <a href="_internal_.SplineCurveOptions.html">SplineCurveOptions</a>.<a href="_internal_.SplineCurveOptions.html#alpha">alpha</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/6ce0bfa/src/interfaces.ts#L46">interfaces.ts:46</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/9dcc271/src/core/interfaces.ts#L46">core/interfaces.ts:46</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="arcDivisions" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>arc<wbr/>Divisions</span><a href="#arcDivisions" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">arc<wbr/>Divisions<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/6ce0bfa/src/curve-interpolator.ts#L24">curve-interpolator.ts:24</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/9dcc271/src/curve-interpolator.ts#L28">curve-interpolator.ts:28</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a id="closed" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>closed</span><a href="#closed" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">closed<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div><aside class="tsd-sources">
-<p>Inherited from <a href="_internal_.CurveOptions.html">CurveOptions</a>.<a href="_internal_.CurveOptions.html#closed">closed</a></p>
+<p>Inherited from <a href="_internal_.SplineCurveOptions.html">SplineCurveOptions</a>.<a href="_internal_.SplineCurveOptions.html#closed">closed</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/6ce0bfa/src/interfaces.ts#L48">interfaces.ts:48</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/9dcc271/src/core/interfaces.ts#L62">core/interfaces.ts:62</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="lmargin" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>lmargin</span><a href="#lmargin" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">lmargin<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/6ce0bfa/src/curve-interpolator.ts#L25">curve-interpolator.ts:25</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/9dcc271/src/curve-interpolator.ts#L31">curve-interpolator.ts:31</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="numericalApproximationOrder" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>numerical<wbr/>Approximation<wbr/>Order</span><a href="#numericalApproximationOrder" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">numerical<wbr/>Approximation<wbr/>Order<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/9dcc271/src/curve-interpolator.ts#L29">curve-interpolator.ts:29</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="numericalInverseSamples" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>numerical<wbr/>Inverse<wbr/>Samples</span><a href="#numericalInverseSamples" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">numerical<wbr/>Inverse<wbr/>Samples<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/9dcc271/src/curve-interpolator.ts#L30">curve-interpolator.ts:30</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a id="tension" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>tension</span><a href="#tension" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">tension<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
-<p>Inherited from <a href="_internal_.CurveOptions.html">CurveOptions</a>.<a href="_internal_.CurveOptions.html#tension">tension</a></p>
+<p>Inherited from <a href="_internal_.SplineCurveOptions.html">SplineCurveOptions</a>.<a href="_internal_.SplineCurveOptions.html#tension">tension</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/6ce0bfa/src/interfaces.ts#L44">interfaces.ts:44</a></li></ul></aside></section></section></div>
+<li>Defined in <a href="https://github.com/kjerandp/curve-interpolator/blob/9dcc271/src/core/interfaces.ts#L44">core/interfaces.ts:44</a></li></ul></aside></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -100,6 +112,8 @@
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="_internal_.CurveInterpolatorOptions.html#arcDivisions" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>arc<wbr/>Divisions?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_internal_.CurveInterpolatorOptions.html#closed" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>closed?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="_internal_.CurveInterpolatorOptions.html#lmargin" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>lmargin?</a></li>
+<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_internal_.CurveInterpolatorOptions.html#numericalApproximationOrder" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>numerical<wbr/>Approximation<wbr/>Order?</a></li>
+<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_internal_.CurveInterpolatorOptions.html#numericalInverseSamples" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>numerical<wbr/>Inverse<wbr/>Samples?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_internal_.CurveInterpolatorOptions.html#tension" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>tension?</a></li></ul></li></ul></nav></div></div>
 <div class="container tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
