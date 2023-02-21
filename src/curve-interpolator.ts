@@ -165,34 +165,20 @@ export default class CurveInterpolator {
   getTangentAt<T extends VectorType>(position:number, target: T) : T
   getTangentAt(position: number) : Vector
   getTangentAt(position: number, target?: VectorType) : Vector {
-    const dt = this.getDerivativeAt(position, target);
-    return normalize(dt);
+    const t = clamp(this.getTimeFromPosition(position), 0, 1);
+    return this.getTangentAtTime(t, target);
   }
 
   /**
-   * Get the derivative at the given position.
-   * @param position position on curve (0 - 1)
+   * Get the tangent at the given time.
+   * @param t time at curve (0 - 1)
    * @param target optional target
    */
-  getDerivativeAt<T extends VectorType>(position:number, target: T) : T
-  getDerivativeAt(position: number) : Vector
-  getDerivativeAt(position: number, target?: VectorType) : Vector {
-    const t = clamp(this.getTimeFromPosition(position), 0, 1);
+  getTangentAtTime<T extends VectorType>(t:number, target: T) : T
+  getTangentAtTime(t: number) : Vector
+  getTangentAtTime(t: number, target?: VectorType) : Vector {
     const dt = this._curveMapper.evaluateForT(derivativeAtT, t, target);
-    return dt;
-  }
-
-  /**
-   * Get the second derivative at the given position.
-   * @param position position on curve (0 - 1)
-   * @param target optional target
-   */
-  getSecondDerivativeAt<T extends VectorType>(position:number, target: T) : T
-  getSecondDerivativeAt(position: number) : Vector
-  getSecondDerivativeAt(position: number, target?: VectorType) : Vector {
-    const t = clamp(this.getTimeFromPosition(position), 0, 1);
-    const ddt = this._curveMapper.evaluateForT(secondDerivativeAtT, t, target);
-    return ddt;
+    return normalize(dt);
   }
 
   /**
@@ -205,6 +191,18 @@ export default class CurveInterpolator {
   getNormalAt(position: number) : Vector
   getNormalAt(position: number, target?: VectorType) : Vector {
     const t = clamp(this.getTimeFromPosition(position), 0, 1);
+    return this.getNormalAtTime(t, target);
+  }
+
+  /**
+   * Get the normal for 2D or 3D curve at the given time (t). In 3D the normal
+   * points towards the center of the curvature.
+   * @param t time at curve (0 - 1)
+   * @param target optional target
+   */
+  getNormalAtTime<T extends VectorType>(t:number, target: T) : T
+  getNormalAtTime(t: number) : Vector
+  getNormalAtTime(t: number, target?: VectorType) : Vector {
     const dt = normalize(this._curveMapper.evaluateForT(derivativeAtT, t));
 
     if (dt.length < 2 || dt.length > 3) return undefined;
@@ -229,7 +227,17 @@ export default class CurveInterpolator {
    */
   getCurvatureAt(position: number) {
     const t = clamp(this.getTimeFromPosition(position), 0.0, 1.0);
+    return this.getCurvatureAtTime(t);
+  }
 
+  /**
+   * Finds the curvature and radius at the specified time (0..1) on the curve. The unsigned curvature
+   * is returned along with radius, tangent vector and, for 2D and 3D curves, a direction vector is included
+   * (which points toward the center of the curvature).
+   * @param t time (t) along curve (0 - 1)
+   * @returns object containing the unsigned curvature, radius + tangent and direction vectors
+   */
+  getCurvatureAtTime(t: number) {
     const dt = this._curveMapper.evaluateForT(derivativeAtT, t);
     const ddt = this._curveMapper.evaluateForT(secondDerivativeAtT, t);
 
@@ -266,6 +274,31 @@ export default class CurveInterpolator {
     return { curvature, radius, tangent, direction };
   }
 
+  /**
+   * Get the derivative at the given position.
+   * @param position position on curve (0 - 1)
+   * @param target optional target
+   */
+  getDerivativeAt<T extends VectorType>(position:number, target: T) : T
+  getDerivativeAt(position: number) : Vector
+  getDerivativeAt(position: number, target?: VectorType) : Vector {
+    const t = clamp(this.getTimeFromPosition(position), 0, 1);
+    const dt = this._curveMapper.evaluateForT(derivativeAtT, t, target);
+    return dt;
+  }
+
+  /**
+   * Get the second derivative at the given position.
+   * @param position position on curve (0 - 1)
+   * @param target optional target
+   */
+  getSecondDerivativeAt<T extends VectorType>(position:number, target: T) : T
+  getSecondDerivativeAt(position: number) : Vector
+  getSecondDerivativeAt(position: number, target?: VectorType) : Vector {
+    const t = clamp(this.getTimeFromPosition(position), 0, 1);
+    const ddt = this._curveMapper.evaluateForT(secondDerivativeAtT, t, target);
+    return ddt;
+  }
 
   /**
    * Get a bounding box for the curve or the segment given by the
@@ -356,34 +389,6 @@ export default class CurveInterpolator {
       pts.push(this.getPointAt(u, returnType && new returnType()));
     }
     return pts;
-  }
-
-  /**
-   * Create and cache a lookup table of n=samples points, indexed by position (u)
-   * @param samples number of samples (segments)
-   * @param from start at position
-   * @param to end at position
-   * @returns Map of positions -> points
-   */
-  createLookupTable(samples: number, from = 0, to = 1) : Map<number, Vector> {
-    if (!samples || samples <= 1) throw Error('Invalid arguments passed to createLookupTable(). You must specify at least 2 samples.')
-    if (from < 0 || to > 1 || to < from) return undefined;
-
-    const cacheKey = `lut_${samples}_${from}_${to}`;
-
-    if (!this._cache.has(cacheKey)) {
-      const lut = new Map();
-
-      for (let d = 0; d < samples; d++) {
-        const u = from === 0 && to === 1 ?
-          d / (samples - 1) : from + ((d / (samples - 1)) * (to - from));
-        const point = this.getPointAt(u);
-        lut.set(u, point);
-      }
-      this._cache.set(cacheKey, lut);
-    }
-
-    return this._cache.get(cacheKey) as Map<number, Vector>;
   }
 
   /**
@@ -511,6 +516,133 @@ export default class CurveInterpolator {
       }
     }
     return Array.from(solutions);
+  }
+
+  /**
+   * Create and cache a lookup table of n=samples points, indexed by position (u)
+   * @param samples number of samples (segments)
+   * @param from start at position
+   * @param to end at position
+   * @returns Map of positions -> points
+   */
+  createLookupTable(samples: number, from = 0, to = 1) : Map<number, Vector> {
+    if (!samples || samples <= 1) throw Error('Invalid arguments passed to createLookupTable(). You must specify at least 2 samples.')
+    if (from < 0 || to > 1 || to < from) return undefined;
+
+    const cacheKey = `lut_${samples}_${from}_${to}`;
+
+    if (!this._cache.has(cacheKey)) {
+      const lut = new Map();
+
+      for (let d = 0; d < samples; d++) {
+        const u = from === 0 && to === 1 ?
+          d / (samples - 1) : from + ((d / (samples - 1)) * (to - from));
+        const point = this.getPointAt(u);
+        lut.set(u, point);
+      }
+      this._cache.set(cacheKey, lut);
+    }
+
+    return this._cache.get(cacheKey) as Map<number, Vector>;
+  }
+
+  /**
+   * Convenience function for iterating over multiple values for a set of samples along the curve.
+   * The forEach function takes a user defined callback function, which will be called for each position
+   * along the curve with its position (u), time (t), sample index (i) and the previous mapped value (prev)
+   * @param func callback function
+   * @param samples number of (evenly spaced) samples OR an array of user specified positions (u)
+   * @param from from position
+   * @param to to position
+   * @returns array of mapped objects
+   */
+  forEach(func: ({ u, t, i, prev }) => unknown, samples: (number | number[]), from = 0, to = 1) : void {
+    let positions = [];
+    if (Number.isFinite(samples)) {
+      if (samples <= 1) throw Error('Invalid arguments passed to forEach(). You must specify at least 2 samples.')
+      const nSamples = samples as number;
+      for (let i = 0; i < samples; i++) {
+        const u = from === 0 && to === 1 ?
+          i / (nSamples - 1) : from + ((i / (nSamples - 1)) * (to - from));
+        positions.push(u);
+      }
+    } else if(Array.isArray(samples)) {
+      positions = samples;
+    }
+
+    let prev = null;
+    positions.forEach((u, i) => {
+      if (!Number.isFinite(u) || u < 0 || u > 1) throw Error('Invalid position (u) for sample in forEach!');
+      const t = this.getTimeFromPosition(u);
+      const current = func({ u, t, i, prev });
+      prev = { u, t, i, value: current };
+    });
+  }
+
+  /**
+   * Convenience function for returning multiple values for a set of samples along the curve.
+   * The map function takes a user defined mapping function, which will be called for each position
+   * along the curve with its position (u), time (t), sample index (i) and the previous mapped value (prev)
+   * @param func mapping function
+   * @param samples number of (evenly spaced) samples OR an array of user specified positions (u)
+   * @param from from position
+   * @param to to position
+   * @returns array of mapped objects
+   */
+  map(func: ({ u, t, i, prev }) => unknown, samples: (number | number[]), from = 0, to = 1) : unknown[] {
+    let positions = [];
+    if (Number.isFinite(samples)) {
+      if (samples <= 1) throw Error('Invalid arguments passed to map(). You must specify at least 2 samples.')
+      const nSamples = samples as number;
+      for (let i = 0; i < samples; i++) {
+        const u = from === 0 && to === 1 ?
+          i / (nSamples - 1) : from + ((i / (nSamples - 1)) * (to - from));
+        positions.push(u);
+      }
+    } else if(Array.isArray(samples)) {
+      positions = samples;
+    }
+
+    let prev = null;
+    return positions.map((u, i) => {
+      if (!Number.isFinite(u) || u < 0 || u > 1) throw Error('Invalid position (u) for sample in map()!');
+      const t = this.getTimeFromPosition(u);
+      const current = func({ u, t, i, prev });
+      prev = { u, t, i, value: current };
+      return current;
+    });
+  }
+
+  /**
+   * Convenience function for reducing multiple values for a set of samples along the curve.
+   * This function takes a user defined reduce function, which will be called for each position
+   * along the curve with its position (u), time (t), sample index (i) and the previous mapped value (prev)
+   * @param func reduce function
+   * @param initialValue initial accumulator value
+   * @param samples number of (evenly spaced) samples OR an array of user specified positions (u)
+   * @param from from position
+   * @param to to position
+   * @returns array of mapped objects
+   */
+  reduce(func: ({ acc, u, t, i }) => unknown, initialValue:unknown, samples: (number | number[]), from = 0, to = 1) : unknown[] {
+    let positions = [];
+    if (Number.isFinite(samples)) {
+      if (samples <= 1) throw Error('Invalid arguments passed to map(). You must specify at least 2 samples.')
+      const nSamples = samples as number;
+      for (let i = 0; i < samples; i++) {
+        const u = from === 0 && to === 1 ?
+          i / (nSamples - 1) : from + ((i / (nSamples - 1)) * (to - from));
+        positions.push(u);
+      }
+    } else if(Array.isArray(samples)) {
+      positions = samples;
+    }
+
+    return positions.reduce((acc, u, i) => {
+      if (!Number.isFinite(u) || u < 0 || u > 1) throw Error('Invalid position (u) for sample in map()!');
+      const t = this.getTimeFromPosition(u);
+      return func({ acc, u, t, i });
+    }, initialValue);
   }
 
 

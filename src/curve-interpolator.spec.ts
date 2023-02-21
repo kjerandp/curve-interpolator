@@ -221,5 +221,26 @@ describe('curve-interpolator.ts', () => {
     result = lerp.getNearestPosition(point2);
     expect(result.u).to.be.closeTo(0.722301, 0.00001);
   });
+
+  it('should be able to map values over a curve range specifying a number of samples', () => {
+    const lerp = new CurveInterpolator(points, { tension: 0, alpha: 1, arcDivisions: 0 });
+
+    const mapped = lerp.map(({ u }) => u, 4, 0.2, 0.5);
+    expect(mapped).to.deep.eq([0.2, 0.3, 0.4, 0.5]);
+  });
+
+  it('should be able to map values over a curve range providing an array of user defined positions', () => {
+    const lerp = new CurveInterpolator(points, { tension: 0, alpha: 1, arcDivisions: 0 });
+
+    const mapped = lerp.map(({ u }) => u, [0.4, 0.8, 0.6]);
+    expect(mapped).to.deep.eq([0.4, 0.8, 0.6]);
+  });
+
+  it('should be able to reduce values over a curve range specifying a number of samples', () => {
+    const lerp = new CurveInterpolator(points, { tension: 0, alpha: 1, arcDivisions: 0 });
+
+    const mapped = lerp.reduce(({ acc, i }) => acc + i, 0, 10);
+    expect(mapped).to.deep.eq(45);
+  });
 });
 
