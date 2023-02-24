@@ -398,15 +398,15 @@ export default class CurveInterpolator {
    * @param threshold Precision
    * @returns Object with position (u), distance and the point at u/t
    */
-  getNearestPosition(point: Vector, threshold = 0.00001) : { u: number, point: Vector, distance: number } {
+  getNearestPosition(point: Vector, threshold = 0.00001, samples?: number) : { u: number, point: Vector, distance: number } {
     if (threshold <= 0 || !Number.isFinite(threshold)) throw Error('Invalid threshold. Must be a number greater than zero!');
 
-    const samples = 10 * this.points.length - 1;
+    samples = samples || 10 * this.points.length - 1;
     const pu:VectorType = new Array(point.length) as unknown as VectorType;
     let minDist = Infinity;
     let minU = 0;
 
-    const lut = this.createLookupTable(samples);
+    const lut = this.createLookupTable(u => this.getPointAt(u), samples, { cacheKey: `lut_nearest_${samples}` });
 
     // first pass: find the closest point out of uniform samples along the curve
     Array.from(lut.keys()).forEach(key => {
@@ -519,30 +519,38 @@ export default class CurveInterpolator {
 
   /**
    * Create and cache a lookup table of n=samples points, indexed by position (u)
+   * @param func function generating lookup table value
    * @param samples number of samples (segments)
-   * @param from start at position
-   * @param to end at position
+   * @param options object of { from, to, cacheKey } - if cacheKey is included, the map will be stored in the internal cache
    * @returns Map of positions -> points
    */
-  createLookupTable(samples: number, from = 0, to = 1) : Map<number, Vector> {
+  createLookupTable<T>(func: (u:number) => T, samples: number, options?: { from?: number, to?: number, cacheKey?: string }) : Map<number, T> {
     if (!samples || samples <= 1) throw Error('Invalid arguments passed to createLookupTable(). You must specify at least 2 samples.')
-    if (from < 0 || to > 1 || to < from) return undefined;
+    const { from, to, cacheKey } = {
+      from: 0,
+      to: 1,
+      ...options,
+    };
+    
+    if (from < 0 || to > 1 || to < from) return undefined;    
 
-    const cacheKey = `lut_${samples}_${from}_${to}`;
+    let lut = null;
 
-    if (!this._cache.has(cacheKey)) {
-      const lut = new Map();
+    if (!cacheKey || !this._cache.has(cacheKey)) {
+      lut = new Map();
 
       for (let d = 0; d < samples; d++) {
         const u = from === 0 && to === 1 ?
           d / (samples - 1) : from + ((d / (samples - 1)) * (to - from));
-        const point = this.getPointAt(u);
-        lut.set(u, point);
+        const value = func(u);
+        lut.set(u, value);
       }
-      this._cache.set(cacheKey, lut);
+      if (cacheKey) this._cache.set(cacheKey, lut);
+    } else if (cacheKey && this._cache.has(cacheKey)) {
+      lut = this._cache.get(cacheKey) as Map<number, T>;
     }
 
-    return this._cache.get(cacheKey) as Map<number, Vector>;
+    return lut;
   }
 
   /**
@@ -555,7 +563,7 @@ export default class CurveInterpolator {
    * @param to to position
    * @returns array of mapped objects
    */
-  forEach(func: ({ u, t, i, prev }) => unknown, samples: (number | number[]), from = 0, to = 1) : void {
+  forEach<T>(func: ({ u, t, i, prev }) => T, samples: (number | number[]), from = 0, to = 1) : void {
     let positions = [];
     if (Number.isFinite(samples)) {
       if (samples <= 1) throw Error('Invalid arguments passed to forEach(). You must specify at least 2 samples.')
@@ -588,7 +596,7 @@ export default class CurveInterpolator {
    * @param to to position
    * @returns array of mapped objects
    */
-  map(func: ({ u, t, i, prev }) => unknown, samples: (number | number[]), from = 0, to = 1) : unknown[] {
+  map<T>(func: ({ u, t, i, prev }) => T, samples: (number | number[]), from = 0, to = 1) : T[] {
     let positions = [];
     if (Number.isFinite(samples)) {
       if (samples <= 1) throw Error('Invalid arguments passed to map(). You must specify at least 2 samples.')
@@ -623,7 +631,7 @@ export default class CurveInterpolator {
    * @param to to position
    * @returns array of mapped objects
    */
-  reduce(func: ({ acc, u, t, i }) => unknown, initialValue:unknown, samples: (number | number[]), from = 0, to = 1) : unknown[] {
+  reduce<T>(func: ({ acc, u, t, i }) => T, initialValue:T, samples: (number | number[]), from = 0, to = 1) : T {
     let positions = [];
     if (Number.isFinite(samples)) {
       if (samples <= 1) throw Error('Invalid arguments passed to map(). You must specify at least 2 samples.')

@@ -163,23 +163,23 @@ describe('curve-interpolator.ts', () => {
     const interp = new CurveInterpolator(points, { tension: 0, alpha: 0 });
 
     expect(interp._cache.keys.length).to.eq(0);
-    const lut1 = interp.createLookupTable(20);
+    const lut1 = interp.createLookupTable(u => u, 20, { cacheKey: 'test' });
     expect(lut1.size).to.eq(20);
-    expect(interp._cache.has('lut_20_0_1')).to.be.true;
+    expect(interp._cache.has('test')).to.be.true;
 
     expect(lut1.has(0)).to.be.true;
     expect(lut1.has(1)).to.be.true;
 
-    const lut2 = interp.createLookupTable(20, 0.3, 0.7);
+    const lut2 = interp.createLookupTable(u => u, 20, { from: 0.3, to: 0.7, cacheKey: 'test2' });
     expect(lut2.size).to.eq(20);
-    expect(interp._cache.has('lut_20_0.3_0.7')).to.be.true;
-    expect(interp._cache.has('lut_20_0_1')).to.be.true;
+    expect(interp._cache.has('test2')).to.be.true;
+    expect(interp._cache.has('test')).to.be.true;
 
     expect(lut2.has(0.3)).to.be.true;
     expect(lut2.has(0.7)).to.be.true;
     interp.alpha = 0.5;
-    expect(interp._cache.has('lut_20_0.3_0.7')).to.be.false;
-    expect(interp._cache.has('lut_20_0_1')).to.be.false;
+    expect(interp._cache.has('test2')).to.be.false;
+    expect(interp._cache.has('test')).to.be.false;
   });
 
   it('should work with less than 4 control points', () => {
