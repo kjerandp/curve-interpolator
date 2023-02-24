@@ -507,7 +507,6 @@ export default class CurveInterpolator {
         else if (max >= 0) ts.sort((a, b) => a - b);
 
         for (let j = 0; j < ts.length; j++) {
-          if (ts[j] === 0 && i > 0) continue; // avoid duplicate (0 would be found as 1 in previous iteration)
           const nt = (ts[j] + idx) / nPoints; // normalize t
           solutions.add(nt);
 

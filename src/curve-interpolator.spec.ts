@@ -92,6 +92,37 @@ describe('curve-interpolator.ts', () => {
 
   });
 
+  it('should be able to lookup extrema on curve', () => {
+    const interp = new CurveInterpolator([[187.7, 113.4], [930, 821.62], [1620, 1330.82], [2310, 1621.24]], { tension: 0.75, alpha: 0 });
+
+    // expect one solution for the end-points in this data
+    let actual = interp.getIntersects(187.7, 0, 0) as number[];
+    expect(actual.length).to.eq(1);
+    
+    actual = interp.getIntersects(2310, 0, 0) as number[];
+    expect(actual.length).to.eq(1);
+
+    //from start of curve
+    actual = interp.getIntersects(187.7, 0, 1) as number[];
+    expect(actual).to.not.be.null;
+    expect(actual[1]).to.be.closeTo(113.4, EPS);
+
+    actual = interp.getIntersects(2310, 0, 1) as number[];
+    expect(actual).to.not.be.null;
+    expect(actual[1]).to.be.closeTo(1621.24, EPS);
+    
+    // from end of curve
+    actual = interp.getIntersects(187.7, 0, -1) as number[];
+    expect(actual).to.not.be.null;
+    expect(actual[1]).to.be.closeTo(113.4, EPS);
+
+    actual = interp.getIntersects(2310, 0, -1) as number[];
+    expect(actual).to.not.be.null;
+    expect(actual[1]).to.be.closeTo(1621.24, EPS);
+
+
+  });
+
   it('should be able to get bounds of curve', () => {
     const interp = new CurveInterpolator(points, { tension: 0, alpha: 0 });
 

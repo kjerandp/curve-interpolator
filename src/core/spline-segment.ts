@@ -63,8 +63,9 @@ export function calculateCoefficients(p0: Vector, p1:Vector, p2:Vector, p3:Vecto
 
     const a = (2 * v1 - 2 * v2 + u + v);
     const b = (-3 * v1 + 3 * v2 - 2 * u - v);
+    const c = u;
     const d = v1;
-    coefficientsList[k] = [a, b, u, d];
+    coefficientsList[k] = [a, b, c, d];
   }
   return coefficientsList;
 }
