@@ -273,5 +273,36 @@ describe('curve-interpolator.ts', () => {
     const mapped = lerp.reduce(({ acc, i }) => acc + i, 0, 10);
     expect(mapped).to.deep.eq(45);
   });
+
+  it('should return the Frenet-frames in 3d given a number of segments', () => {
+    const lerp2d = new CurveInterpolator(points, { tension: 0, alpha: 1, arcDivisions: 0 });
+    expect(lerp2d.getFrenetFrames(10)).to.be.undefined;
+
+    const lerp3d = new CurveInterpolator(points3d, { tension: 0, alpha: 1, arcDivisions: 0 });
+
+    const result = lerp3d.getFrenetFrames(10);
+
+    expect(result.tangents.length).to.eq(11);
+    expect(result.normals.length).to.eq(11);
+    expect(result.binormals.length).to.eq(11);
+
+    const normals = [
+      [-0, -0, -1],
+      [0.009241715900917333, -0.22355726615559307, -0.9746469819561563],
+      [0.07519649382870604, -0.8430999136085097, -0.5324734951048672],
+      [0.10569030233723536, -0.9503013780798257, -0.29284270660449757],
+      [-0.09322439048956332, -0.8727842582591987, -0.47912091537814344],
+      [-0.10768487787795038, -0.8718360628865027, -0.47781361065479616],
+      [-0.03967909137676523, -0.8677655638926591, -0.49538721807245867],
+      [0.26821056388630016, -0.8510664650835947, -0.4513856061394822],
+      [0.4323086396065564, -0.849148468493959, -0.30340751239198555],
+      [0.4192160009210173, -0.8256141926158265, 0.3776495061867643],
+      [0.4078956847626701, -0.8244649304232898, 0.39227374224400063],
+    ];
+    
+    result.normals.forEach((actual, i) => {
+      expect(actual).to.deep.eq(normals[i]);
+    });
+  });
 });
 

@@ -100,7 +100,7 @@ export function dot(v1:Vector, v2:Vector) : number {
  * @param target optional target
  * @returns Vector perpendicular to p1 and p2
  */
-export function cross(v1:Vector, v2:Vector, target? : Vector) : Vector {
+export function cross(v1:Vector, v2:Vector, target?:Vector) : Vector {
   if (v1.length > 3) return undefined;
   target = target || new Array(3);
 
@@ -111,6 +111,38 @@ export function cross(v1:Vector, v2:Vector, target? : Vector) : Vector {
   target[1] = az * bx - ax * bz;
   target[2] = ax * by - ay * bx;
 
+  return target;
+}
+
+/**
+ * Add two vectors
+ * @param v1 Vector
+ * @param v2 Vector
+ * @param target optional target
+ * @returns Sum of v1 and v2
+ */
+export function add(v1:Vector, v2:Vector, target?:Vector) : Vector {
+  target = target || new Array(v1.length);
+
+  for (let k = 0; k < v1.length; k++) {
+    target[k] = v1[k] + v2[k];
+  }
+  return target;
+}
+
+/**
+ * Subtract two vectors
+ * @param v1 Vector
+ * @param v2 Vector
+ * @param target optional target
+ * @returns Difference of v1 and v2
+ */
+export function sub(v1:Vector, v2:Vector, target?:Vector) : Vector {
+  target = target || new Array(v1.length);
+
+  for (let k = 0; k < v1.length; k++) {
+    target[k] = v1[k] - v2[k];
+  }
   return target;
 }
 
@@ -177,4 +209,37 @@ export function orthogonal(v:Vector, target?: Vector) : Vector {
   u[1] = u[0];
   u[0] = x;
   return u;
+}
+
+/**
+ * Rotate a point around the given axis and angle 
+ * @param vector vector to rotate
+ * @param axis vector defining the rotation axis
+ * @param angle angle of rotation in radians
+ * @param target optional target
+ * @returns rotated vector
+ */
+export function rotate3d(vector:Vector, axis:Vector = [0, 1, 0], angle = 0, target?: Vector) : Vector {
+  const c = Math.cos(angle);
+  const s = Math.sin(angle);
+
+  const t = 1 - c;
+
+  const vx = vector[0];
+  const vy = vector[1];
+  const vz = vector[2];
+
+  const ax = axis[0];
+  const ay = axis[1];
+  const az = axis[2];
+
+  const tx = t * ax, ty = t * ay;
+  
+  target = target || vector;
+
+  target[0] = (tx * ax + c) * vx + (tx * ay - s * az) * vy + (tx * az + s * ay) * vz;
+  target[1] = (tx * ay + s * az) * vx + (ty * ay + c) * vy + (ty * az - s * ax) * vz;
+  target[2] = (tx * az - s * ay) * vx + (ty * az + s * ax) * vy + (t * az * az + c) * vz;
+  
+  return target;
 }

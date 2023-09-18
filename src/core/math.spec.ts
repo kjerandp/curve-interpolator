@@ -8,6 +8,7 @@ import {
   sumOfSquares,
   magnitude,
   dot,
+  rotate3d,
 } from './math';
 import { expect } from 'chai';
 import {
@@ -130,5 +131,12 @@ describe('math.ts', () => {
     expect(dot([2, -2], [4, 1])).to.eq(6);
     expect(dot([0, 0], [2, 1])).to.eq(0);
     expect(dot([-1, 3, 6], [2, 6, -3])).to.eq(-2);
+  });
+
+  it('should rotate a point at a given angle and rotation axis', () => {
+    compareNumArrays(rotate3d([1, 0, 0], [0, 1, 0], Math.PI), [-1, 0, 0], EPS);
+    compareNumArrays(rotate3d([1, 5, 0], [0, 1, 0], Math.PI), [-1, 5, 0], EPS);
+    compareNumArrays(rotate3d([1, -2, 0], [0, 0, 1], Math.PI / 2), [2, 1, 0], EPS);
+    compareNumArrays(rotate3d([1, -2, 0], [0, 0, 1], Math.PI / 3), [2.23205080, -0.1339746, 0], EPS);
   });
 });

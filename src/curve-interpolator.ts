@@ -10,6 +10,7 @@ import {
   getQuadRoots,
   magnitude,
   normalize,
+  rotate3d,
 } from './core/math';
 
 import {
@@ -216,6 +217,84 @@ export default class CurveInterpolator {
     const ddt = normalize(this._curveMapper.evaluateForT(secondDerivativeAtT, t));
 
     return normalize(cross(cross(dt, ddt), dt), normal);
+  }
+
+
+  /**
+   * Calculate the Frenet-Serret frames for a 3d curve, using the concept of parallel transport. 
+   * The implementation used here is basically a copy of the function used in THREE.js (https://github.com/mrdoob/three.js),
+   * which in turn is based on the the paper "Parallel Transport Approach to Curve Framing" by Hanson and Ma
+   * (https://legacy.cs.indiana.edu/ftp/techreports/TR425.pdf)
+   * @param segments number of samples (segments) along the curve (will return segments + 1 frames) 
+   * @returns object containing arrays for tangents, normals and binormals
+   */
+  getFrenetFrames(segments:number) : { tangents:Vector[], normals:Vector[], binormals:Vector[]} {
+    if (this.points[0].length !== 3) return undefined;
+    
+    const tangents = new Array(segments + 1);
+    const normals = new Array(segments + 1);
+    const binormals = new Array(segments + 1);
+
+    for (let i = 0; i <= segments; i++) {
+      tangents[i] = this.getTangentAt(i / segments);
+    }
+    
+    // select an initial normal vector perpendicular to the first tangent vector, and in the
+    // direction of the minimum tangent xyz component
+    let normal: Vector;
+    
+		let min = Number.MAX_VALUE;
+		const tx = Math.abs(tangents[0][0]);
+		const ty = Math.abs(tangents[0][1]);
+		const tz = Math.abs(tangents[0][2]);
+
+		if (tx <= min) {
+			min = tx;
+			normal = [1, 0, 0];
+		}
+
+		if (ty <= min) {
+			min = ty;
+			normal = [0, 1, 0];
+		}
+
+		if (tz <= min) {
+			normal = [0, 0, 1];
+		}
+
+    let vec = normalize(cross(tangents[0], normal));
+    
+
+    normals[0] = cross(tangents[0], vec);
+    binormals[0] = cross(tangents[0], normals[0]);
+
+    for (let i = 1; i <= segments; i++) {
+      vec = cross(tangents[i - 1], tangents[i]);
+      normals[i] = copyValues(normals[i - 1]);
+      if (magnitude(vec) > EPS) {
+        normalize(vec);
+        const theta = Math.acos(clamp(dot(tangents[i - 1], tangents[i]), -1, 1)); // clamp for floating pt errors
+        rotate3d(normals[i - 1], vec, theta, normals[i]);
+      }
+      binormals[i] = cross(tangents[i], normals[i]);
+    }
+
+    // if the curve is closed, postprocess the vectors so the first and last normal vectors are the same
+    if (this.closed === true) {
+      let theta = Math.acos(clamp(dot(normals[0], normals[segments]), -1, 1)) / segments;
+
+      if (dot(tangents[0], cross(normals[0], normals[segments])) > 0) {
+        theta = -theta;
+      }
+
+      for (let i = 1; i <= segments; i++) {
+        // twist a little...
+        rotate3d(normals[i], tangents[i], theta * i, normals[i]);
+        binormals[i] = cross(tangents[i], normals[i]);
+      }
+    }
+
+    return { tangents, normals, binormals };
   }
 
   /**
@@ -521,14 +600,15 @@ export default class CurveInterpolator {
    * Create and cache a lookup table of n=samples points, indexed by position (u)
    * @param func function generating lookup table value
    * @param samples number of samples (segments)
-   * @param options object of { from, to, cacheKey } - if cacheKey is included, the map will be stored in the internal cache
+   * @param options object of \{ from, to, cacheKey \} - if cacheKey is included, the map will be stored in the internal cache
    * @returns Map of positions -> points
    */
-  createLookupTable<T>(func: (u:number) => T, samples: number, options?: { from?: number, to?: number, cacheKey?: string }) : Map<number, T> {
+  createLookupTable<T>(func: (u:number) => T, samples: number, options?: { from?: number, to?: number, cacheKey?: string, cacheForceUpdate?: boolean }) : Map<number, T> {
     if (!samples || samples <= 1) throw Error('Invalid arguments passed to createLookupTable(). You must specify at least 2 samples.')
-    const { from, to, cacheKey } = {
+    const { from, to, cacheKey, cacheForceUpdate } = {
       from: 0,
       to: 1,
+      cacheForceUpdate: false,
       ...options,
     };
     
@@ -536,7 +616,7 @@ export default class CurveInterpolator {
 
     let lut = null;
 
-    if (!cacheKey || !this._cache.has(cacheKey)) {
+    if (!cacheKey || cacheForceUpdate || !this._cache.has(cacheKey)) {
       lut = new Map();
 
       for (let d = 0; d < samples; d++) {
@@ -566,9 +646,10 @@ export default class CurveInterpolator {
   forEach<T>(func: ({ u, t, i, prev }) => T, samples: (number | number[]), from = 0, to = 1) : void {
     let positions = [];
     if (Number.isFinite(samples)) {
-      if (samples <= 1) throw Error('Invalid arguments passed to forEach(). You must specify at least 2 samples.')
       const nSamples = samples as number;
-      for (let i = 0; i < samples; i++) {
+      if (nSamples <= 1) throw Error('Invalid arguments passed to forEach(). You must specify at least 2 samples.')
+      
+      for (let i = 0; i < nSamples; i++) {
         const u = from === 0 && to === 1 ?
           i / (nSamples - 1) : from + ((i / (nSamples - 1)) * (to - from));
         positions.push(u);
@@ -599,9 +680,10 @@ export default class CurveInterpolator {
   map<T>(func: ({ u, t, i, prev }) => T, samples: (number | number[]), from = 0, to = 1) : T[] {
     let positions = [];
     if (Number.isFinite(samples)) {
-      if (samples <= 1) throw Error('Invalid arguments passed to map(). You must specify at least 2 samples.')
       const nSamples = samples as number;
-      for (let i = 0; i < samples; i++) {
+      if (nSamples <= 1) throw Error('Invalid arguments passed to map(). You must specify at least 2 samples.')
+      
+      for (let i = 0; i < nSamples; i++) {
         const u = from === 0 && to === 1 ?
           i / (nSamples - 1) : from + ((i / (nSamples - 1)) * (to - from));
         positions.push(u);
@@ -634,9 +716,10 @@ export default class CurveInterpolator {
   reduce<T>(func: ({ acc, u, t, i }) => T, initialValue:T, samples: (number | number[]), from = 0, to = 1) : T {
     let positions = [];
     if (Number.isFinite(samples)) {
-      if (samples <= 1) throw Error('Invalid arguments passed to map(). You must specify at least 2 samples.')
       const nSamples = samples as number;
-      for (let i = 0; i < samples; i++) {
+      if (nSamples <= 1) throw Error('Invalid arguments passed to map(). You must specify at least 2 samples.')
+      
+      for (let i = 0; i < nSamples; i++) {
         const u = from === 0 && to === 1 ?
           i / (nSamples - 1) : from + ((i / (nSamples - 1)) * (to - from));
         positions.push(u);

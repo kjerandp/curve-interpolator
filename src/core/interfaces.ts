@@ -42,7 +42,7 @@ export interface VectorType {
 export interface CurveParameters {
   /* curve tension (0 = Catmull-Rom curve, 1 = linear curve) */
   tension?: number,
-  /* curve velocity vector modifier (0 = uniform, 0.5 = centrepetal, 1 = chordal */
+  /* curve velocity vector modifier (0 = uniform, 0.5 = centripetal, 1 = chordal */
   alpha?: number,
 }
 
