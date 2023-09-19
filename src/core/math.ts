@@ -212,7 +212,30 @@ export function orthogonal(v:Vector, target?: Vector) : Vector {
 }
 
 /**
- * Rotate a point around the given axis and angle 
+ * Rotate a 2d point at the specified angle around the anchor point (0,0)
+ * @param vector vector to rotate
+ * @param anchor anchor point to rotate around
+ * @param angle angle of rotation in radians
+ * @param target optional target
+ * @returns rotated vector
+ */
+export function rotate2d(vector:Vector, angle = 0, anchor:Vector = [0, 0], target?: Vector) : Vector {
+  const c = Math.cos(angle);
+  const s = Math.sin(angle);
+
+  const vx = vector[0] - anchor[0];
+  const vy = vector[1] - anchor[1];
+
+  target = target || vector;
+
+  target[0] = vx * c - vy * s + anchor[0];
+  target[1] = vx * s + vy * c + anchor[1];
+
+  return target;
+}
+
+/**
+ * Rotate a 3d point around the given axis and angle 
  * @param vector vector to rotate
  * @param axis vector defining the rotation axis
  * @param angle angle of rotation in radians

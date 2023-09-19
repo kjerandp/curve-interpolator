@@ -274,19 +274,26 @@ describe('curve-interpolator.ts', () => {
     expect(mapped).to.deep.eq(45);
   });
 
-  it('should return the Frenet-frames in 3d given a number of segments', () => {
+  it('should return the Frenet-frames given a number of segments (2d/3d)', () => {
     const lerp2d = new CurveInterpolator(points, { tension: 0, alpha: 1, arcDivisions: 0 });
-    expect(lerp2d.getFrenetFrames(10)).to.be.undefined;
+    const result2d = lerp2d.getFrenetFrames(10);
 
+    expect(result2d.tangents.length).to.eq(11);
+    expect(result2d.normals.length).to.eq(11);
+    expect(result2d.binormals).to.be.undefined;
+
+    result2d.tangents.forEach((tan, i) => {
+      expect(result2d.normals[i]).to.deep.eq([-tan[1], tan[0]]);
+    });
     const lerp3d = new CurveInterpolator(points3d, { tension: 0, alpha: 1, arcDivisions: 0 });
 
-    const result = lerp3d.getFrenetFrames(10);
+    const result3d = lerp3d.getFrenetFrames(10);
 
-    expect(result.tangents.length).to.eq(11);
-    expect(result.normals.length).to.eq(11);
-    expect(result.binormals.length).to.eq(11);
+    expect(result3d.tangents.length).to.eq(11);
+    expect(result3d.normals.length).to.eq(11);
+    expect(result3d.binormals.length).to.eq(11);
 
-    const normals = [
+    const expected3dNormals = [
       [-0, -0, -1],
       [0.009241715900917333, -0.22355726615559307, -0.9746469819561563],
       [0.07519649382870604, -0.8430999136085097, -0.5324734951048672],
@@ -300,8 +307,8 @@ describe('curve-interpolator.ts', () => {
       [0.4078956847626701, -0.8244649304232898, 0.39227374224400063],
     ];
     
-    result.normals.forEach((actual, i) => {
-      expect(actual).to.deep.eq(normals[i]);
+    result3d.normals.forEach((actual, i) => {
+      expect(actual).to.deep.eq(expected3dNormals[i]);
     });
   });
 });

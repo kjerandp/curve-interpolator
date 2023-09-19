@@ -9,6 +9,7 @@ import {
   magnitude,
   dot,
   rotate3d,
+  rotate2d,
 } from './math';
 import { expect } from 'chai';
 import {
@@ -133,7 +134,16 @@ describe('math.ts', () => {
     expect(dot([-1, 3, 6], [2, 6, -3])).to.eq(-2);
   });
 
-  it('should rotate a point at a given angle and rotation axis', () => {
+  it('should rotate a 2d point at the given angle and anchor point', () => {
+    compareNumArrays(rotate2d([1, 0], Math.PI / 2), [-0, 1], EPS);
+    compareNumArrays(rotate2d([1.5, 2], Math.PI / 2), [-2, 1.5], EPS);
+    compareNumArrays(rotate2d([1, 1], Math.PI), [-1, -1], EPS);
+    compareNumArrays(rotate2d([1, 1], Math.PI, [0, 1]), [-1, 1], EPS);
+    compareNumArrays(rotate2d([2, 3], Math.PI / 4, [1, -1]), [-1.12132034, 2.5355339], EPS);
+    compareNumArrays(rotate2d([2, 3], Math.PI / 4, [2, 3]), [2, 3], EPS);
+  });
+
+  it('should rotate a 3d point at a given angle and rotation axis', () => {
     compareNumArrays(rotate3d([1, 0, 0], [0, 1, 0], Math.PI), [-1, 0, 0], EPS);
     compareNumArrays(rotate3d([1, 5, 0], [0, 1, 0], Math.PI), [-1, 5, 0], EPS);
     compareNumArrays(rotate3d([1, -2, 0], [0, 0, 1], Math.PI / 2), [2, 1, 0], EPS);

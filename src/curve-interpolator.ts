@@ -225,76 +225,85 @@ export default class CurveInterpolator {
    * The implementation used here is basically a copy of the function used in THREE.js (https://github.com/mrdoob/three.js),
    * which in turn is based on the the paper "Parallel Transport Approach to Curve Framing" by Hanson and Ma
    * (https://legacy.cs.indiana.edu/ftp/techreports/TR425.pdf)
+   * 
+   * In the case of 2d, the normals are rotated 90 degrees counter-clockwise from the tangents and the binormals are omitted.
    * @param segments number of samples (segments) along the curve (will return segments + 1 frames) 
-   * @returns object containing arrays for tangents, normals and binormals
+   * @returns object containing arrays for tangents, normals and binormals if applicable
    */
-  getFrenetFrames(segments:number) : { tangents:Vector[], normals:Vector[], binormals:Vector[]} {
-    if (this.points[0].length !== 3) return undefined;
-    
+  getFrenetFrames(segments:number) : { tangents:Vector[], normals:Vector[], binormals?:Vector[]} {    
     const tangents = new Array(segments + 1);
     const normals = new Array(segments + 1);
-    const binormals = new Array(segments + 1);
 
     for (let i = 0; i <= segments; i++) {
       tangents[i] = this.getTangentAt(i / segments);
     }
-    
-    // select an initial normal vector perpendicular to the first tangent vector, and in the
-    // direction of the minimum tangent xyz component
-    let normal: Vector;
-    
-		let min = Number.MAX_VALUE;
-		const tx = Math.abs(tangents[0][0]);
-		const ty = Math.abs(tangents[0][1]);
-		const tz = Math.abs(tangents[0][2]);
 
-		if (tx <= min) {
-			min = tx;
-			normal = [1, 0, 0];
-		}
-
-		if (ty <= min) {
-			min = ty;
-			normal = [0, 1, 0];
-		}
-
-		if (tz <= min) {
-			normal = [0, 0, 1];
-		}
-
-    let vec = normalize(cross(tangents[0], normal));
-    
-
-    normals[0] = cross(tangents[0], vec);
-    binormals[0] = cross(tangents[0], normals[0]);
-
-    for (let i = 1; i <= segments; i++) {
-      vec = cross(tangents[i - 1], tangents[i]);
-      normals[i] = copyValues(normals[i - 1]);
-      if (magnitude(vec) > EPS) {
-        normalize(vec);
-        const theta = Math.acos(clamp(dot(tangents[i - 1], tangents[i]), -1, 1)); // clamp for floating pt errors
-        rotate3d(normals[i - 1], vec, theta, normals[i]);
+    if (this.dim === 2) {
+      for (let i = 0; i < tangents.length; i++) {
+        normals[i] = [-tangents[i][1], tangents[i][0]]; 
       }
-      binormals[i] = cross(tangents[i], normals[i]);
+      return { tangents, normals };
     }
+    else if (this.dim === 3) {
+      const binormals = new Array(segments + 1);
+      // select an initial normal vector perpendicular to the first tangent vector, and in the
+      // direction of the minimum tangent xyz component
+      let normal: Vector;
+      
+      let min = Number.MAX_VALUE;
+      const tx = Math.abs(tangents[0][0]);
+      const ty = Math.abs(tangents[0][1]);
+      const tz = Math.abs(tangents[0][2]);
 
-    // if the curve is closed, postprocess the vectors so the first and last normal vectors are the same
-    if (this.closed === true) {
-      let theta = Math.acos(clamp(dot(normals[0], normals[segments]), -1, 1)) / segments;
-
-      if (dot(tangents[0], cross(normals[0], normals[segments])) > 0) {
-        theta = -theta;
+      if (tx <= min) {
+        min = tx;
+        normal = [1, 0, 0];
       }
+
+      if (ty <= min) {
+        min = ty;
+        normal = [0, 1, 0];
+      }
+
+      if (tz <= min) {
+        normal = [0, 0, 1];
+      }
+
+      let vec = normalize(cross(tangents[0], normal));
+      
+
+      normals[0] = cross(tangents[0], vec);
+      binormals[0] = cross(tangents[0], normals[0]);
 
       for (let i = 1; i <= segments; i++) {
-        // twist a little...
-        rotate3d(normals[i], tangents[i], theta * i, normals[i]);
+        vec = cross(tangents[i - 1], tangents[i]);
+        normals[i] = copyValues(normals[i - 1]);
+        if (magnitude(vec) > EPS) {
+          normalize(vec);
+          const theta = Math.acos(clamp(dot(tangents[i - 1], tangents[i]), -1, 1)); // clamp for floating pt errors
+          rotate3d(normals[i - 1], vec, theta, normals[i]);
+        }
         binormals[i] = cross(tangents[i], normals[i]);
       }
-    }
 
-    return { tangents, normals, binormals };
+      // if the curve is closed, postprocess the vectors so the first and last normal vectors are the same
+      if (this.closed === true) {
+        let theta = Math.acos(clamp(dot(normals[0], normals[segments]), -1, 1)) / segments;
+
+        if (dot(tangents[0], cross(normals[0], normals[segments])) > 0) {
+          theta = -theta;
+        }
+
+        for (let i = 1; i <= segments; i++) {
+          // twist a little...
+          rotate3d(normals[i], tangents[i], theta * i, normals[i]);
+          binormals[i] = cross(tangents[i], normals[i]);
+        }
+      }
+      return { tangents, normals, binormals };
+    }
+    
+    return undefined;
   }
 
   /**
@@ -799,5 +808,9 @@ export default class CurveInterpolator {
   get maxZ() {
     const bbox = this.getBoundingBox();
     return bbox.max[2];
+  }
+
+  get dim() {
+    return this.points[0]?.length || undefined;
   }
 }
