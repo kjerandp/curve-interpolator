@@ -228,14 +228,20 @@ export default class CurveInterpolator {
    * 
    * In the case of 2d, the normals are rotated 90 degrees counter-clockwise from the tangents and the binormals are omitted.
    * @param segments number of samples (segments) along the curve (will return segments + 1 frames) 
+   * @param from position from
+   * @param to position to
    * @returns object containing arrays for tangents, normals and binormals if applicable
    */
-  getFrenetFrames(segments:number) : { tangents:Vector[], normals:Vector[], binormals?:Vector[]} {    
+  getFrenetFrames(segments:number, from = 0, to = 1) : { tangents:Vector[], normals:Vector[], binormals?:Vector[]} {    
+    if (from < 0 || to > 1 || to < from) return undefined;
+
     const tangents = new Array(segments + 1);
     const normals = new Array(segments + 1);
 
     for (let i = 0; i <= segments; i++) {
-      tangents[i] = this.getTangentAt(i / segments);
+      const u = from === 0 && to === 1 ?
+        i / segments : from + ((i / segments) * (to - from));
+      tangents[i] = this.getTangentAt(u);
     }
 
     if (this.dim === 2) {
@@ -268,7 +274,7 @@ export default class CurveInterpolator {
       if (tz <= min) {
         normal = [0, 0, 1];
       }
-
+      
       let vec = normalize(cross(tangents[0], normal));
       
 
